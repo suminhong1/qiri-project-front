@@ -13,7 +13,7 @@ const Header = () => {
   useEffect(() => {}, [bell]);
 
   return (
-    <div className="topbar">
+    <>
       <div className="header">
         <div className="header-logo">
           <a href="/" className="logo">
@@ -60,7 +60,6 @@ const Header = () => {
           </a>
         </div>
       </div>
-
       <div className="navbar">
         <div className="navbar-menu">
           <a href="/" className="matchingPost">
@@ -80,8 +79,7 @@ const Header = () => {
           </a>
         </div>
       </div>
-      <div></div>
-    </div>
+    </>
   );
 };
 export default Header;
