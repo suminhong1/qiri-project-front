@@ -1,3 +1,8 @@
+.header-nav {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .header {
   background-color: white;
   width: 100%;
@@ -5,8 +10,6 @@
   display: flex;
   height: 130px;
   justify-content: space-between;
-  overflow: hidden;
-  white-space: nowrap;
 }
 
 .header-logo {
@@ -81,8 +84,6 @@
   box-shadow: 0 5px 4px -4px #ffd7c2;
   justify-content: space-between;
   align-items: center;
-  overflow: hidden;
-  white-space: nowrap;
   font-size: 1.8rem;
 }
 
@@ -99,16 +100,14 @@
 .matchingPost,
 .review,
 .community {
-  padding: 10px;
   color: #4e4e4e;
 }
 
 .matchingPost:hover,
 .review:hover,
 .community:hover {
-  background-color: #ff7f38;
   border-radius: 5px;
-  color: white;
+  color: #ff7f38;
 }
 
 .navbar-alarm {

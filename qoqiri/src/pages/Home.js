@@ -1,94 +1,75 @@
+import "../css/Home.css";
+
 const Home = () => {
   return (
     <>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
-
-      <p>asddsaasd</p>
-      <p>asddsaasd</p>
+      <div className="cTypeSelect">
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+        <section className="cTypeCard">
+          <a href="/" className="cTypeText">
+            <p>게임</p>
+          </a>
+        </section>
+      </div>
     </>
   );
 };
