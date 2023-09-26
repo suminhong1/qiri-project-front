@@ -1,7 +1,7 @@
 import logo from "../assets/logo.png";
 import title from "../assets/title.JPG";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "../assets/reset.css";
 import "../css/Header.css";
 import "../css/Font.css";
@@ -9,11 +9,11 @@ import alarm from "../assets/alarm.gif";
 import { useState, useEffect } from "react";
 
 const Header = () => {
-  const [bell, setBell] = useState([false]);
+  const [bell] = useState([false]);
   useEffect(() => {}, [bell]);
 
   return (
-    <div className="topbar">
+    <>
       <div className="header">
         <div className="header-logo">
           <a href="/" className="logo">
@@ -60,7 +60,6 @@ const Header = () => {
           </a>
         </div>
       </div>
-
       <div className="navbar">
         <div className="navbar-menu">
           <a href="/" className="matchingPost">
@@ -73,7 +72,6 @@ const Header = () => {
             커뮤니티
           </a>
         </div>
-
         <div className="navbar-alarm">
           <a href="/" className="alarm">
             <img src={alarm} style={{ height: "50px", width: "auto" }} />
@@ -81,7 +79,7 @@ const Header = () => {
         </div>
       </div>
       <div></div>
-    </div>
+    </>
   );
 };
 export default Header;
