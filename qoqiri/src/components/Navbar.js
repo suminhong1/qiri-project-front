@@ -11,13 +11,16 @@ const Navbar = () => {
     <>
       <div className="navbar">
         <div className="navbar-home">
-          <a href="/" className="homeButton" style={{ marginLeft: "20px" }}>
+          <a href="/" className="homeButton">
             <GrHomeRounded />
           </a>
         </div>
         <div className="navbar-menu">
           <a href="/" className="matchingPost">
-            끼리모집!
+            끼리모집
+          </a>
+          <a href="/" className="matchingSearch">
+            끼리찾기
           </a>
           <a href="/" className="review">
             끼리후기
@@ -31,7 +34,7 @@ const Navbar = () => {
           <a href="/" className="alarm">
             <img
               src={alarm}
-              style={{ height: "50px", width: "auto" }}
+              style={{ height: "40px", width: "auto" }}
               alt="alarm"
             />
           </a>

@@ -1,84 +1,18 @@
 import "../css/Home.css";
+import CategoryType from "../components/CategoryType";
 
 const Home = () => {
   return (
     <>
       <section className="billboard">
         <div className="content">
-          <p>으아아아아악 dasdsadasdasdsa</p>
-          <p>우와아아아아 dsa dsad as dasd asda s</p>
-          <p>으아아아아아아아아 as das das das ds</p>
+          <p>즐기자, 함께</p>
+          <p>누구든, 언제든</p>
+          <p>함께, 가볍게</p>
+          <p>놀자, 지금 바로</p>
         </div>
       </section>
-      <div className="main-body">
-        <div className="cTypeSelect">
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-          <section className="cTypeCard">
-            <a href="/" className="cTypeText">
-              <p>게임</p>
-            </a>
-          </section>
-        </div>
-      </div>
+      <CategoryType />
     </>
   );
 };

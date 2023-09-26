@@ -30,9 +30,10 @@ const StyledHeader = styled.header`
     flex: 1;
     display: flex;
     align-items: end;
-    justify-content: center;
+    justify-content: start;
     padding: 10px;
     margin-bottom: 15px;
+    margin-left: 20px;
   }
 
   .header-search input {
@@ -40,7 +41,7 @@ const StyledHeader = styled.header`
     font-size: 1.2rem;
     display: block;
     width: 80%;
-    max-width: 600px;
+    max-width: 1000px;
     height: 50px;
     padding: 10px;
     border-bottom: 3px solid #ff7f38;
