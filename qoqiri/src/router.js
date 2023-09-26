@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
-import Post from "./pages/Post";
+import BestPost from "./pages/BestPost";
+import ViewPost from "./pages/ViewPost";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter([
   {
@@ -9,6 +11,10 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <NotFound />,
     children: [
+      {
+        index: true,
+        element: <Home />,
+      },
       {
         index: true,
         element: <BestPost />,
