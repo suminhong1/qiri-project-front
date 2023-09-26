@@ -115,13 +115,11 @@ const Header = () => {
             />
           </button>
         </div>
-
         <div className="header-sign">
           <a href="/" className="login">
             로그인
           </a>
         </div>
-
         <div className="header-sign">
           <a href="/" className="login">
             회원가입
