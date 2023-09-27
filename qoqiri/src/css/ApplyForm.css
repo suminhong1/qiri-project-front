@@ -1,13 +1,14 @@
 .container {
   text-align: center;
   margin-top: 20px;
-  background-color: #ffcaae;
+  background-color: rgba(253, 236, 217, 0.973);
   width: 298px;
   height: 600px;
   border-radius: 3%;
 }
 
 .header-sign {
+  display: flex;
   font-size: 15px;
   font-weight: bold;
   margin: 10px;
@@ -20,6 +21,7 @@
   transition: transform 0.5s ease-in-out;
   margin: 0 auto;
   text-align: left;
+  position: relative;
 }
 
 .custom-card.flipped {
@@ -29,17 +31,46 @@
 .card-front {
   width: 288px;
   height: 444px;
-  display: block;
-  position: relative;
   transform-style: preserve-3d;
-  right: 7px;
+  position: relative;
 }
 
-.card-front img {
-  margin-left: 10px;
+.card-front .main-image {
   width: 268px;
-  height: 350px;
+  height: 268px;
+  border-radius: 100%;
+  border: 5px double #ff9305;
   object-fit: cover;
+  box-sizing: border-box;
+}
+
+.sub-image {
+  display: inline;
+}
+
+.sub-image .sub-image1 {
+  margin-left: 33px;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 5px double #ff9305;
+  margin-bottom: 100px;
+}
+.sub-image .sub-image2 {
+  margin-left: 33px;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 5px double #ff9305;
+  margin-bottom: 100px;
+}
+.sub-image .sub-image3 {
+  margin-left: 33px;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 5px double #ff9305;
+  margin-bottom: 100px;
 }
 
 .card-body {
@@ -52,16 +83,28 @@
   padding: 0;
 }
 
-.card-body p {
+.card-body h1 {
+  font-size: 30px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.p-text {
   font-size: 16px;
+  margin-left: 10px;
+  overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
+  text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
+  display: -webkit-box; /* WebKit 기반 브라우저에서 사용 */
+  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 (3줄 이상은 자름) */
+  white-space: normal;
+  -webkit-box-orient: vertical; /* 세로 방향으로 텍스트 배치 */
 }
 
 .card-back {
   width: 288px;
   height: 444px;
-  background: #ffcaae;
-  padding: 1rem;
+  background: rgba(253, 236, 217, 0.973);
   transform: scale(-1, 1);
+  margin-left: 6px;
   display: none;
   position: relative;
   transform-style: preserve-3d;
@@ -75,6 +118,7 @@
 .info-row {
   display: flex;
   margin-bottom: 10px;
+  padding: 8px;
 }
 
 .info-label {
@@ -96,7 +140,7 @@
 }
 
 .front-applyBtn {
-  background-color: green;
+  background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
   color: white;
@@ -105,7 +149,7 @@
 }
 
 .front-chatBtn {
-  background-color: blue;
+  background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
@@ -113,7 +157,7 @@
 }
 
 .back-applyBtn {
-  background-color: green;
+  background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
   color: white;
@@ -123,7 +167,7 @@
 }
 
 .back-chatBtn {
-  background-color: blue;
+  background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;

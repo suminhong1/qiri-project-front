@@ -1,0 +1,24 @@
+/* Apply.css */
+
+.Apply-main {
+  display: flex;
+  justify-content: center;
+}
+
+.Apply-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around; /* 여백을 고르게 분배합니다 */
+  max-width: 1200px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 가운데 정렬을 위한 설정 */
+}
+
+.ApplyForm {
+  margin: 10px; /* 기본 간격 설정 */
+  flex: 1; /* 동일한 너비를 갖도록 설정 */
+
+  /* 화면이 작아질 때 간격 없애기 */
+  @media (max-width: 768px) {
+    margin: 0;
+  }
+}

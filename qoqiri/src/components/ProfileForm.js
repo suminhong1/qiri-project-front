@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../css/ProfileForm.css";
 import son from "../assets/son.jpg";
 
-const Mini2 = () => {
+const Mini = () => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleCardClick = () => {
@@ -17,7 +17,7 @@ const Mini2 = () => {
         <div className="card-front">
           <img src={son} alt="User" />
           <div className="card-body">
-            <h2>사용자명</h2>
+            <h1>사용자명</h1>
             <p>한줄소개</p>
           </div>
         </div>
@@ -58,4 +58,4 @@ const Mini2 = () => {
   );
 };
 
-export default Mini2;
+export default Mini;
