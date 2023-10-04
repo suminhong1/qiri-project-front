@@ -1,42 +1,95 @@
-/* #list {
-    /* background-color: #ff7f38; 
-} 
-*/
-section {
-    display: block;
-    margin: 0;
-    font: inherit;
-    border: 0;
+h2 {
+    font-size: 1.2em;
+    font-weight: 700;
 }
-#postList {
+
+.bottomBoardListHeader {
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
+}
+
+#boardList {
     box-sizing: border-box;
     width: 100%;
     font-size: 1em;
+}
+
+#boardList .item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(0, 0, 0 /5%);
+}
+
+#boardList,
+#title,
+.searchAndWrite {
     padding: 0 10px;
 }
-#postList .item a {
-    background-color: black;
+
+#boardList .simple .item {
+    padding: 5px;
 }
 
-#postList .item {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid;
+#boardList .header .titleContainer,
+#boardList .header .titleContainer .title {
+    justify-content: center;
+    width: 100%;
 }
 
-#postList .item .best {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-#postList .item .titleContainer {
+#boardList .item .titleContainer {
     display: flex;
     align-items: center;
     padding: 2px 0;
     overflow: hidden;
 }
-#postList .item .category {
+
+#boardList.simple .item .title .text {
+    font-size: 0.9em;
+}
+
+#boardList.simple .item .etc {
+    width: 30%;
+}
+
+#boardList .item .etc {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 2px;
+    white-space: nowrap;
+}
+
+#boardList .simple .item .etc .nickName {
+    display: inline-flex;
+    flex: 4;
+    align-items: center;
+    justify-content: center;
+}
+
+#boardList .simple .item .etc > div {
+    text-align: center;
+}
+
+#boardList .simple .item .etc .field {
+    flex: 3;
+}
+
+#boardList .simple .item .etc .number {
+    flex: 2;
+}
+
+#boardList .simple .item .info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#boardList .simple .item .titleContainer {
+    max-width: 70%;
+}
+
+#boardList .item .category {
     box-sizing: border-box;
     padding: 4px 6px;
     margin-right: 8px;
@@ -44,81 +97,60 @@ section {
     color: black;
     word-break: keep-all;
     white-space: nowrap;
-    background-color: #ff7f38;
-    border: solid 1px;
+    background-color: rgb(0, 0, 0 /5%);
+    border: solid 1px rgb(0, 0, 0 /10%);
     border-radius: 6px;
 }
 
-#postList .item .title {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    border: solid 1px;
+#boardList .simple .item .title {
+    width: 100%;
 }
 
-#postList .item .titleContainer .text {
+#boardList .item .info i {
+    margin-right: 4px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#boardList .simple .item .title .text {
+    font-size: 0.9em;
+}
+
+#boardList .item .title .text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: flex;
-    align-items: center;
 }
 
-#postList .item .title .pre {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    vertical-align: baseline;
-    border: 0;
+#boardList .item .etc .dot {
+    display: none;
 }
 
-#postList .item .best .commentCount {
-    color: black;
-    font-size: 0.7em;
-}
-#postList .item .titleContainer .commentCount {
+#boardList .item .title .commentCount,
+#boardList .simple .item .commentCount {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 16px;
     margin-left: 5px;
+    font-size: 0.9em;
     font-weight: 700;
+    color: #ff7f38;
     text-align: center;
     border-radius: 3px;
 }
 
-#postList .item .etc {
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    padding: 2px 0;
-    font-size: 0.8em;
-    color: gray;
+/* #boardList .item .info svg, */
+#boardList .item .info i {
+    margin-right: 4px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+/* #boardList .item .title .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-}
-#postList .etc .nickName,
-.viewCount {
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    vertical-align: baseline;
-    border: 0;
-}
-
-.dot {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 14px;
-    height: 100%;
-}
-
-#postList .item .etc .likeCount {
-    color: #000;
-}
+} */
 
 .pagination {
     display: flex;
@@ -184,10 +216,6 @@ section {
     margin: 30px 0;
 }
 
-.searchAndWrite {
-    padding: 0 10px;
-}
-
 #list .searchAndWrite form {
     display: flex;
     flex: 1;
@@ -223,6 +251,7 @@ section {
     margin: 0 14px;
     font-size: 1em;
     background-color: #ff7f38;
+    color: whitesmoke;
     border: 0;
     border-radius: 8px;
 }
