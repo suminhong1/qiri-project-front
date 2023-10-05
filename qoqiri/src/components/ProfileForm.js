@@ -2,60 +2,106 @@ import React, { useState } from "react";
 import "../css/ProfileForm.css";
 import son from "../assets/son.jpg";
 
-const Mini = () => {
+const ApplyForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
   };
 
+  const customButtonStyle = {
+    display: isFlipped ? "none" : "block",
+    transform: "none",
+    cursor: "pointer",
+    borderRadius: "4px",
+  };
+
+  const customBackButtonStyle = {
+    display: isFlipped ? "block" : "none",
+    transform: "scale(-1, 1)",
+    cursor: "pointer",
+    borderRadius: "4px",
+  };
+
   return (
-    <div className="container" onClick={handleCardClick}>
-      <div className="header-sign">신청 카테고리명:을 신청하였습니다.</div>
+    <div className="container">
+      <div className="header-sign"></div>
 
       <div className={`custom-card ${isFlipped ? "flipped" : ""}`}>
         <div className="card-front">
-          <img src={son} alt="User" />
-          <div className="card-body">
-            <h1>사용자명</h1>
-            <p>한줄소개</p>
+          <div>
+            <img className="main-image" src={son} alt="User" />
           </div>
+          <div className="card-body">
+            <h1>#이름#</h1>
+            <p className="pf-p-text">
+              한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개aergaergaergaergaergargaergaergaergaergaergreaaergaergaergaergaerg한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개
+            </p>
+          </div>
+        </div>
+
+        <div className="front-Btn">
+          <button
+            className="front-infoBtn"
+            style={customButtonStyle}
+            onClick={handleCardClick}
+          >
+            프로필 정보보기
+          </button>
         </div>
         <div className="card-back">
           <div className="card-body">
             <div className="info-row">
               <div className="info-label">이름:</div>
-              <div className="info-value">사용자명</div>
+              <div className="info-value">#사용자명#</div>
             </div>
             <div className="info-row">
               <div className="info-label">성별:</div>
-              <div className="info-value">남성</div>
+              <div className="info-value">#성별#</div>
             </div>
             <div className="info-row">
               <div className="info-label">거주지:</div>
-              <div className="info-value">서울, 대한민국</div>
+              <div className="info-value">#거주지#</div>
             </div>
             <div className="info-row">
               <div className="info-label">나이:</div>
-              <div className="info-value">30세</div>
+              <div className="info-value">#나이#</div>
             </div>
             <div className="info-row">
               <div className="info-label">취미1:</div>
-              <div className="info-value">축구</div>
+              <div className="info-value">#취미1#</div>
             </div>
             <div className="info-row">
               <div className="info-label">취미2:</div>
-              <div className="info-value">야구</div>
+              <div className="info-value">#취미2#</div>
             </div>
             <div className="info-row">
               <div className="info-label">취미3:</div>
-              <div className="info-value">농구</div>
+              <div className="info-value">#취미3#</div>
+            </div>
+            <div className="info-row">
+              <div className="info-label">취미4:</div>
+              <div className="info-value">#취미4#</div>
+            </div>
+            <div className="info-row">
+              <div className="info-label">취미5:</div>
+              <div className="info-value">#취미5#</div>
             </div>
           </div>
+        </div>
+
+        <div>
+          <button
+            className="back-infoBtn"
+            style={customBackButtonStyle}
+            onClick={handleCardClick}
+          >
+            앞!
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default Mini;
+export default ApplyForm;

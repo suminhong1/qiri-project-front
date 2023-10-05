@@ -5,14 +5,17 @@
   width: 298px;
   height: 600px;
   border-radius: 3%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 .header-sign {
   display: flex;
+  justify-content: center;
   font-size: 15px;
   font-weight: bold;
   margin: 10px;
   padding: 10px;
+  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
 .custom-card {
@@ -39,38 +42,11 @@
   width: 268px;
   height: 268px;
   border-radius: 100%;
-  border: 5px double #ff9305;
+  border: none;
   object-fit: cover;
   box-sizing: border-box;
-}
-
-.sub-image {
-  display: inline;
-}
-
-.sub-image .sub-image1 {
-  margin-left: 33px;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  border: 5px double #ff9305;
-  margin-bottom: 100px;
-}
-.sub-image .sub-image2 {
-  margin-left: 33px;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  border: 5px double #ff9305;
-  margin-bottom: 100px;
-}
-.sub-image .sub-image3 {
-  margin-left: 33px;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  border: 5px double #ff9305;
-  margin-bottom: 100px;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.39), 0 6px 6px rgba(0, 0, 0, 0.41);
 }
 
 .card-body {
@@ -91,12 +67,14 @@
 .p-text {
   font-size: 16px;
   margin-left: 10px;
+  margin-top: 25px;
   overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
   text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
   display: -webkit-box; /* WebKit 기반 브라우저에서 사용 */
   -webkit-line-clamp: 3; /* 표시할 줄 수 설정 (3줄 이상은 자름) */
   white-space: normal;
   -webkit-box-orient: vertical; /* 세로 방향으로 텍스트 배치 */
+  line-height: 1.4;
 }
 
 .card-back {
@@ -127,7 +105,7 @@
 }
 
 .info-value {
-  flex: 3;
+  flex: 2;
   font-size: 16px;
 }
 
@@ -146,14 +124,16 @@
   color: white;
   width: 278px;
   margin-bottom: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.front-chatBtn {
+.apfront-infoBtn {
   background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
 .back-applyBtn {
@@ -164,13 +144,15 @@
   width: 278px;
   margin-bottom: 10px;
   margin-left: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.back-chatBtn {
+.apback-infoBtn {
   background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
   margin-left: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }

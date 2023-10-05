@@ -1,24 +1,31 @@
-/* Apply.css */
-
-.Apply-main {
+.ApplyMain {
+  min-width: 1900px;
+  width: 100%;
   display: flex;
   justify-content: center;
+  border-radius: 2%;
+  background-color: rgb(247, 242, 235);
+  margin: 60px;
 }
 
-.Apply-container {
+.AC {
+  justify-content: center;
+  border: 1px;
+  min-width: 2000px;
+  max-width: 1400px;
+  height: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* 여백을 고르게 분배합니다 */
-  max-width: 1200px; /* 최대 너비 설정 */
-  margin: 0 auto; /* 가운데 정렬을 위한 설정 */
+  margin: 10px;
 }
-
-.ApplyForm {
-  margin: 10px; /* 기본 간격 설정 */
-  flex: 1; /* 동일한 너비를 갖도록 설정 */
-
-  /* 화면이 작아질 때 간격 없애기 */
-  @media (max-width: 768px) {
-    margin: 0;
-  }
+.Applytag {
+  font-weight: bold;
+  font-size: 50px;
+  position: relative;
+  bottom: 40px;
+  left: 125px;
+  color: coral;
+}
+.ApplySelect {
+  margin: 30px;
 }
