@@ -4,6 +4,7 @@ import ViewPost from "./pages/ViewPost";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
+import MatchingBoard from "./pages/MatchingBoard";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: "ViewPost",
         element: <ViewPost />,
+      },
+      {
+        path: "matchingboard",
+        element: <MatchingBoard />,
       },
     ],
   },
