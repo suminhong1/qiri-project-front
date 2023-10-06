@@ -1,7 +1,9 @@
-/* #list {
-    /* background-color: #ff7f38; 
-} 
+/* 
+ #list {
+   background-color: #ff7f38; 
+}
 */
+
 section {
     display: block;
     margin: 0;
@@ -120,7 +122,7 @@ section {
     color: #000;
 }
 
-.pagination {
+/* .pagination {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -223,6 +225,7 @@ section {
     margin: 0 14px;
     font-size: 1em;
     background-color: #ff7f38;
+    color: whitesmoke;
     border: 0;
     border-radius: 8px;
 }
@@ -242,4 +245,4 @@ section {
 #list .searchAndWrite .write {
     display: flex;
     justify-content: flex-end;
-}
+} */
