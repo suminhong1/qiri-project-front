@@ -122,7 +122,7 @@ section {
     color: #000;
 }
 
-.pagination {
+/* .pagination {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -245,4 +245,4 @@ section {
 #list .searchAndWrite .write {
     display: flex;
     justify-content: flex-end;
-}
+} */

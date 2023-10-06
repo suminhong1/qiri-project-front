@@ -1,4 +1,4 @@
-import '..css/PageNation.css';
+import '../css/PageNation.css';
 
 const PageNation = () => {
     return (
@@ -29,7 +29,7 @@ const PageNation = () => {
             <div className="searchAndWrite">
                 <div></div>
                 <div>
-                    <form action="/best">
+                    <form action="/post">
                         <div className="search">
                             <select name="searchType">
                                 <option value={'title'}>제목</option>
