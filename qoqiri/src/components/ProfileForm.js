@@ -1,12 +1,24 @@
 import React, { useState } from "react";
+import Modal from "./modal";
 import "../css/ProfileForm.css";
 import son from "../assets/son.jpg";
 
-const ApplyForm = () => {
+const ProfileForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
+  };
+
+  const handleImageClick = (index) => {
+    setIsModalOpen(true);
+    setCurrentImageIndex(index);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   const customButtonStyle = {
@@ -30,7 +42,12 @@ const ApplyForm = () => {
       <div className={`custom-card ${isFlipped ? "flipped" : ""}`}>
         <div className="card-front">
           <div>
-            <img className="main-image" src={son} alt="User" />
+            <img
+              className="main-image"
+              src={son}
+              alt="User"
+              onClick={() => handleImageClick(0)}
+            />
           </div>
           <div className="card-body">
             <h1>#이름#</h1>
@@ -100,8 +117,15 @@ const ApplyForm = () => {
           </button>
         </div>
       </div>
+      {isModalOpen && (
+        <Modal
+          images={[son]}
+          index={currentImageIndex}
+          close={handleModalClose}
+        />
+      )}
     </div>
   );
 };
 
-export default ApplyForm;
+export default ProfileForm;
