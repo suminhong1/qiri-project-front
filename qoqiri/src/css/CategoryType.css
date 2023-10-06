@@ -20,10 +20,25 @@
   height: 250px;
   background-position: center center;
   background-size: cover;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.6)),
-    url(../assets/game.jpg);
-  border-radius: 10px;
-  margin: 10px;
+  border-radius: 7px;
+  margin: 5px;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 7px;
+  background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.6));
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.cTypeCard:hover .overlay {
+  opacity: 0;
 }
 
 .cTypeText {
@@ -33,7 +48,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 4rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  -webkit-text-stroke: 1.2px white;
+  -webkit-text-stroke: 0.8px white;
+  z-index: 2; /* 추가 */
+  position: relative; /* 추가 */
 }
