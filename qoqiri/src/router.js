@@ -4,6 +4,9 @@ import ViewPost from "./pages/ViewPost";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
+import Mini from "./pages/Mini";
+import Apply from "./pages/Apply";
+import Review from "./pages/Review";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +27,18 @@ const router = createBrowserRouter([
         element: <ViewPost />,
       },
     ],
+  },
+  {
+    path: "/mini",
+    element: <Mini />,
+  },
+  {
+    path: "/apply",
+    element: <Apply />,
+  },
+  {
+    path: "/review",
+    element: <Review />,
   },
 ]);
 

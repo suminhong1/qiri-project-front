@@ -1,17 +1,21 @@
 .container {
   text-align: center;
   margin-top: 20px;
-  background-color: #ffcaae;
+  background-color: rgba(253, 236, 217, 0.973);
   width: 298px;
   height: 600px;
   border-radius: 3%;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 .header-sign {
+  display: flex;
+  justify-content: center;
   font-size: 15px;
   font-weight: bold;
   margin: 10px;
   padding: 10px;
+  text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
 .custom-card {
@@ -20,6 +24,7 @@
   transition: transform 0.5s ease-in-out;
   margin: 0 auto;
   text-align: left;
+  position: relative;
 }
 
 .custom-card.flipped {
@@ -29,17 +34,19 @@
 .card-front {
   width: 288px;
   height: 444px;
-  display: block;
-  position: relative;
   transform-style: preserve-3d;
-  right: 7px;
+  position: relative;
 }
 
-.card-front img {
-  margin-left: 10px;
+.card-front .main-image {
   width: 268px;
-  height: 350px;
+  height: 268px;
+  border-radius: 100%;
+  border: none;
   object-fit: cover;
+  box-sizing: border-box;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.39), 0 6px 6px rgba(0, 0, 0, 0.41);
 }
 
 .card-body {
@@ -52,16 +59,30 @@
   padding: 0;
 }
 
-.card-body p {
+.card-body h1 {
+  font-size: 30px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.p-text {
   font-size: 16px;
+  margin-left: 10px;
+  margin-top: 25px;
+  overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
+  text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
+  display: -webkit-box; /* WebKit 기반 브라우저에서 사용 */
+  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 (3줄 이상은 자름) */
+  white-space: normal;
+  -webkit-box-orient: vertical; /* 세로 방향으로 텍스트 배치 */
+  line-height: 1.4;
 }
 
 .card-back {
   width: 288px;
   height: 444px;
-  background: #ffcaae;
-  padding: 1rem;
+  background: rgba(253, 236, 217, 0.973);
   transform: scale(-1, 1);
+  margin-left: 6px;
   display: none;
   position: relative;
   transform-style: preserve-3d;
@@ -75,6 +96,7 @@
 .info-row {
   display: flex;
   margin-bottom: 10px;
+  padding: 8px;
 }
 
 .info-label {
@@ -83,7 +105,7 @@
 }
 
 .info-value {
-  flex: 3;
+  flex: 2;
   font-size: 16px;
 }
 
@@ -96,37 +118,41 @@
 }
 
 .front-applyBtn {
-  background-color: green;
+  background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
   margin-bottom: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.front-chatBtn {
-  background-color: blue;
+.apfront-infoBtn {
+  background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
 .back-applyBtn {
-  background-color: green;
+  background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
   margin-bottom: 10px;
   margin-left: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.back-chatBtn {
-  background-color: blue;
+.apback-infoBtn {
+  background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
   margin-left: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
