@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../login.css';
 
 const User = {
   email: 'test@example.com',
@@ -52,14 +53,13 @@ export default function Login() {
   };
 
   return (
-    <div className="page">
+    <div className="login-page">
       <div className="image">
         <img src="../resources/elephant.jpg" alt="로고" />
       </div>
       <div className="contentWrap">
         <div className="titleWrap">
-          
-          <br />
+          <br/>
         </div>
 
         <div className="inputTitle">이메일 주소</div>
