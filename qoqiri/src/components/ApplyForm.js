@@ -1,12 +1,24 @@
 import React, { useState } from "react";
 import "../css/ApplyForm.css";
+import Modal from "./modal";
 import son from "../assets/son.jpg";
 
 const ApplyForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
+  };
+
+  const handleImageClick = (index) => {
+    setIsModalOpen(true);
+    setCurrentImageIndex(index);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
   };
 
   const customButtonStyle = {
@@ -30,7 +42,12 @@ const ApplyForm = () => {
       <div className={`custom-card ${isFlipped ? "flipped" : ""}`}>
         <div className="card-front">
           <div>
-            <img className="main-image" src={son} alt="User" />
+            <img
+              className="main-image"
+              src={son}
+              alt="User"
+              onClick={() => handleImageClick(0)}
+            />
           </div>
           <div className="card-body">
             <h1>#이름#</h1>
@@ -62,37 +79,35 @@ const ApplyForm = () => {
               <div className="info-label">이름:</div>
               <div className="info-value">#사용자명#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">성별:</div>
               <div className="info-value">#성별#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">거주지:</div>
               <div className="info-value">#거주지#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">나이:</div>
               <div className="info-value">#나이#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">취미1:</div>
               <div className="info-value">#취미1#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">취미2:</div>
               <div className="info-value">#취미2#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">취미3:</div>
               <div className="info-value">#취미3#</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">취미4:</div>
-              <div className="info-value">#취미4#</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">취미5:</div>
-              <div className="info-value">#취미5#</div>
             </div>
           </div>
         </div>
@@ -114,6 +129,13 @@ const ApplyForm = () => {
           </button>
         </div>
       </div>
+      {isModalOpen && (
+        <Modal
+          images={[son]}
+          index={currentImageIndex}
+          close={handleModalClose}
+        />
+      )}
     </div>
   );
 };
