@@ -1,0 +1,87 @@
+.selected-category {
+  position: relative;
+  padding-top: 60px; 
+  padding-bottom: 30px;
+}
+
+.selected-category h2 {
+  position: absolute;
+  top: 20px;   
+  left: 120px auto;
+  margin: 0;   
+}
+
+.user-info-table {
+  width: 80%;
+  border-collapse: collapse;
+  margin-top: 10px; /* 표의 상단 가격 줄이기 */
+  margin-bottom: 80px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user-info-table th,
+.user-info-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: white;
+}
+
+/* 항목 칸 너비 설정 */
+.user-info-table th:nth-child(1),
+.user-info-table td:nth-child(1) {
+  width: 10%; 
+}
+
+/* 날짜 칸 너비 설정 */
+.user-info-table th:nth-child(2),
+.user-info-table td:nth-child(2) {
+  width: 15%; 
+}
+
+.user-info-table th:nth-child(3),
+.user-info-table td:nth-child(3) {
+  width: 75%;
+}
+
+.category-buttons {
+  text-align: center; /* 가로 중앙 정렬 */
+  margin-top: 300px;
+}
+
+.category-buttons button {
+  cursor: pointer;
+  padding: 20px;
+  background-color: white;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.pagination {
+  position: absolute;
+  bottom: 0; 
+  left: 50%; 
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+
+.pagination button {
+  margin: 0 5px; /* 페이지 버튼 사이의 간격 조절 */
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background-color: white;
+}
+
+.pagination button.active {
+  background-color: #FF9615; 
+  color: #fff;
+}
+
+  
+  
+  

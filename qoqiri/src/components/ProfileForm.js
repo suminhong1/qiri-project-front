@@ -72,37 +72,35 @@ const ProfileForm = () => {
               <div className="info-label">이름:</div>
               <div className="info-value">#사용자명#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">성별:</div>
               <div className="info-value">#성별#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">거주지:</div>
               <div className="info-value">#거주지#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">나이:</div>
               <div className="info-value">#나이#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">취미1:</div>
               <div className="info-value">#취미1#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">취미2:</div>
               <div className="info-value">#취미2#</div>
             </div>
+            <hr />
             <div className="info-row">
               <div className="info-label">취미3:</div>
               <div className="info-value">#취미3#</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">취미4:</div>
-              <div className="info-value">#취미4#</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">취미5:</div>
-              <div className="info-value">#취미5#</div>
             </div>
           </div>
         </div>

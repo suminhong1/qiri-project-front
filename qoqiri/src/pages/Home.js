@@ -1,5 +1,6 @@
 import "../css/Home.css";
 import CategoryType from "../components/CategoryType";
+import React from "react";
 
 const Home = () => {
   return (

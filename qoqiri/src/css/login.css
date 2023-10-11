@@ -1,11 +1,4 @@
 .login-page {
-  background-color: #FF9615;
-  width: 400px;
-  padding: 8% 0 0;
-  margin: auto;
-}
-
-.page {
   position: relative;
   background: #FFFFFF;
   max-width: 430px;
@@ -22,34 +15,27 @@
   font-size: 26px;
 font-weight: bold;
 color: #262626;
-
 }
-
 .contentWrap {
   margin-top: 26px;
   flex: 1;
 }
-
 .inputTitle {
   font-size: 12px;
 font-weight: 600;
 color: #262626;
-
 }
-
 .inputWrap {
   display: flex;
   border-radius: 8px;
   padding: 16px;
   margin-top: 8px;
   background-color: white;
-  border: 1px solid #e2e0e0;
- 
+  border: 1px solid #E2E0E0;
 }
 .inputWrap:focus-within {
   border: 1px solid #FF9615;
 }
-
 .input {
   width: 100%;
   outline: none;
@@ -58,11 +44,9 @@ border: none;
   font-size: 14px;
 font-weight: 400;
 }
-
 .input::placeholder {
-  color: #dadada;
+  color: #DADADA;
 }
-
 .bottomButton {
   width: 80%;
 height: 48px;
@@ -70,44 +54,64 @@ height: 48px;
   font-weight: bold;
   margin-bottom: 16px;
   cursor: pointer;
-}
-
-.bottomButton:disabled {
   background-color: #FF9615;
   color: white;
+  position: relative; /* 부모 요소로부터 상대 위치 설정 */
+  overflow: hidden; /* 내부 요소의 넘치는 부분을 숨김 */
 }
-
+@keyframes shine {
+  0% {
+    left: -100%; /* 시작 지점은 버튼 왼쪽 밖으로 이동 */
+  }
+  100% {
+    left: 100%; /* 종료 지점은 버튼 오른쪽 밖으로 이동 */
+  }
+}
+.bottomButton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shine 4s infinite; /* 애니메이션을 무한 반복 */
+  pointer-events: none; /* 마우스 이벤트를 가리킴 */
+}
+/* .bottomButton:disabled {
+  background-color: #FF9615;
+  color: white;
+} */
 .errorMessageWrap {
   margin-top: 8px;
-  color: #ef0000;
+  color: #EF0000;
   font-size: 12px;
 }
-
-
 .linksWrap {
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 16px;
 }
-
 .linksWrap a {
   text-decoration: none;
   color: #262626;
   font-weight: lighter; /* 글자 연하게 설정 */
   font-family: 'Arial', sans-serif;
   font-size: 12px;
-  
 }
-
 .linksWrap span {
   margin: 0 8px;
   color: #262626;
   font-size: 14px;
 }
-
 /* body {
-  background-color: #FF9615; 
+  background-color: #FF9615;
   margin: 0;
   padding: 0;
 } */

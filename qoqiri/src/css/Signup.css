@@ -1,5 +1,6 @@
 .form {
-  max-width: 500px;
+  max-width: 30vw;
+  min-width: 450px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f7f7f7;
@@ -54,8 +55,13 @@
   margin-top: 4px;
 }
 
-button[type="submit"] {
-  width: 80%;
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+.signup-form button[type="submit"] {
+  width: 500%;
   height: 48px;
   border: none;
   font-weight: bold;
@@ -66,21 +72,22 @@ button[type="submit"] {
   cursor: pointer;
 }
 
-button[type="submit"]:disabled {
+.signup-form button[type="submit"]:disabled {
   background-color: #FF7F38;
   color: white;
 }
 
 .form img {
   width: 5%;
-  height: auto; 
-  margin-bottom: 20px; 
+  height: auto;
+  margin-bottom: 20px;
 }
 
-/* .form-container { 
-  max-height: 1200px; 
-  overflow-y: auto; 
+/* .form-container {
+  max-height: 1200px;
+  overflow-y: auto;
 } */
+
 /* 스크롤바 관련 */
 
 .form-el.label-for-gender {
@@ -120,27 +127,24 @@ button[type="submit"]:disabled {
 
 /* 지역 선택창 조정 */
 .form-el select#location {
-  width: 30%; 
-  
+  width: 30%;
 }
 
 .form-el select#mbti {
-  width: 30%; 
+  width: 30%;
 }
 
 .form-el select:focus {
   border: 1px solid #FF9615;
 }
 
-
-
-.selectlike-box {  /* 관심주제 설정 관련 */
+.selectlike-box {
+  /* 관심주제 설정 관련 */
   display: flex;
   flex-wrap: wrap;
   gap: 3px;
   border-top: 1px solid #ccc;
   padding-top: 16px;
-  
 }
 
 .selectlike-box-item {
@@ -154,5 +158,5 @@ button[type="submit"]:disabled {
 }
 
 .selectlike-box-item.selected {
-  background-color: #FF9615; 
+  background-color: #FF9615;
 }
