@@ -1,17 +1,17 @@
-import '../css/BestPost.css';
+import '../css/PostComp.css';
 
-const BestPost = () => {
+const PostComp = () => {
     return (
         <>
             <article id="list">
-                <section id="postList" className="bestPost">
+                <section id="postList" className="justPost">
                     <a className="item" href="#">
-                        <div className="best">
+                        <div className="post">
                             <div className="titleContainer">
-                                <div className="category">[베스트글 카테고리]</div>
+                                <div className="category">[게시글 카테고리]</div>
                                 <div className="title"></div>{' '}
                                 <div className="text">
-                                    <div className="pre">[베스트글 제목]</div>
+                                    <div className="pre">[게시글 제목]</div>
                                     어느정도 내용
                                 </div>
                             </div>
@@ -32,21 +32,21 @@ const BestPost = () => {
                                 </div>
                                 <div className="dot">{/* :: after */}</div>
                                 <div className="likeCount">
-                                    <i className="like Icon">{/* ::before */}</i>
-                                    좋아요{/*아이콘*/}
+                                    <span className="like Icon">👍</span>
+                                    {/*나중에 이모티콘 수정*/}
                                 </div>
                             </div>
                         </div>
                     </a>
                 </section>
-                <section id="postList" className="bestPost">
+                <section id="postList" className="justPost">
                     <a className="item" href="#">
-                        <div className="best">
+                        <div className="post">
                             <div className="titleContainer">
-                                <div className="category">[베스트글 카테고리]</div>
+                                <div className="category">[게시글 카테고리]</div>
                                 <div className="title"></div>{' '}
                                 <div className="text">
-                                    <div className="pre">[베스트글 제목]</div>
+                                    <div className="pre">[게시글 제목]</div>
                                     어느정도 내용
                                 </div>
                             </div>
@@ -67,8 +67,7 @@ const BestPost = () => {
                                 </div>
                                 <div className="dot">{/* :: after */}</div>
                                 <div className="likeCount">
-                                    <i className="like Icon">{/* ::before */}</i>
-                                    좋아요{/*아이콘*/}
+                                    <span className="like Icon">👍</span>
                                 </div>
                             </div>
                         </div>
@@ -79,4 +78,4 @@ const BestPost = () => {
     );
 };
 
-export default BestPost;
+export default PostComp;

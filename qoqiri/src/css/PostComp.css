@@ -1,0 +1,117 @@
+section {
+    display: block;
+    margin: 0;
+    font: inherit;
+    border: 0;
+}
+#postList {
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 1em;
+    padding: 0 10px;
+}
+#postList .item a {
+    background-color: black;
+}
+
+#postList .item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid;
+}
+
+#postList .item .best {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#postList .item .titleContainer {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    overflow: hidden;
+}
+#postList .item .category {
+    box-sizing: border-box;
+    padding: 4px 6px;
+    margin-right: 8px;
+    font-size: 0.9em;
+    color: black;
+    word-break: keep-all;
+    white-space: nowrap;
+    background-color: #ff7f38;
+    border: solid 1px;
+    border-radius: 6px;
+}
+
+#postList .item .title {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: solid 1px;
+}
+
+#postList .item .titleContainer .text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+}
+
+#postList .item .title .pre {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    vertical-align: baseline;
+    border: 0;
+}
+
+#postList .item .best .commentCount {
+    color: black;
+    font-size: 0.7em;
+}
+#postList .item .titleContainer .commentCount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    margin-left: 5px;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 3px;
+}
+
+#postList .item .etc {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 2px 0;
+    font-size: 0.8em;
+    color: gray;
+    white-space: nowrap;
+}
+#postList .etc .nickName,
+.viewCount {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    vertical-align: baseline;
+    border: 0;
+}
+
+.dot {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 100%;
+}
+
+#postList .item .etc .likeCount {
+    color: #000;
+}

@@ -62,18 +62,18 @@ const StyledHeader = styled.header`
     outline: none;
   }
 
-  .header-sign {
+  .header-user {
     display: flex;
     justify-content: center;
     margin-right: 30px;
     margin-top: 15px;
   }
 
-  .header-sign :hover {
+  .header-user :hover {
     color: #ff7f38;
   }
 
-  .header-sign a {
+  .header-user a {
     padding: 5px;
     color: gray;
   }
@@ -115,13 +115,13 @@ const Header = () => {
             />
           </button>
         </div>
-        <div className="header-sign">
+        <div className="header-user">
           <a href="/" className="login">
             로그인
           </a>
         </div>
-        <div className="header-sign">
-          <a href="/" className="login">
+        <div className="header-user">
+          <a href="/" className="join">
             회원가입
           </a>
         </div>

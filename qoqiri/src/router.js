@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Mini from "./pages/Mini";
 import Apply from "./pages/Apply";
 import Review from "./pages/Review";
+import MatchingBoard from "./pages/MatchingBoard";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "ViewPost",
         element: <ViewPost />,
+      },
+      {
+        path: "matchingboard",
+        element: <MatchingBoard />,
       },
     ],
   },
