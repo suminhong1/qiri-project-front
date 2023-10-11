@@ -16,7 +16,7 @@ const UserInfoPage = () => {
     '차단한 사용자',
   ];
   const [categoryData, setCategoryData] = useState([]);
-  const [userCategoryData, setUserCategoryData] = useState([]); // 내정보 카테고리 데이터
+  const [userCategoryData, setUserCategoryData] = useState([]);
 
   useEffect(() => {
     const data = Array.from({ length: 250 }, (_, i) => `데이터 ${i + 1}`);
@@ -29,7 +29,6 @@ const UserInfoPage = () => {
     }
     setSelectedCategory(category);
     setCurrentPage(1);
-
     const filteredData = categoryData.filter((item) => item.includes(category));
     setUserCategoryData(filteredData);
   };
@@ -54,45 +53,23 @@ const UserInfoPage = () => {
         ))}
       </div>
       <div className="selected-category">
-        {selectedCategory === '내가 쓴 글' ? (
-          <div>
-            <h2>{selectedCategory}</h2>
-            <table className="user-info-table">
-              <thead>
-                <tr>
-                  <th>항목</th>
-                  <th>날짜</th>
-                  <th>내용</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div>
-            <h2>{selectedCategory}</h2>
-            <table className="user-info-table">
-              <thead>
-                <tr>
-                  <th>항목</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <table className="user-info-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>날짜</th>
+              <th>내용</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.map((item, index) => (
+              <tr key={index}>
+                <td>{item}</td> // 실제 데이터 삽입 부분
+    
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {selectedCategory && (

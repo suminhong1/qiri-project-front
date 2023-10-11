@@ -1,5 +1,6 @@
 .form {
-  max-width: 500px;
+  max-width: 30vw;  
+  min-width: 450px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f7f7f7;

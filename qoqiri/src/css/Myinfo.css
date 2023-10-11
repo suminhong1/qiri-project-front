@@ -7,14 +7,14 @@
 .selected-category h2 {
   position: absolute;
   top: 20px;   
-  left: 120px;
+  left: 120px auto;
   margin: 0;   
 }
 
 .user-info-table {
   width: 80%;
   border-collapse: collapse;
-  margin-top: 10px; /* 표의 상단 간격을 줄입니다. */
+  margin-top: 10px; /* 표의 상단 가격 줄이기 */
   margin-bottom: 80px;
   margin-left: auto;
   margin-right: auto;
@@ -25,6 +25,23 @@
   border: 1px solid #ddd;
   padding: 10px;
   background-color: white;
+}
+
+/* 항목 칸 너비 설정 */
+.user-info-table th:nth-child(1),
+.user-info-table td:nth-child(1) {
+  width: 10%; 
+}
+
+/* 날짜 칸 너비 설정 */
+.user-info-table th:nth-child(2),
+.user-info-table td:nth-child(2) {
+  width: 15%; 
+}
+
+.user-info-table th:nth-child(3),
+.user-info-table td:nth-child(3) {
+  width: 75%;
 }
 
 .category-buttons {
@@ -65,6 +82,7 @@
   color: #fff;
 }
 
+  
   
   
   
