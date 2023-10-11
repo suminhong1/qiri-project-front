@@ -71,15 +71,20 @@ const StyledHeader = styled.header`
     justify-content: center;
     margin-right: 30px;
     margin-top: 15px;
+    height: 35px;
+    background-color: transparent;
+    border: none;
+    color: gray;
+    font-size: 1rem;
+  }
+
+  .header-user .login,
+  .header-user .join {
+    color: gray;
   }
 
   .header-user :hover {
-    color: #ff7f38;
-  }
-
-  .header-user a {
-    padding: 5px;
-    color: gray;
+    color: black;
   }
 `;
 
