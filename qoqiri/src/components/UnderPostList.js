@@ -33,6 +33,9 @@ const UnderPostList = () => {
                 <div className="item listHeader">
                     <div className="info2">
                         <div className="titleContainer">
+                            <div className="categoryContainer">
+                                <span className="underListCategory">카테고리</span>
+                            </div>
                             <span className="title">
                                 <span className="text1">제목</span>
                             </span>
@@ -65,7 +68,7 @@ const UnderPostList = () => {
                                         }}
                                     /> */}
                                 </div>
-                                {/* <span className="category">{post.category}</span> */}
+                                <span className="category">{post.category}</span>
                                 <span className="title">
                                     {/* <span className="text">[기타취미] &nbsp;</span> */}
                                     <span className="text2">{post.postTitle}</span>
@@ -73,7 +76,8 @@ const UnderPostList = () => {
                                 </span>
                             </div>
                             <div className="etc1">
-                                <div className="nickName">{post.userInfo}</div>
+                                {console.log(post)}
+                                <div className="nickName">{post.userInfo.userNickname}</div>
                                 <div className="dot"></div>
                                 <div className="datetime field">{post.postDate}</div>
                                 <div className="dot"></div>
@@ -82,7 +86,7 @@ const UnderPostList = () => {
                                 </div>
 
                                 <div className="dot"></div>
-                                <div className="likeCount number">{/* <i className="like">{post.likeCount}</i> */}</div>
+                                {/* <div className="likeCount number"><i className="like">{post.likeCount}</i></div> */}
                             </div>
                         </div>
                     </a>
