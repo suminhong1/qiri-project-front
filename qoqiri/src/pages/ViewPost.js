@@ -1,7 +1,26 @@
 import '../css/ViewPost.css';
+import logo from '../assets/logo.png';
 import UnderPostList from '../components/UnderPostList';
+import PageNation from '../components/PageNation';
+import Counter from '../components/Counter';
+import RightModal from '../components/RightModal';
+import NavBtn from '../components/NavBtn';
+import { faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
 const ViewPost = () => {
+    const [bookMark, setBookMark] = useState(false);
+    // const [likeCount, setLikeCount] = useState(0);
+    const handleBookMark = () => {
+        setBookMark(!bookMark);
+        if (bookMark) {
+            alert('게시물이 저장됐습니다.');
+        } else {
+            alert('게시물 저장이 해제됐습니다.');
+        }
+    };
+
     return (
         <>
             <main id="main">
@@ -11,9 +30,20 @@ const ViewPost = () => {
                     <input type="hidden" className="ogImage" value />
                     <input type="hidden" className="url" value />
                     <div className="back">
-                        <a href="#">코끼리끼리 그리고 대충 아이콘</a>
+                        <div className="bestBox">
+                            {/*홈버튼 쪼끔 수정 */}
+                            <a href="http://localhost:3000/">
+                                {/*Link to로 수정할거*/}
+                                <span className="gobest">Best</span>
+                                <img
+                                    src={logo}
+                                    className="ViewPost-logo"
+                                    alt="logo"
+                                    style={{ height: '30px', width: 'auto' }}
+                                />
+                            </a>
+                        </div>
                     </div>
-
                     <div className="item">
                         <div className="info">
                             <div className="titleContainer">
@@ -35,7 +65,10 @@ const ViewPost = () => {
                                     <div className="dot"></div>
                                     <div className="viewCount">안에 svg랑 path 넣어줘야함</div>
                                     <div className="dot"></div>
-                                    <div className="likeCount">이미지파일이랑 따봉갯수</div>
+                                    <div className="likeCount">👍{/*여기도 카운팅 올라가는건 나중에 생각하자*/}</div>
+                                </div>
+                                <div className="right">
+                                    <RightModal></RightModal>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +77,7 @@ const ViewPost = () => {
           출처 :<a href="#" target="_blank"></a>
         </div> */}
                     <div className="customHtml"></div>
-                    <div className="content ck-contetnt">
+                    <div className="bestContent">
                         <p>100년만에 한번 나올까말까한 희대의 프로그래머</p>
                         <p>홍수민씨의 은퇴식을 시작하겠습니다</p>
                     </div>
@@ -52,12 +85,23 @@ const ViewPost = () => {
                     <div className="customHtml"></div>
 
                     <div className="likeContainer">
-                        <button id="like" className="like">
-                            <span>코하하</span>
-                        </button>
-                        <button id="scrap" className="scrap">
-                            스크랩
-                        </button>
+                        <div id="like" className="like">
+                            <Counter></Counter> {/*count={likeCount} setCount={setLikeCount}*/}
+                        </div>
+                        <div
+                            onClick={() => {
+                                handleBookMark();
+                            }}
+                        >
+                            <div type="button" className="scrap">
+                                <div className="scp">스크랩</div>
+                                {bookMark ? (
+                                    <FontAwesomeIcon icon={faBookmark} style={{ color: 'thistle' }} className="sc" />
+                                ) : (
+                                    <FontAwesomeIcon icon={faBookmark} style={{ color: '#ff7f38' }} className="sc" />
+                                )}
+                            </div>
+                        </div>
                     </div>
                     <div className="listAndEdit">
                         <div className="left">
@@ -78,7 +122,7 @@ const ViewPost = () => {
                     </div>
                     <div className="commentTitle">댓글</div>
                     <div className="comments" id="comments">
-                        더 추가해야함
+                        여러 이용자들이 댓글쓴거랑 베댓 나오게해야함
                     </div>
                     <div className="commentContainer" id="newComment">
                         <div className="contentContainer">
@@ -88,6 +132,7 @@ const ViewPost = () => {
                                 </div>
                                 <div className="submit">
                                     <button type="button" onClick="login(event)">
+                                        {/*로그인 폼뜨게*/}
                                         로그인
                                     </button>
                                 </div>
@@ -103,53 +148,9 @@ const ViewPost = () => {
                         <div className="right"></div>
                     </div>
                 </div>
+                <NavBtn />
                 <UnderPostList />
-
-                <section id="modal" className="class">
-                    <div class="container share">
-                        <div class="urlLink">
-                            <a href="#">{/* <img /> */}</a>
-                        </div>
-                    </div>
-                    <div class="container removeArticle">
-                        <form action="#" method="POST">
-                            <input type="password" name="password" placeholder="비밀번호" maxlength="100" />
-                            <button>확인</button>
-                        </form>
-                    </div>
-                    <div class="container removeComment">
-                        <input type="password" name="password" placeholder="비밀번호" maxlength="100" />
-                        <button>확인</button>
-                    </div>
-                    <div class="container report">
-                        <input type="hidden" name="type" />
-                        <input type="hidden" name="id" />
-                        <textarea name="content" placeholder="신고 내용" maxlength="200"></textarea>
-                        <button>확인</button>
-                    </div>
-
-                    <div class="userBan">
-                        <input type="hidden" name="type" />
-                        <input type="hidden" name="id" />
-                        <textarea name="content" placeholder="차단 사유" maxlength="200"></textarea>
-                        <button>확인</button>
-                    </div>
-                    <div class="container ban">
-                        <input type="hidden" name="id" />
-                        <input type="hidden" name="type" />
-                        <input type="hidden" name="contentId" />
-                        <input type="text" name="duration" placeholder="정지 기간 (일)" maxlength="3" />
-                        <input type="text" name="reason" placeholder="정지 사유" maxlength="100" />
-                        <input
-                            type="text"
-                            name="displayReason"
-                            placeholder="사용자에게 보일 정지 사유"
-                            maxlength="100"
-                        />
-                        <button>확인</button>
-                    </div>
-                    <div className="background"></div>
-                </section>
+                <PageNation />
             </main>
         </>
     );

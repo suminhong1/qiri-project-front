@@ -1,285 +1,285 @@
 h2 {
-  font-size: 1.2em;
-  font-weight: 700;
+    font-size: 1.2em;
+    font-weight: 700;
 }
 
 .bottomBoardListHeader {
-  width: 100%;
-  padding: 10px 15px;
-  text-align: left;
+    width: 100%;
+    padding: 10px 15px;
+    text-align: left;
 }
 
 #boardList {
-  box-sizing: border-box;
-  width: 100%;
-  font-size: 1em;
+    box-sizing: border-box;
+    width: 100%;
+    font-size: 1em;
 }
 
 #boardList,
 #title,
 .searchAndWrite {
-  padding: 0 10px;
+    padding: 0 10px;
 }
 
-#boardList .simple .item1 {
-  padding: 5px;
+#boardList .simple .underList {
+    padding: 5px;
 }
 
 #boardList .titleContainer,
 #boardList .titleContainer .title {
-  justify-content: center;
-  width: 100%;
+    justify-content: center;
+    width: 100%;
 }
 
 #boardList .titleContainer {
-  display: flex;
-  align-items: center;
-  padding: 2px 0;
-  overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+    overflow: hidden;
 }
 
 #boardList.simple .title .text {
-  font-size: 0.9em;
+    font-size: 0.9em;
 }
 
 #boardList.simple .etc1 {
-  width: 30%;
+    width: 30%;
 }
 
 #boardList .etc1 {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  padding: 2px;
-  white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 2px;
+    white-space: nowrap;
 }
 
 #boardList .etc1 .nickName {
-  display: inline-flex;
-  flex: 4;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.9em;
+    display: inline-flex;
+    flex: 4;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
 }
 
 #boardList .etc1 > div {
-  text-align: center;
+    text-align: center;
 }
 
 #boardList .etc1 .field {
-  flex: 3;
-  font-size: 0.9em;
+    flex: 3;
+    font-size: 0.9em;
 }
 
 #boardList .etc1 .number {
-  flex: 2;
-  font-size: 0.9em;
+    flex: 2;
+    font-size: 0.9em;
 }
 
 #boardList .info2 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  /* box-shadow: var(--shadows-gray-blue-3-5-b-box-shadow, 0px 2px 5px 0px rgba(238, 10, 10, 0.03)); */
-  background-color: antiquewhite;
-  font-size: 0.8em;
-  font-weight: bold;
-  padding: 7px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* box-shadow: var(--shadows-gray-blue-3-5-b-box-shadow, 0px 2px 5px 0px rgba(238, 10, 10, 0.03)); */
+    background-color: antiquewhite;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 7px;
 }
 
 #boardList .titleContainer {
-  max-width: 70%;
+    max-width: 70%;
 }
 
-#boardList .item1 .category {
-  box-sizing: border-box;
-  padding: 4px 6px;
-  margin-right: 8px;
-  font-size: 0.9em;
-  color: white;
-  word-break: keep-all;
-  white-space: nowrap;
-  background-color: #ff7f38;
-  border: solid 1px #ff7f38;
-  border-radius: 6px;
+#boardList .underList .category {
+    box-sizing: border-box;
+    padding: 4px 6px;
+    margin-right: 8px;
+    font-size: 0.9em;
+    color: white;
+    word-break: keep-all;
+    white-space: nowrap;
+    background-color: #ff7f38;
+    border: solid 1px #ff7f38;
+    border-radius: 6px;
 }
 
-#boardList .simple .item1 .title {
-  width: 100%;
+#boardList .simple .underList .title {
+    width: 100%;
 }
 
 #boardList .info2 .titleContainer .title .text1 {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 
-  /*이거 건들면 ㅈ됨 ㄹㅇ 전체 컴포넌트 페이지 태그들 이름 다시 정리해야함*/
+    /*이거 건들면 ㅈ됨 ㄹㅇ 전체 컴포넌트 페이지 태그들 이름 다시 정리해야함*/
 }
 
-#boardList .simple .item1 .title .text .text1 {
-  font-size: 0.9em;
+#boardList .simple .underList .title .text .text1 {
+    font-size: 0.9em;
 }
 
-#boardList .item1 .title .text .text1 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+#boardList .underList .title .text .text1 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .listHeader {
-  height: 55px;
+    height: 55px;
 }
-#boardList .item1 .etc1 .dot {
-  display: none;
+#boardList .underList .etc1 .dot {
+    display: none;
 }
 
 .text2 {
-  font-size: 0.9em;
+    font-size: 0.9em;
 }
 
-#boardList .item1 .title .commentCount,
-#boardList .simple .item1 .commentCount {
-  /* display: flex; */
-  align-items: center;
-  justify-content: center;
-  height: 16px;
-  margin-left: 5px;
-  font-size: 0.9em;
-  font-weight: 700;
-  color: #ff7f38;
-  text-align: center;
-  border-radius: 3px;
+#boardList .underList .title .commentCount,
+#boardList .simple .underList .commentCount {
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    margin-left: 5px;
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #ff7f38;
+    text-align: center;
+    border-radius: 3px;
 }
 
-#boardList .item1 .info3 {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 0 20px;
+#boardList .underList .info3 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 20px;
 }
 
-#boardList .item1 .info3 i {
-  margin-right: 4px;
-  background-repeat: no-repeat;
-  background-position: center;
+#boardList .underList .info3 i {
+    margin-right: 4px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .pagination {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 32px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 32px 0;
 }
 
 .pagination .prev,
 .pagination .next {
-  box-sizing: border-box;
-  width: 50px;
-  height: 30px;
+    box-sizing: border-box;
+    width: 50px;
+    height: 30px;
 }
 
 .pagination .prev a,
 .pagination .next a {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 
-  background-color: #ff7f38;
-  color: white;
+    background-color: #ff7f38;
+    color: white;
 }
 
 .pagination .number {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .pagination .number a {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  margin: 0 5px;
-  border-right: 0;
-  border-radius: 4px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 5px;
+    border-right: 0;
+    border-radius: 4px;
 }
 
 .pagination .number .selected {
-  color: white;
-  background-color: #ff7f38;
+    color: white;
+    background-color: #ff7f38;
 }
 
 .pagination a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 .pagination .number .notSelected {
-  background-color: rgba(8, 8, 8, 0.05);
+    background-color: rgba(8, 8, 8, 0.05);
 }
 #list .searchAndWrite {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: 30px 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px 0;
 }
 
 #list .searchAndWrite form {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  width: 440px;
-  height: 40px;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 440px;
+    height: 40px;
 }
 
 #list .searchAndWrite .search {
-  display: flex;
-  flex: 1;
+    display: flex;
+    flex: 1;
 }
 
 #list .searchAndWrite .search select {
-  box-sizing: border-box;
-  height: 40px;
-  padding: 0 20px;
-  font-size: 1em;
-  color: white;
-  cursor: pointer;
-  border: 0;
-  border-radius: 8px;
-  appearance: none;
-  background-color: #ff7f38;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    font-size: 1em;
+    color: white;
+    cursor: pointer;
+    border: 0;
+    border-radius: 8px;
+    appearance: none;
+    background-color: #ff7f38;
 }
 
 #list .searchAndWrite .search input {
-  box-sizing: border-box;
-  flex: 1;
-  height: 40px;
-  padding: 0 16px;
-  margin: 0 14px;
-  font-size: 1em;
-  background-color: #ff7f38;
-  color: whitesmoke;
-  border: 0;
-  border-radius: 8px;
+    box-sizing: border-box;
+    flex: 1;
+    height: 40px;
+    padding: 0 16px;
+    margin: 0 14px;
+    font-size: 1em;
+    background-color: #ff7f38;
+    color: whitesmoke;
+    border: 0;
+    border-radius: 8px;
 }
 
 #list .searchAndWrite .search button {
-  box-sizing: border-box;
-  height: 40px;
-  padding: 0 20px;
-  margin: 0;
-  font-size: 0.9em;
-  color: white;
-  background-color: #ff7f38;
-  border: 0;
-  border-radius: 8px;
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    margin: 0;
+    font-size: 0.9em;
+    color: white;
+    background-color: #ff7f38;
+    border: 0;
+    border-radius: 8px;
 }
 
 #list .searchAndWrite .write {
-  display: flex;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
 }

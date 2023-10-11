@@ -27,7 +27,7 @@ const router = createBrowserRouter([
         element: <ViewPost />,
       },
       {
-        path: "matchingboard",
+        path: "matchingBoard",
         element: <MatchingBoard />,
       },
     ],
