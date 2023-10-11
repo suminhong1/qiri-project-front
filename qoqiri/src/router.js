@@ -20,11 +20,11 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        index: true,
+        path: "bestPost",
         element: <BestPost />,
       },
       {
-        path: "ViewPost",
+        path: "viewPost",
         element: <ViewPost />,
       },
       {

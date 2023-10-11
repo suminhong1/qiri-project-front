@@ -3,6 +3,10 @@ import title from "../assets/title.JPG";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { userSave, userLogout } from "../store/userSlice";
 
 const StyledHeader = styled.header`
   * {
@@ -80,6 +84,26 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => {
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => {
+    return state.user;
+  });
+
+  useEffect(() => {
+    const save = localStorage.getItem("user");
+    if (Object.keys(user).length === 0 && save !== null) {
+      dispatch(userSave(JSON.parse(save)));
+    }
+  }, []);
+
+  const logout = () => {
+    console.log("logout!");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(userLogout());
+  };
+
   return (
     <StyledHeader>
       <div className="header">
@@ -115,16 +139,28 @@ const Header = () => {
             />
           </button>
         </div>
-        <div className="header-user">
-          <a href="/" className="login">
-            로그인
-          </a>
-        </div>
-        <div className="header-user">
-          <a href="/" className="join">
-            회원가입
-          </a>
-        </div>
+        {/* 로그인이 되어 있지 않은 경우 */}
+        {Object.keys(user).length === 0 && (
+          <>
+            <button className="header-user">
+              <Link to="/Login" className="login">
+                로그인
+              </Link>
+            </button>
+            <button className="header-user">
+              <Link to="/Signup" className="join">
+                회원가입
+              </Link>
+            </button>
+          </>
+        )}
+
+        {/* 로그인이 되어 있는 경우 */}
+        {Object.keys(user).length !== 0 && (
+          <button onClick={logout} className="header-user">
+            로그아웃
+          </button>
+        )}
       </div>
     </StyledHeader>
   );
