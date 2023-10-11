@@ -9,7 +9,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="navbar">
+      <div className="navbar2">
         <div className="navbar-home">
           <a href="/" className="homeButton">
             <GrHomeRounded />
