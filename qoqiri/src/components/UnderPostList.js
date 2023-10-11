@@ -6,24 +6,23 @@ import { useEffect, useState } from 'react';
 const instance = axios.create({
     baseURL: 'http://localhost:8080/qiri/',
 });
-// export const getPosts = async () => {
-//     return await instance.get('posts');
-//  백단 오류 해결돼야함
-// };
+
+// 백단 서버에 요청하는거
+export const getPosts = async () => {
+    return await instance.get('post');
+};
 
 const UnderPostList = () => {
     const [posts, setPosts] = useState([]);
+
+    // 프론트단에서 보여질수있게 하는것
+    const postAPI = async () => {
+        const result = await getPosts();
+        setPosts(result.data);
+    };
+    // useEffect API는 좀더 공부해야함
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await instance.get('posts');
-                console.log('Response Data: ', response.data);
-                setPosts(response.data);
-            } catch (error) {
-                console.error('Error : ', error);
-            }
-        };
-        fetchData();
+        postAPI();
     }, []);
 
     return (
@@ -46,11 +45,13 @@ const UnderPostList = () => {
                         </div>
                     </div>
                 </div>
+
                 {posts.map((post) => (
-                    <a key={post.postSeq} className="underList" href="#">
+                    <a key={post.postSEQ} className="underList" href="#">
                         <div className="info3">
                             <div className="titleContainer">
                                 <div className="bestImage">
+                                    {/*백단 도메인의 필드명이랑 이름맞춰줘야함 */}
                                     {/* 여기 이제 url 방식으로 Blob써서 넣어야함 */}
                                     {/* <img
                                         src={kkorang}
@@ -67,23 +68,21 @@ const UnderPostList = () => {
                                 {/* <span className="category">{post.category}</span> */}
                                 <span className="title">
                                     {/* <span className="text">[기타취미] &nbsp;</span> */}
-                                    <span className="text2">{post.title}</span>
-                                    <span className="commentCount">{post.commentCount}</span>
+                                    <span className="text2">{post.postTitle}</span>
+                                    {/* <span className="commentCount">{post.commentCount}</span> */}
                                 </span>
                             </div>
                             <div className="etc1">
-                                <div className="nickName">{post.writer}</div>
+                                <div className="nickName">{post.userInfo}</div>
                                 <div className="dot"></div>
-                                <div className="datetime field">{post.date}</div>
+                                <div className="datetime field">{post.postDate}</div>
                                 <div className="dot"></div>
                                 <div className="viewCount number">
-                                    <i className="view">{post.viewCount}</i>
+                                    <i className="view">{post.postView}</i>
                                 </div>
 
                                 <div className="dot"></div>
-                                <div className="likeCount number">
-                                    <i className="like">{post.likeCount}</i>
-                                </div>
+                                <div className="likeCount number">{/* <i className="like">{post.likeCount}</i> */}</div>
                             </div>
                         </div>
                     </a>
