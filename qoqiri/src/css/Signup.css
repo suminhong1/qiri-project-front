@@ -1,6 +1,6 @@
 .form {
-  max-width: 30vw;
-  min-width: 450px;
+  max-width: 35vw;
+  min-width: 500px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f7f7f7;
@@ -10,7 +10,6 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  top: -150px;
 }
 
 .form h3 {
@@ -77,18 +76,16 @@
   color: white;
 }
 
+.show-password-button {
+  border: 2px solid #e2e0e0;
+  margin-bottom: 5px;
+}
+
 .form img {
   width: 5%;
   height: auto;
   margin-bottom: 20px;
 }
-
-/* .form-container {
-  max-height: 1200px;
-  overflow-y: auto;
-} */
-
-/* 스크롤바 관련 */
 
 .form-el.label-for-gender {
   margin-top: 16px; /* 간격 조절 */

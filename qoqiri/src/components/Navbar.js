@@ -2,10 +2,18 @@ import alarm from "../assets/alarm.gif";
 import { useState, useEffect } from "react";
 import "../css/Navbar.css";
 import { GrHomeRounded } from "react-icons/gr";
+import { useLocation } from 'react-router-dom';
 
 const Navbar = () => {
+  const location = useLocation();
   const [bell, setBell] = useState([false]);
   useEffect(() => {}, [bell]);
+
+  // 회원가입, 로그인 페이지일때 네비바 숨김
+  if (location.pathname === "/Login" || location.pathname === "/signup") {
+    return null;
+  }
+
 
   return (
     <>

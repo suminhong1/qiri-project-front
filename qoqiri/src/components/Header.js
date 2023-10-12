@@ -7,6 +7,9 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { userSave, userLogout } from "../store/userSlice";
+import { useLocation } from 'react-router-dom';
+
+
 
 const StyledHeader = styled.header`
   * {
@@ -89,8 +92,10 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => {
-  const dispatch = useDispatch();
 
+  const location = useLocation();
+  const dispatch = useDispatch();
+  
   const user = useSelector((state) => {
     return state.user;
   });
@@ -108,6 +113,10 @@ const Header = () => {
     localStorage.removeItem("user");
     dispatch(userLogout());
   };
+
+  if (location.pathname === "/Login" || location.pathname === "/signup") {
+    return null; // 로그인, 회원가입 페이지일때 헤더 숨김
+  }
 
   return (
     <StyledHeader>
@@ -153,7 +162,7 @@ const Header = () => {
               </Link>
             </button>
             <button className="header-user">
-              <Link to="/Signup" className="join">
+              <Link to="/signup" className="join">
                 회원가입
               </Link>
             </button>
