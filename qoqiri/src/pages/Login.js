@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import '../login.css';
-
-const User = {
-  email: 'test@example.com',
-  pw: 'test2323@@@'
-};
+import '../css/login.css';
+import axios from 'axios';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
-
   const [emailValid, setEmailValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
@@ -44,18 +39,31 @@ export default function Login() {
     }
   };
 
-  const onClickConfirmButton = () => {
-    if (email === User.email && pw === User.pw) {
-      alert('로그인 성공.');
-    } else {
-      alert('등록되지 않은 회원입니다.');
+  const onClickConfirmButton = async () => {
+    try {
+        const response = await axios.post("http://localhost:8080/qiri/userInfo/signin", { 
+            id: email, 
+            pwd: pw 
+        });
+
+        const data = response.data;
+
+        if (response.status === 200) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify({ id: data.id, nickname: data.nickname }));
+            alert('로그인 성공.');
+        } else {
+            alert(data.message || '로그인 실패');
+        }
+    } catch (error) {
+        alert('로그인 중 오류 발생');
     }
-  };
+};
 
   return (
     <div className="login-page">
       <div className="image">
-        <img src="../resources/elephant.jpg" alt="로고" />
+        <img src="../assets/logo.png" alt="로고" />
       </div>
       <div className="contentWrap">
         <div className="titleWrap">
@@ -108,7 +116,7 @@ export default function Login() {
         <div>
           <button
             onClick={onClickConfirmButton}
-            disabled={notAllow}
+            disabled={notAllow} // 빈 칸 & 잘못 입력한 경우에도 로그인버튼 활성화 방지 
             className="bottomButton"
           >
             로그인

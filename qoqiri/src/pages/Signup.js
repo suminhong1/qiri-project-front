@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import '../Signup.css';
+import '../css/Signup.css';
+
+import axios from 'axios';
 
 function SignUp() {
   // 상태 변수들
@@ -231,53 +233,40 @@ function SignUp() {
   ];
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); // 폼 기본 제출 방지
 
-    // 모든 데이터를 서버로 전송하는 코드를 작성
     const userData = {
-      id,
-      name,
-      password,
-      email,
-      phone,
-      birth,
-      selectedGender,
-      selectedBloodType,
-      location,
-      mbti,
-      selectlike,
+        id,
+        name,
+        password,
+        email,
+        phone,
+        birth,
+        selectedGender,
+        selectedBloodType,
+        location,
+        mbti,
+        selectlike,
     };
 
-    // axios를 사용하여 서버로 데이터 전송
-    fetch('/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          alert('회원가입이 완료되었습니다.');
+    try {
+        const response = await axios.post("http://localhost:3000/userInfo/signup", userData);
+
+        if (response.status === 200) {
+            alert('회원가입이 완료되었습니다.');
         } else {
-          alert('회원가입에 실패했습니다.');
+            alert(response.data.message || '회원가입에 실패했습니다.');
         }
-      })
-      .catch((error) => {
+    } catch (error) {
         console.error(error);
         alert('오류가 발생했습니다. 다시 시도해주세요.');
-      });
-  };
-
+    }
+};
 
   return (
     <>
       <div className="form-container">
-        <img src="/elephant.png" alt="로고이미지" style={{ width: '100px', height: 'auto' }} />
-        <img src="/title.jpg" alt="타이틀" style={{ width: '150px', height: 'auto', marginTop: '-200px' }} />
-
         <div className="form">
           <div className="form-el">
             <label htmlFor="id">아이디</label> <br />

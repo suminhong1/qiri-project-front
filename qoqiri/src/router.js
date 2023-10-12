@@ -7,6 +7,8 @@ import Home from "./pages/Home";
 import Mini from "./pages/Mini";
 import Apply from "./pages/Apply";
 import MatchingBoard from "./pages/MatchingBoard";
+import Login from "./pages/Login";
+import SignUp from "./pages/Signup";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,14 @@ const router = createBrowserRouter([
       {
         path: "matchingBoard",
         element: <MatchingBoard />,
+      },
+      { 
+        path: "Login",
+        element: <Login />,
+      },
+      { 
+        path: "Signup",
+        element: <SignUp />,
       },
     ],
   },
