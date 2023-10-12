@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../css/login.css';
 import axios from 'axios';
+import logo from "../assets/logo.png";
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -63,7 +64,7 @@ export default function Login() {
   return (
     <div className="login-page">
       <div className="image">
-        <img src="../assets/logo.png" alt="로고" />
+        <img src={logo} style={{height: "100px"}} alt="로고" />
       </div>
       <div className="contentWrap">
         <div className="titleWrap">
