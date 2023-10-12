@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "../css/CategoryType.css";
-
-const instance = axios.create({
-  baseURL: "http://localhost:8080/qiri/",
-});
-
-export const getCategoryTypes = async () => {
-  return await instance.get("categoryType");
-};
+import { getCategoryTypes } from "../api/categoryType";
 
 const CategoryType = () => {
   const [categoryTypes, setCategoryTypes] = useState([]);
