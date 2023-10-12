@@ -132,7 +132,9 @@ h2 {
     display: none;
 }
 
-.text2 {
+.underPostListTitle {
+    display: flex;
+    justify-content: center;
     font-size: 0.9em;
 }
 

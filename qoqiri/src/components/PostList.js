@@ -1,35 +1,62 @@
 import '../css/UnderPostList.css';
 import kkorang from '../assets/kkorang3.jpg';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { getBoards, getPosts } from '../api/post';
+import { Link } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 
-const instance = axios.create({
-    baseURL: 'http://localhost:8080/qiri/',
-});
-
-// 백단 서버에 요청하는거
-export const getPosts = async () => {
-    return await instance.get('post');
-};
-
-const UnderPostList = () => {
+const PostList = () => {
     const [posts, setPosts] = useState([]);
+    const [boards, setBoards] = useState([]);
+    const [page, setPage] = useState(1);
+    const [board, setBoard] = useState(null);
 
     // 프론트단에서 보여질수있게 하는것
-    const postAPI = async () => {
-        const result = await getPosts();
+    // post API에서 getBoards랑 getPosts를 둘다써야함 강사님 유튜브 home.js랑 watch.js참고
+
+    const boardAPI = async () => {
+        const result = await getBoards();
+        setBoards(result.data);
+    };
+
+    const PostAPI = async () => {
+        const result = await getPosts(page, board);
+        console.log(result.data);
+        setPosts([...posts, ...result.data]);
+    };
+
+    const boardFilterAPI = async () => {
+        const result = await getPosts(page, board);
         setPosts(result.data);
     };
+
     // useEffect API는 좀더 공부해야함
     useEffect(() => {
-        postAPI();
+        boardAPI();
+        PostAPI();
     }, []);
+
+    useEffect(() => {
+        if (board != null) {
+            console.log(board);
+            PostAPI();
+        }
+    }, [board]);
+
+    const filterBoard = (e) => {
+        e.preventDefault();
+        const href = e.target.href.split('/');
+        console.log(href[href.length - 1]);
+        setBoard(parseInt(href[href.length - 1]));
+        setPage(1);
+        setPosts([]);
+    };
 
     return (
         <>
             <h2 className="bottomBoardListHeader"> 전체글</h2>
-
-            <section id="boardList" className="simple">
+            {/*map 처리 아래 수정해야함*/}
+            <section id="boardList" className="simple" key={posts?.postSEQ}>
                 <div className="item listHeader">
                     <div className="info2">
                         <div className="titleContainer">
@@ -50,7 +77,7 @@ const UnderPostList = () => {
                 </div>
 
                 {posts.map((post) => (
-                    <a key={post.postSEQ} className="underList" href="#">
+                    <a key={post?.postSEQ} className="underList" href="#">
                         <div className="info3">
                             <div className="titleContainer">
                                 <div className="bestImage">
@@ -68,10 +95,10 @@ const UnderPostList = () => {
                                         }}
                                     /> */}
                                 </div>
-                                <span className="category">{post.category}</span>
+
                                 <span className="title">
-                                    {/* <span className="text">[기타취미] &nbsp;</span> */}
-                                    <span className="text2">{post.postTitle}</span>
+                                    <span className="category">{post.category}</span>
+                                    <span className="underPostListTitle">{post.postTitle}</span>
                                     {/* <span className="commentCount">{post.commentCount}</span> */}
                                 </span>
                             </div>
@@ -96,4 +123,4 @@ const UnderPostList = () => {
     );
 };
 
-export default UnderPostList;
+export default PostList;

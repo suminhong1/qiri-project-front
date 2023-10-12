@@ -1,13 +1,16 @@
 import '../css/ViewPost.css';
 import logo from '../assets/logo.png';
-import UnderPostList from '../components/UnderPostList';
+import PostList from '../components/PostList';
 import PageNation from '../components/PageNation';
 import Counter from '../components/Counter';
 import RightModal from '../components/RightModal';
 import NavBtn from '../components/NavBtn';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getPost } from '../api/post';
 
 const ViewPost = () => {
     const [bookMark, setBookMark] = useState(false);
@@ -21,14 +24,31 @@ const ViewPost = () => {
         }
     };
 
+    const { id } = useParams();
+    const dispatch = useDispatch();
+
+    const [post, setPost] = useState(null);
+    //댓글 관련 추가해야됨
+
+    const getPostAPI = async () => {
+        const result = await getPost(id);
+        setPost(result.data);
+    };
+
+    useEffect(() => {
+        getPostAPI();
+    }, []);
+
+    //댓글관련 유즈이펙트 추가해야됨
+
     return (
         <>
             <main id="main">
-                <div className="body">
-                    <input type="hidden" className="title" value="수민이의 은퇴식" />
+                <div className="body" key={post?.postSEQ}>
+                    {/* <input type="hidden" className="title" value="수민이의 은퇴식" />
                     <input type="hidden" className="ogContent" value />
                     <input type="hidden" className="ogImage" value />
-                    <input type="hidden" className="url" value />
+                    <input type="hidden" className="url" value /> */}
                     <div className="back">
                         <div className="bestBox">
                             {/*홈버튼 쪼끔 수정 */}
@@ -53,17 +73,17 @@ const ViewPost = () => {
                                     </span>
                                 </div>
                                 <span>
-                                    <h1>수민이의 은퇴식</h1>
+                                    <h1>{post?.postTitle}</h1>
                                 </span>
                             </div>
                             <div className="etc">
                                 <div className="left">
-                                    <div className="userImage" style={{}}></div>
-                                    <div className="nickName">홍수민</div>
+                                    <div className="userImage"></div>
+                                    <div className="nickName">{post?.userInfo.userNickname}</div>
                                     <div className="dot"></div>
-                                    <div className="dateTime">n일전</div>
+                                    <div className="dateTime">{post?.postDate}</div>
                                     <div className="dot"></div>
-                                    <div className="viewCount">안에 svg랑 path 넣어줘야함</div>
+                                    <div className="viewCount">{post?.postView}</div>
                                     <div className="dot"></div>
                                     <div className="likeCount">👍{/*여기도 카운팅 올라가는건 나중에 생각하자*/}</div>
                                 </div>
@@ -78,8 +98,7 @@ const ViewPost = () => {
         </div> */}
                     <div className="customHtml"></div>
                     <div className="bestContent">
-                        <p>100년만에 한번 나올까말까한 희대의 프로그래머</p>
-                        <p>홍수민씨의 은퇴식을 시작하겠습니다</p>
+                        <p>{post?.postContent} 이게 지금 업로드한 컨텐츠 내용임</p>
                     </div>
                     <div className="html"></div>
                     <div className="customHtml"></div>
@@ -93,13 +112,23 @@ const ViewPost = () => {
                                 handleBookMark();
                             }}
                         >
-                            <div type="button" className="scrap">
-                                <div className="scp">스크랩</div>
-                                {bookMark ? (
-                                    <FontAwesomeIcon icon={faBookmark} style={{ color: 'thistle' }} className="sc" />
-                                ) : (
-                                    <FontAwesomeIcon icon={faBookmark} style={{ color: '#ff7f38' }} className="sc" />
-                                )}
+                            <div>
+                                <div type="button" className="scrap">
+                                    <div className="scp">스크랩</div>
+                                    {bookMark ? (
+                                        <FontAwesomeIcon
+                                            icon={faBookmark}
+                                            style={{ color: 'thistle' }}
+                                            className="sc"
+                                        />
+                                    ) : (
+                                        <FontAwesomeIcon
+                                            icon={faBookmark}
+                                            style={{ color: '#ff7f38' }}
+                                            className="sc"
+                                        />
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,7 +160,7 @@ const ViewPost = () => {
                                     <textarea disabled name="content" placeholder="로그인 해주세요"></textarea>
                                 </div>
                                 <div className="submit">
-                                    <button type="button" onClick="login(event)">
+                                    <button type="button">
                                         {/*로그인 폼뜨게*/}
                                         로그인
                                     </button>
@@ -149,7 +178,7 @@ const ViewPost = () => {
                     </div>
                 </div>
                 <NavBtn />
-                <UnderPostList />
+                <PostList />
                 <PageNation />
             </main>
         </>
