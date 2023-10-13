@@ -81,7 +81,7 @@ const ViewPost = () => {
                                     <div className="userImage"></div>
                                     <div className="nickName">{post?.userInfo.userNickname}</div>
                                     <div className="dot"></div>
-                                    <div className="dateTime">{post?.postDate}</div>
+                                    <div className="dateTime">{post?.postDate.substr(5, 5)}일</div>
                                     <div className="dot"></div>
                                     <div className="viewCount">{post?.postView}</div>
                                     <div className="dot"></div>

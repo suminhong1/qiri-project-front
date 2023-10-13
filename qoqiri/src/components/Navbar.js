@@ -114,7 +114,6 @@ const Navbar = () => {
 
   useEffect(() => {}, [bell]);
 
-  // 회원가입, 로그인 페이지일때 네비바 숨김
   if (location.pathname === "/Login" || location.pathname === "/signup") {
     return null;
   }
@@ -131,15 +130,15 @@ const Navbar = () => {
           <a href="/" className="matchingPost">
             끼리모집
           </a>
-          <a href="/" className="matchingSearch">
+          <Link to="/matchingBoard" className="matchingSearch">
             끼리찾기
-          </a>
+          </Link>
           <a href="/" className="review">
             끼리후기
           </a>
-          <a href="/" className="community">
+          <Link to="/bestPost" className="post">
             커뮤니티
-          </a>
+          </Link>
         </div>
         <div
           className="navbar-alarm"

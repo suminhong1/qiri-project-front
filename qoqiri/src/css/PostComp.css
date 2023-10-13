@@ -10,17 +10,33 @@ section {
     font-size: 1em;
     padding: 0 10px;
 }
-#postList .item a {
-    background-color: black;
+
+#postList .info2 {
+    display: flex;
+    /* flex-direction: row; */
+    justify-content: space-between;
+    align-items: center;
+    background-color: antiquewhite;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 9px;
 }
+
+/* #postList .item a {
+    background-color: black;
+} */
 
 #postList .item {
+    box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 0 20px;
+    border-radius: 12px;
 }
 
-#postList .item .best {
+#postList .item .post {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -49,7 +65,6 @@ section {
     display: flex;
     align-items: center;
     overflow: hidden;
-    border: solid 1px;
 }
 
 #postList .item .titleContainer .text {
@@ -60,25 +75,24 @@ section {
     align-items: center;
 }
 
-#postList .item .title .pre {
+/* #postList .item .title .pre {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
     font: inherit;
     vertical-align: baseline;
     border: 0;
-}
+} */
 
-#postList .item .best .commentCount {
+#postList .item .post .titleContainer .commentCount {
     color: black;
     font-size: 0.7em;
 }
-#postList .item .titleContainer .commentCount {
+#postList .item .commentCount {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     height: 16px;
-    margin-left: 5px;
     font-weight: 700;
     text-align: center;
     border-radius: 3px;
@@ -93,16 +107,24 @@ section {
     color: gray;
     white-space: nowrap;
 }
-#postList .etc .nickName,
-.viewCount {
+
+#postList .etc .nickName {
     box-sizing: border-box;
     padding: 0;
-    margin: 0;
+    margin-right: 20px;
     font: inherit;
     vertical-align: baseline;
     border: 0;
 }
 
+#postList .etc .viewCount {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 8px;
+    font: inherit;
+    vertical-align: baseline;
+    border: 0;
+}
 .dot {
     position: relative;
     display: flex;
@@ -114,4 +136,43 @@ section {
 
 #postList .item .etc .likeCount {
     color: #000;
+}
+#postList.simple .etc1 {
+    width: 30%;
+}
+
+#postList .etc1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    white-space: nowrap;
+}
+
+#postList .etc1 .nickName {
+    display: inline-flex;
+    flex: 4;
+    align-items: center;
+    justify-content: left;
+    font-size: 0.9em;
+}
+
+#postList .etc1 > div {
+    text-align: center;
+}
+
+#postList .etc1 .field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+}
+
+#postList .etc1 .number {
+    flex: 2;
+    font-size: 0.9em;
+}
+
+#postList .info2 .titleContainer .title .text1 {
+    margin-left: 200px;
 }

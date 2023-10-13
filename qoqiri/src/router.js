@@ -10,6 +10,7 @@ import MatchingBoard from "./pages/MatchingBoard";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import UserInfoPage from "./pages/Myinfo";
+import Post from "./pages/Post";
 
 const router = createBrowserRouter([
   {
@@ -25,12 +26,17 @@ const router = createBrowserRouter([
         path: "bestPost",
         element: <BestPost />,
       },
+
       {
         path: "viewPost/:id",
         element: <ViewPost />,
       },
       {
         path: "matchingBoard",
+        element: <MatchingBoard />,
+      },
+      {
+        path: "matchingBoard/:id",
         element: <MatchingBoard />,
       },
       {
@@ -45,6 +51,10 @@ const router = createBrowserRouter([
         path: "myinfo",
         element: <UserInfoPage />,
       },
+      {
+        path: "Post/:id",
+        element: <Post />,
+      },
     ],
   },
   {
@@ -56,5 +66,4 @@ const router = createBrowserRouter([
     element: <Apply />,
   },
 ]);
-
 export default router;

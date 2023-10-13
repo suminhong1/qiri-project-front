@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import '../css/PageNation.css';
 
-const PageNation = () => {
+const Page = () => {
+    // const [pagenation, setPagenation] = useState(1);
+
+    // }
     return (
         <>
+            {/* //         <PageNation maxPage={49} currentPage={pagenation} setCurrentPage={setPagenation} visiblePageCount={5} /> */}
             <section className="pagination">
                 <div className="prev"></div>
                 <div className="number">
@@ -19,7 +24,6 @@ const PageNation = () => {
                     <a href="#" className="notSelected">
                         5
                     </a>
-                    {/*여기도 맵으로?*/}
                 </div>
                 <div className="next">
                     <a href="#">다음</a>
@@ -46,4 +50,4 @@ const PageNation = () => {
         </>
     );
 };
-export default PageNation;
+export default Page;
