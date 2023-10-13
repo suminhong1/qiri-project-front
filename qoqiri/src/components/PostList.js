@@ -1,4 +1,4 @@
-import '../css/UnderPostList.css';
+import '../css/PostList.css';
 import kkorang from '../assets/kkorang3.jpg';
 import { useEffect, useState } from 'react';
 import { getBoards, getPosts } from '../api/post';
@@ -77,13 +77,21 @@ const PostList = () => {
                 </div>
 
                 {posts.map((post) => (
-                    <a key={post?.postSEQ} className="underList" href="#">
+                    <Link to={`/viewpost/${post.postSEQ}`} className="underList">
                         <div className="info3">
                             <div className="titleContainer">
+                                <span className="title">
+                                    <span className="category">{post?.category}</span>
+                                    <span className="PostListTitle">{post?.postTitle}</span>
+                                    <span className="commentCount">{post?.commentCount}</span>
+                                </span>
+                            </div>
+                            <div className="etc1">
+                                {console.log(post)}
                                 <div className="bestImage">
                                     {/*백단 도메인의 필드명이랑 이름맞춰줘야함 */}
                                     {/* 여기 이제 url 방식으로 Blob써서 넣어야함 */}
-                                    {/* <img
+                                    <img
                                         src={kkorang}
                                         style={{
                                             maxWidth: '100%',
@@ -93,30 +101,23 @@ const PostList = () => {
                                             backgroundSize: 'cover',
                                             borderRadius: '3px',
                                         }}
-                                    /> */}
+                                    />
                                 </div>
-
-                                <span className="title">
-                                    <span className="category">{post.category}</span>
-                                    <span className="underPostListTitle">{post.postTitle}</span>
-                                    {/* <span className="commentCount">{post.commentCount}</span> */}
-                                </span>
-                            </div>
-                            <div className="etc1">
-                                {console.log(post)}
-                                <div className="nickName">{post.userInfo.userNickname}</div>
+                                <div className="nickName">{post?.userInfo.userNickname}</div>
                                 <div className="dot"></div>
-                                <div className="datetime field">{post.postDate}</div>
+                                <div className="datetime field">{post?.postDate.substr(5, 5)}</div>
                                 <div className="dot"></div>
                                 <div className="viewCount number">
-                                    <i className="view">{post.postView}</i>
+                                    <i className="view">{post?.postView}</i>
                                 </div>
-
                                 <div className="dot"></div>
-                                {/* <div className="likeCount number"><i className="like">{post.likeCount}</i></div> */}
+                                <div className="likeCount number">
+                                    <i className="like">{post?.likeCount}👍</i>
+                                </div>
+                                <div className="dot"></div>
                             </div>
                         </div>
-                    </a>
+                    </Link>
                 ))}
             </section>
         </>

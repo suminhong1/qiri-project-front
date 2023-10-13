@@ -1,44 +1,57 @@
-/* 
- #list {
-   background-color: #ff7f38; 
-}
-*/
-
 section {
     display: block;
     margin: 0;
     font: inherit;
     border: 0;
 }
-#postList {
+#bestList {
     box-sizing: border-box;
     width: 100%;
     font-size: 1em;
     padding: 0 10px;
 }
-#postList .item a {
-    background-color: black;
-}
 
-#postList .item {
-    /* display: flex; */
+#bestList .info2 {
+    display: flex;
+    /* flex-direction: row; */
     justify-content: space-between;
-    border-bottom: 1px solid;
+    align-items: center;
+    background-color: antiquewhite;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 9px;
 }
 
-#postList .item .best {
+#bestList .item {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    padding: 0 20px;
+    border-radius: 12px;
+}
+
+#bestList .item .best {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
 
-#postList .item .titleContainer {
+#bestList .item .titleContainer {
     display: flex;
-    /* align-items: center; */
+    align-items: center;
     padding: 2px 0;
     overflow: hidden;
 }
-#postList .item .category {
+
+#bestList .item .best {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#bestList .item .category {
     box-sizing: border-box;
     padding: 4px 6px;
     margin-right: 8px;
@@ -51,14 +64,13 @@ section {
     border-radius: 6px;
 }
 
-#postList .item .title {
+#bestList .item .title {
     display: flex;
     align-items: center;
     overflow: hidden;
-    /* border: solid 1px; */
 }
 
-#postList .item .titleContainer .text {
+#bestList .item .titleContainer .text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -66,7 +78,7 @@ section {
     align-items: center;
 }
 
-#postList .item .title .pre {
+#bestList .item .title .pre {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -75,11 +87,11 @@ section {
     border: 0;
 }
 
-#postList .item .best .commentCount {
+#bestList .item .best .commentCount {
     color: black;
     font-size: 0.7em;
 }
-#postList .item .titleContainer .commentCount {
+#bestList .item .titleContainer .commentCount {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,7 +102,7 @@ section {
     border-radius: 3px;
 }
 
-#postList .item .etc {
+#bestList .item .etc {
     display: flex;
     align-items: center;
     justify-content: start;
@@ -99,7 +111,7 @@ section {
     color: gray;
     white-space: nowrap;
 }
-#postList .etc .nickName,
+/* #bestList .etc .nickName,
 .viewCount {
     box-sizing: border-box;
     padding: 0;
@@ -107,7 +119,7 @@ section {
     font: inherit;
     vertical-align: baseline;
     border: 0;
-}
+} */
 
 .dot {
     position: relative;
@@ -118,6 +130,60 @@ section {
     height: 100%;
 }
 
-#postList .item .etc .likeCount {
+#bestList .item .etc .likeCount {
     color: #000;
+}
+
+#bestList .etc1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    white-space: nowrap;
+}
+
+#bestList .etc1 .nickName {
+    display: inline-flex;
+    flex: 4;
+    align-items: center;
+    justify-content: left;
+    font-size: 0.9em;
+}
+
+#bestList .etc1 > div {
+    text-align: center;
+}
+
+#bestList .etc1 .field {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9em;
+}
+
+#bestList .etc1 .number {
+    flex: 2;
+    font-size: 0.9em;
+}
+
+#bestList .info2 .titleContainer .title .text1 {
+    margin-left: 200px;
+}
+
+#bestList .etc .nickName {
+    box-sizing: border-box;
+    padding: 0;
+    margin-right: 20px;
+    font: inherit;
+    vertical-align: baseline;
+    border: 0;
+}
+
+#bestList .etc .viewCount {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 8px;
+    font: inherit;
+    vertical-align: baseline;
+    border: 0;
 }
