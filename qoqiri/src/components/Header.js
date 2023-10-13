@@ -7,9 +7,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { userSave, userLogout } from "../store/userSlice";
-import { useLocation } from 'react-router-dom';
-
-
+import { useLocation } from "react-router-dom";
 
 const StyledHeader = styled.header`
   * {
@@ -92,10 +90,9 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => {
-
   const location = useLocation();
   const dispatch = useDispatch();
-  
+
   const user = useSelector((state) => {
     return state.user;
   });
@@ -171,9 +168,16 @@ const Header = () => {
 
         {/* 로그인이 되어 있는 경우 */}
         {Object.keys(user).length !== 0 && (
-          <button onClick={logout} className="header-user">
-            로그아웃
-          </button>
+          <>
+            <button onClick={logout} className="header-user">
+              로그아웃
+            </button>
+            <button className="header-user">
+              <Link to="/myinfo" className="myInfo">
+                내정보
+              </Link>
+            </button>
+          </>
         )}
       </div>
     </StyledHeader>

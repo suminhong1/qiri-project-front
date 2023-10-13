@@ -2,18 +2,122 @@ import alarm from "../assets/alarm.gif";
 import { useState, useEffect } from "react";
 import "../css/Navbar.css";
 import { GrHomeRounded } from "react-icons/gr";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { Link } from "react-router-dom";
+
+function OffCanvasExample({ show, handleClose, ...props }) {
+  return (
+    <Offcanvas show={show} onHide={handleClose} {...props}>
+      <Offcanvas.Header closeButton>
+        <Offcanvas.Title style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+          내 소식
+        </Offcanvas.Title>
+      </Offcanvas.Header>
+      <Offcanvas.Body>
+        <div className="notice">
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+          <Link className="notice-link">
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
+              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
+            </div>
+          </Link>
+        </div>
+      </Offcanvas.Body>
+    </Offcanvas>
+  );
+}
 
 const Navbar = () => {
   const location = useLocation();
   const [bell, setBell] = useState([false]);
+  const user = useSelector((state) => state.user);
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   useEffect(() => {}, [bell]);
 
   // 회원가입, 로그인 페이지일때 네비바 숨김
   if (location.pathname === "/Login" || location.pathname === "/signup") {
     return null;
   }
-
 
   return (
     <>
@@ -37,17 +141,21 @@ const Navbar = () => {
             커뮤니티
           </a>
         </div>
-
-        <div className="navbar-alarm">
-          <a href="/" className="alarm">
-            <img
-              src={alarm}
-              style={{ height: "40px", width: "auto" }}
-              alt="alarm"
-            />
-          </a>
+        <div
+          className="navbar-alarm"
+          onClick={handleShow}
+          /*style={{
+            visibility: Object.keys(user).length === 0 ? "hidden" : "visible",
+          }}*/ // 회원가입 완성되면 풀어야됨
+        >
+          <img
+            src={alarm}
+            style={{ height: "40px", width: "auto" }}
+            alt="alarm"
+          />
         </div>
       </div>
+      <OffCanvasExample show={show} handleClose={handleClose} placement="end" />
     </>
   );
 };

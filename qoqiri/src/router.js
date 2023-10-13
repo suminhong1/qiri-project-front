@@ -9,6 +9,7 @@ import Apply from "./pages/Apply";
 import MatchingBoard from "./pages/MatchingBoard";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
+import UserInfoPage from "./pages/Myinfo";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "Signup",
         element: <SignUp />,
+      },
+      {
+        path: "myinfo",
+        element: <UserInfoPage />,
       },
     ],
   },

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import '../Myinfo.css';
-import Paging from '../components/Paging';
+import React, { useState, useEffect } from "react";
+import "../css/Myinfo.css";
+import Paging from "../components/Paging";
 
 const UserInfoPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const categories = [
-    '회원정보 변경',
-    '내가 쓴 글',
-    '내가 쓴 댓글',
-    '좋아요 한 글',
-    '좋아요 한 댓글',
-    '스크랩 한 글',
-    '차단한 사용자',
+    "회원정보 변경",
+    "내가 쓴 글",
+    "내가 쓴 댓글",
+    "좋아요 한 글",
+    "좋아요 한 댓글",
+    "스크랩 한 글",
+    "차단한 사용자",
   ];
   const [categoryData, setCategoryData] = useState([]);
   const [userCategoryData, setUserCategoryData] = useState([]);
@@ -24,7 +24,7 @@ const UserInfoPage = () => {
   }, []);
 
   const handleCategoryClick = (category) => {
-    if (category === '회원정보 변경') {
+    if (category === "회원정보 변경") {
       return;
     }
     setSelectedCategory(category);
@@ -35,7 +35,10 @@ const UserInfoPage = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = userCategoryData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = userCategoryData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <div className="category-page">
@@ -45,7 +48,8 @@ const UserInfoPage = () => {
             key={index}
             onClick={() => handleCategoryClick(category)}
             style={{
-              backgroundColor: selectedCategory === category ? '#FF9615' : 'white',
+              backgroundColor:
+                selectedCategory === category ? "#FF9615" : "white",
             }}
           >
             {category}
@@ -65,7 +69,6 @@ const UserInfoPage = () => {
             {currentItems.map((item, index) => (
               <tr key={index}>
                 <td>{item}</td> // 실제 데이터 삽입 부분
-    
               </tr>
             ))}
           </tbody>
