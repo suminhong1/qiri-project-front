@@ -150,6 +150,11 @@ a {
   margin-left: 10px;
   margin-right: 30px;
   /* font-family: "NanumSquareRoundEB"; */
+  /* 추가된 스타일 */
+  max-width: 300px; /* 허용할 최대 너비 설정 */
+  white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+  text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
 }
 
 .nickname {
@@ -184,6 +189,10 @@ a {
   color: #757575;
   line-height: 18px;
   /* font-family: "NanumSquareRoundL"; */
+  /* 추가된 스타일 */
+  max-height: 100px; /* 허용할 최대 높이 설정 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+  text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
 }
 .comment-count {
   width: 20px;
@@ -297,4 +306,19 @@ button {
   font-size: 20px;
   cursor: pointer;
   color: #333; /* 선택 사항: 필요한대로 색상을 변경하세요. */
+}
+
+/* comment */
+
+.comment textarea {
+  border-style: none;
+  min-width: 750px;
+  min-height: 10px;
+  resize: none;
+}
+
+.comment button {
+  border-style: none;
+  cursor: pointer;
+  min-height: 10px;
 }
