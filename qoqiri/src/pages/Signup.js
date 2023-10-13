@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import '../css/Signup.css';
-
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../css/Signup.css';
+import { getCategoryTypes } from '../api/categoryType';
+import { getCategories } from '../api/category';
+import { getPlaceTypes } from '../api/placeType';
 
-function SignUp() {
+const SignUp = () => {
   // 상태 변수들
   const [id, setId] = useState("");
   const [isIdAvailable, setIsIdAvailable] = useState(true);
@@ -21,22 +23,26 @@ function SignUp() {
   const [selectlike, setSelectlike] = useState([]); // 관심사
 
   // 알림창(에러 메시지)
-  const [idMessage, setIdMessage] = React.useState("");
-  const [nameMessage, setNameMessage] = React.useState("");
-  const [passwordMessage, setPasswordMessage] = React.useState("");
-  const [passwordConfirmMessage, setPasswordConfirmMessage] = React.useState("");
-  const [emailMessage, setEmailMessage] = React.useState("");
-  const [phoneMessage, setPhoneMessage] = React.useState("");
-  const [birthMessage, setBirthMessage] = React.useState("");
+  const [idMessage, setIdMessage] = useState("");
+  const [nameMessage, setNameMessage] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
+  const [phoneMessage, setPhoneMessage] = useState("");
+  const [birthMessage, setBirthMessage] = useState("");
 
   // 유효성 검사
-  const [isId, setIsId] = React.useState(false);
-  const [isname, setIsName] = React.useState(false);
-  const [isPassword, setIsPassword] = React.useState(false);
-  const [isPasswordConfirm, setIsPasswordConfirm] = React.useState(false);
-  const [isEmail, setIsEmail] = React.useState(false);
-  const [isPhone, setIsPhone] = React.useState(false);
+  const [isId, setIsId] = useState(false);
+  const [isName, setIsName] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
+  const [isPhone, setIsPhone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // 관심사 관련
+  const [categories, setCategories] = useState([]);
+  const [categoryTypes, setCategoryTypes] = useState([]);
 
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {
@@ -131,8 +137,8 @@ function SignUp() {
     }
   };
 
-   // 비밀번호 보이기 토글 핸들러
-   const toggleShowPassword = () => {
+  // 비밀번호 보이기 토글 핸들러
+  const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
@@ -214,55 +220,75 @@ function SignUp() {
     }
   };
 
+  useEffect(() => {
+    const fetchCategoryTypes = async () => {
+      const result = await getCategoryTypes();
+      setCategoryTypes(result.data);
+    };
 
-  const interestCategories = [
-    {
-      name: '엔터테인먼트 & 예술',
-      options: ['영화', '드라마', '음악', '미술'],
-    },
+    const fetchCategories = async () => {
+      const result = await getCategories();
+      console.log(result.data);
+      setCategories(result.data);
+    };
 
-    {
-      name: '스포츠',
-      options: ['축구', '야구', '농구', '서핑', '수영', '볼링', '러닝 & 산책', '헬스', '클라이밍', '테니스', '스키'],
-    },
+    fetchCategoryTypes();
+    fetchCategories();
+  }, []);
 
-    {
-      name: '게임',
-      options: ['롤', '피파', '스타', '메이플', '배그', '스팀 게임', '던파', '오버워치'],
-    },
-  ];
+  const getCategoriesByType = (ctSEQ) => {
+    return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ
+    );
+  };
 
+  const [placeTypes, setPlaceTypes] = useState([]);
+
+  const placeTypeAPI = async () => {
+    const result = await getPlaceTypes();
+    setPlaceTypes(result.data);
+  };
+
+  useEffect(() => {
+    placeTypeAPI();
+  }, []);
+
+  const [interestCategories, setInterestCategories] = useState([]);
+
+  useEffect(() => {
+
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // 폼 기본 제출 방지
 
     const userData = {
-        id,
-        name,
-        password,
-        email,
-        phone,
-        birth,
-        selectedGender,
-        selectedBloodType,
-        location,
-        mbti,
-        selectlike,
+      id,
+      name,
+      password,
+      email,
+      phone,
+      birth,
+      selectedGender,
+      selectedBloodType,
+      location,
+      mbti,
+      selectlike,
+      location,
     };
 
     try {
-        const response = await axios.post("http://localhost:3000/userInfo/signup", userData);
+      const response = await axios.post("http://localhost:8080/userInfo/signup", userData);
 
-        if (response.status === 200) {
-            alert('회원가입이 완료되었습니다.');
-        } else {
-            alert(response.data.message || '회원가입에 실패했습니다.');
-        }
+      if (response.status === 200) {
+        alert('회원가입이 완료되었습니다.');
+      } else {
+        alert(response.data.message || '회원가입에 실패했습니다.');
+      }
     } catch (error) {
-        console.error(error);
-        alert('오류가 발생했습니다. 다시 시도해주세요.');
+      console.error(error);
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
     }
-};
+  };
 
   return (
     <>
@@ -294,7 +320,7 @@ function SignUp() {
               type={showPassword ? "text" : "password"} // 비밀번호 보이기 입력에 따라 변경
               value={password}
               onChange={onChangePassword} />
-              <br></br>
+            <br></br>
             <button
               type="button"
               onClick={toggleShowPassword}
@@ -314,7 +340,7 @@ function SignUp() {
               type={showPassword ? "text" : "password"}
               value={passwordConfirm}
               onChange={onChangePasswordConfirm} />
-              <br></br>
+            <br></br>
             <button
               type="button"
               onClick={toggleShowPassword}
@@ -414,22 +440,9 @@ function SignUp() {
               onChange={handleLocationChange}
             >
               <option value="">선택하세요</option>
-              <option value="서울">서울</option>
-              <option value="인천">인천</option>
-              <option value="경기">경기</option>
-              <option value="강원">강원</option>
-              <option value="충북">충북</option>
-              <option value="충남">충남</option>
-              <option value="대구">대구</option>
-              <option value="경북">경북</option>
-              <option value="부산">부산</option>
-              <option value="울산">울산</option>
-              <option value="광주">광주</option>
-              <option value="대전">대전</option>
-              <option value="전북">전북</option>
-              <option value="전남">전남</option>
-              <option value="제주">제주</option>
-              <option value="기타">기타(해외 등)</option>
+              {placeTypes.map((placeType) => (
+                <option value={placeType.placeTypeName} key={placeType.placeTypeSEQ}>{placeType.placeTypeName}</option>
+              ))}
             </select>
           </div>
 
@@ -464,39 +477,40 @@ function SignUp() {
           <br></br>
 
           {/* 관심 주제 선택 양식 */}
-          <div class="interest-section">
+          <div className="interest-section">
             <div className="form-el">
-              <label>관심 주제 설정</label>
+              <label>관심 주제를 선택해주세요</label>
               <br />
-              {interestCategories.map((category) => (
-                <div key={category.name}>
-                  <div className="interest-category">{category.name}</div>
-                  <div className="selectlike-box">
-                    {category.options.map((interest) => (
-                      <div
-                        key={interest}
-                        className={`selectlike-box-item ${selectlike.includes(interest) ? 'selected' : ''
-                          }`}
-                        onClick={() => handleInterestClick(interest)}
-                      >
-                        {interest}
-                      </div>
-                    ))}
+              <div className="selectlike-box">
+                {categoryTypes.map(categoryType => (
+                  <div key={categoryType.ctSEQ}>
+                    <h3>{categoryType.ctName}</h3>
+                    <div className="box-options">
+                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
+                        <div
+                          key={category.categorySEQ}
+                          className={`selectlike-box-item ${selectlike.includes(category.categoryName) ? 'selected' : ''}`}
+                          onClick={() => handleInterestClick(category.categoryName)}
+                        >
+                          {category.categoryName}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
           <br />
           <br />
           <form onSubmit={handleSubmit} className="signup-form">
-          <button type="submit">가입하기</button>
+            <button type="submit">가입하기</button>
           </form>
         </div>
       </div>
     </>
   );
-}
+};
 
 export default SignUp;

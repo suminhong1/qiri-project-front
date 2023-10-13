@@ -3,7 +3,7 @@ import kkorang from '../assets/kkorang3.jpg';
 import { useEffect, useState } from 'react';
 import { getBoards, getPosts } from '../api/post';
 import { Link } from 'react-router-dom';
-import { useInView } from 'react-intersection-observer';
+//import { useInView } from 'react-intersection-observer';
 
 const PostList = () => {
     const [posts, setPosts] = useState([]);

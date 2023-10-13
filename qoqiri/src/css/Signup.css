@@ -131,29 +131,51 @@
   width: 30%;
 }
 
-.form-el select:focus {
-  border: 1px solid #FF9615;
+
+/* 관심사 선택 부분 */
+.interest-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 16px;
+}
+
+.interest-section .form-el label {
+  font-size: 25px; /* 원하는 크기로 조정하세요 */
 }
 
 .selectlike-box {
-  /* 관심주제 설정 관련 */
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
-  border-top: 1px solid #ccc;
-  padding-top: 16px;
+  gap: 40px;
+  margin-top: 8px;
+  
+}
+
+.box-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 16px;
 }
 
 .selectlike-box-item {
   font-style: inherit;
   margin: 5px;
-  padding: 5px 10px;
+  padding: 7px 10px;
   border: 1px solid #ccc;
   cursor: pointer;
   border-radius: 20px;
-  margin-bottom: 25px;
+  font-size: 13px;
 }
 
 .selectlike-box-item.selected {
   background-color: #FF9615;
+  color: white; 
+  border: 1px solid #FF9615;
+}
+
+.selectlike-box h3 {
+  font-size: 17px; 
+  color: #FF9615;
 }

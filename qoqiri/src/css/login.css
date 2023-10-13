@@ -2,8 +2,8 @@
   position: relative;
   background: #FFFFFF;
   max-width: 430px;
-  margin: 0 auto;
-  padding: 35px;
+  margin: auto;
+  padding: 20px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   margin: center;
@@ -11,7 +11,7 @@
 }
 
 .titleWrap {
-  margin-top: 87px;
+  margin-top: 40px;
   font-size: 26px;
 font-weight: bold;
 color: #262626;

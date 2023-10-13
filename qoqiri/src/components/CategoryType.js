@@ -21,17 +21,17 @@ const CategoryType = () => {
         {categoryTypes.map((categoryType) => (
           <section
             className="cTypeCard"
-            key={categoryType.ctSeq}
-            onMouseEnter={() => setHoveredCard(categoryType.ctSeq)}
+            key={categoryType.ctSEQ}
+            onMouseEnter={() => setHoveredCard(categoryType.ctSEQ)}
             onMouseLeave={() => setHoveredCard(null)}
             style={{
-              backgroundImage: `url(/categoryType_logo/${categoryType.ctSeq}.jpg)`,
+              backgroundImage: `url(/categoryType_logo/${categoryType.ctSEQ}.jpg)`,
             }}
           >
             <div
               className="overlay"
               style={{
-                opacity: hoveredCard === categoryType.ctSeq ? 0 : 1,
+                opacity: hoveredCard === categoryType.ctSEQ ? 0 : 1,
               }}
             ></div>
             <a href="/" className="cTypeText">
