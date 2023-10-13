@@ -7,3 +7,8 @@ const instance = axios.create({
 export const login = async (data) => {
   return await instance.post("signin", data);
 };
+
+export const getUser = async (userId) => {
+  const response = await instance.get(`${userId}`);
+  return response;
+};
