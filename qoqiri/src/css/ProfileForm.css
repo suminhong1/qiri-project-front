@@ -1,4 +1,4 @@
-.container {
+.pf-container {
   text-align: center;
   margin-top: 20px;
   background-color: rgba(253, 236, 217, 0.973);
@@ -8,7 +8,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
-.header-sign {
+.pf-header-sign {
   display: flex;
   justify-content: center;
   font-size: 15px;
@@ -18,26 +18,28 @@
   text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.custom-card {
+.pf-custom-card {
   width: 18rem;
   perspective: 1000px;
   transition: transform 0.5s ease-in-out;
+  margin: 0 auto;
   text-align: left;
   position: relative;
 }
 
-.custom-card.flipped {
+.pf-custom-card.flipped {
   transform: rotateY(180deg);
 }
 
-.card-front {
+.pf-card-front {
   width: 288px;
   height: 444px;
   transform-style: preserve-3d;
   position: relative;
 }
 
-.card-front .main-image {
+.pf-card-front .pf-main-image {
+  margin-left: 10px;
   width: 268px;
   height: 268px;
   border-radius: 100%;
@@ -48,53 +50,58 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.39), 0 6px 6px rgba(0, 0, 0, 0.41);
 }
 
-.card-body {
+.pf-card-body {
   padding: 1rem;
 }
 
-.card-body h3 {
-  font-size: 18px;
-  margin: 0;
-  padding: 0;
-}
-
-.card-body h1 {
-  margin-top: 20px;
+.pf-card-body h1 {
+  height: 30px;
   font-size: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
   font-weight: bold;
 }
-
-.pf-p-text {
-  font-size: 20px;
+.pf-text {
+  font-size: 18px;
   margin-left: 10px;
-  margin-top: 30px;
   overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
   text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
   display: -webkit-box; /* WebKit 기반 브라우저에서 사용 */
   -webkit-line-clamp: 3; /* 표시할 줄 수 설정 (3줄 이상은 자름) */
   white-space: normal;
   -webkit-box-orient: vertical; /* 세로 방향으로 텍스트 배치 */
-  line-height: 1.5;
+  line-height: 1.4;
+  height: 69px;
+  width: 230px;
 }
 
-.card-back {
+.pf-front-editBtn {
+  background-color: rgb(6, 6, 165);
+  border: none;
+  height: 40px;
+  color: white;
+  width: 278px;
+  margin-left: 5px;
+  margin-top: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+}
+.pf-card-back {
   width: 288px;
   height: 444px;
   background: rgba(253, 236, 217, 0.973);
   transform: scale(-1, 1);
+  margin-left: 6px;
   display: none;
   position: relative;
   transform-style: preserve-3d;
 }
 
-.info-row {
+.pf-info-row {
   display: flex;
-  margin-bottom: 10px;
-  padding: 8px;
+  margin-bottom: 8px;
+  padding: 7px;
 }
 
-.info-label {
+.pf-info-label {
   flex: 1;
   font-size: 16px;
 }
@@ -104,35 +111,92 @@
   font-size: 16px;
 }
 
-.custom-card.flipped .card-front {
+.pf-custom-card.flipped .pf-card-front {
   display: none;
 }
 
-.custom-card.flipped .card-back {
+.pf-custom-card.flipped .pf-card-back {
   display: block;
 }
 
-.front-infoBtn {
-  font-weight: bold;
-  font-size: large;
-  margin-top: 50px;
-  background-color: rgb(6, 6, 165);
+.pf-front-applyBtn {
+  margin-left: 4px;
+  background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
   color: white;
-  width: 274px;
+  width: 278px;
+  margin-bottom: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.back-infoBtn {
-  font-weight: bold;
-  font-size: large;
-  margin-top: 50px;
+.pf-front-infoBtn {
+  margin-top: 60px;
+  margin-left: 4px;
+  background-color: rgb(255, 167, 96);
+  border: none;
+  height: 40px;
+  color: white;
+  width: 278px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+}
+
+.pf-back-infoBtn {
+  background-color: rgb(255, 167, 96);
+  border: none;
+  height: 40px;
+  color: white;
+  width: 278px;
+  margin-left: 5px;
+  margin-top: 60px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+}
+
+.pf-back-editBtn {
+  position: relative;
+  bottom: 155px;
   background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
-  width: 274px;
-  margin-left: 14px;
+  width: 278px;
+  margin-left: 5px;
+  margin-top: 60px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+}
+
+.pf-container {
+  position: relative;
+  /* 기타 스타일 설정 */
+}
+
+.pf-back-upBtn {
+  position: absolute;
+  bottom: 50px; /* 원하는 위치에 따라 조절 */
+}
+
+.pf-back-saveBtn {
+  position: relative;
+  font-weight: bold;
+  top: 50px;
+  left: 20px;
+  width: 50px;
+  height: 30px;
+  color: white;
+  border: none;
+  background-color: rgb(255, 167, 96);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+}
+
+.pf-front-saveBtn {
+  position: relative;
+  font-weight: bold;
+  top: 110px;
+  left: 220px;
+  width: 50px;
+  height: 30px;
+  color: white;
+  border: none;
+  background-color: rgb(255, 167, 96);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }

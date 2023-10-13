@@ -1,4 +1,4 @@
-.container {
+.ap-container {
   text-align: center;
   margin-top: 20px;
   background-color: rgba(253, 236, 217, 0.973);
@@ -8,7 +8,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
-.header-sign {
+.ap-header-sign {
   display: flex;
   justify-content: center;
   font-size: 15px;
@@ -18,7 +18,7 @@
   text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.custom-card {
+.ap-custom-card {
   width: 18rem;
   perspective: 1000px;
   transition: transform 0.5s ease-in-out;
@@ -27,18 +27,19 @@
   position: relative;
 }
 
-.custom-card.flipped {
+.ap-custom-card.flipped {
   transform: rotateY(180deg);
 }
 
-.card-front {
+.ap-card-front {
   width: 288px;
   height: 444px;
   transform-style: preserve-3d;
   position: relative;
 }
 
-.card-front .main-image {
+.ap-card-front .ap-main-image {
+  margin-left: 10px;
   width: 268px;
   height: 268px;
   border-radius: 100%;
@@ -49,22 +50,16 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.39), 0 6px 6px rgba(0, 0, 0, 0.41);
 }
 
-.card-body {
+.ap-card-body {
   padding: 1rem;
 }
 
-.card-body h3 {
-  font-size: 18px;
-  margin: 0;
-  padding: 0;
-}
-
-.card-body h1 {
+.ap-card-body h1 {
   font-size: 30px;
   margin-bottom: 10px;
   font-weight: bold;
 }
-.p-text {
+.ap-text {
   font-size: 16px;
   margin-left: 10px;
   margin-top: 25px;
@@ -77,7 +72,7 @@
   line-height: 1.4;
 }
 
-.card-back {
+.ap-card-back {
   width: 288px;
   height: 444px;
   background: rgba(253, 236, 217, 0.973);
@@ -88,36 +83,32 @@
   transform-style: preserve-3d;
 }
 
-.card-back h1 {
-  font-size: 24px;
-  margin-top: 0;
-}
-
-.info-row {
+.ap-info-row {
   display: flex;
   margin-bottom: 10px;
   padding: 8px;
 }
 
-.info-label {
+.ap-info-label {
   flex: 1;
   font-size: 16px;
 }
 
-.info-value {
+.ap-info-value {
   flex: 2;
   font-size: 16px;
 }
 
-.custom-card.flipped .card-front {
+.ap-custom-card.flipped .ap-card-front {
   display: none;
 }
 
-.custom-card.flipped .card-back {
+.ap-custom-card.flipped .ap-card-back {
   display: block;
 }
 
-.front-applyBtn {
+.ap-front-applyBtn {
+  margin-left: 4px;
   background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
@@ -127,7 +118,8 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.apfront-infoBtn {
+.ap-front-infoBtn {
+  margin-left: 4px;
   background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
@@ -136,7 +128,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.back-applyBtn {
+.ap-back-applyBtn {
   background-color: rgba(25, 107, 25, 0.966);
   border: none;
   height: 40px;
@@ -147,12 +139,13 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.apback-infoBtn {
+.ap-back-infoBtn {
   background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
   color: white;
   width: 278px;
-  margin-left: 10px;
+  margin-left: 5px;
+  margin-top: 60px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
