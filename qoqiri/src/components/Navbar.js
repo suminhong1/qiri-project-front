@@ -136,7 +136,7 @@ const Navbar = () => {
           <a href="/" className="review">
             끼리후기
           </a>
-          <Link to="/bestPost" className="post">
+          <Link to="/bestPost" className="community">
             커뮤니티
           </Link>
         </div>
