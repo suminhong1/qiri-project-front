@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Test from "../components/Date";
 // import black from "../assets/black.gif";
 
 import axios from "axios";
@@ -11,12 +12,17 @@ const instance = axios.create({
 });
 
 export const getPost = async () => {
-  return await instance.get("post");
+  return await instance.get("/public/post");
+};
+
+export const getComments = async () => {
+  return await instance.get("/comments");
 };
 
 const DetailView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [comments, setComments] = useState([]);
 
   const openModal = (imageIndex) => {
     setSelectedImageIndex(imageIndex);
@@ -27,6 +33,15 @@ const DetailView = () => {
     setSelectedImageIndex(0);
     setIsModalOpen(false);
   };
+
+  const commentsAPI = async () => {
+    const result = await getComments();
+    setComments(result.data);
+  };
+
+  useEffect(() => {
+    commentsAPI();
+  }, []);
 
   const images = ["", "", ""];
   return (
@@ -84,6 +99,26 @@ const DetailView = () => {
             <p>서울특별시</p> <p>강남구</p>
           </div>
         </div>
+        <hr />
+        <div className="comment">
+          <textarea placeholder="댓글달기"></textarea>
+          <button>
+            <img alt="댓글달기 버튼" />
+          </button>
+        </div>
+        <hr />
+        {comments.map((co) => (
+          <div className="commentList">
+            <div comment-profile>
+              <img alt="프로필 이미지" />
+              <div comment-profile-nickname>닉네임</div>
+            </div>
+            <div className="comment-content" key={co.commentsSeq}>
+              {co.commentDesc}
+            </div>
+            <hr />
+          </div>
+        ))}
       </div>
       {isModalOpen && (
         <div className="modal-overlay">
@@ -167,7 +202,9 @@ const MatchingBoard = () => {
             {post.map((po) => (
               <div onClick={toggleModal} className="board">
                 <div className="board-header">
-                  <div className="board-header-time">3분전</div>
+                  <div className="board-header-time" key={po.postSEQ}>
+                    <Test postDate={po.postDate} />
+                  </div>
                   <div className="titleNickname">
                     <div className="title" key={po.postSEQ}>
                       {po.postTitle}
@@ -178,7 +215,9 @@ const MatchingBoard = () => {
                       <img src="" alt="프로필 이미지" className="profileImg" />
                       <img src="" alt="유저 인기도" className="profileLike" />
                     </div>
-                    <span className="nickname">냐오잉</span>
+                    <span className="nickname" key={po.postSEQ}>
+                      {po.postNickName}
+                    </span>
                     <div className="board-image-main">
                       <div className="board-image">
                         <img src="" />
@@ -189,17 +228,8 @@ const MatchingBoard = () => {
                   </div>
                 </div>
                 <div className="write-board">
-                  <div className="write">
-                    글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-                    내용
+                  <div className="write" key={po.postSEQ}>
+                    {po.postContent}
                     <a href="#" className="comment-count">
                       <img src="" alt="comment" />
                       <div className="count">0</div>
@@ -212,8 +242,11 @@ const MatchingBoard = () => {
                     <p className="foot-tag-type">#외향적</p>
                     <p className="foot-tag-type">#직장인</p>
                   </div>
-                  <div className="foot-place-detail">
-                    <p>서울특별시</p> <p>강남구</p>
+                  <div className="foot-place-detail" key={po.postSEQ}>
+                    <p key={po.postSEQ}>{po.placeSeq.placeName}</p>
+                    <p key={po.postSEQ}>
+                      {po.placeSeq.placeType.placeTypeName}
+                    </p>
                   </div>
                 </div>
               </div>
