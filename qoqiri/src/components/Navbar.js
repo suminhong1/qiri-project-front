@@ -130,15 +130,15 @@ const Navbar = () => {
           <a href="/" className="matchingPost">
             끼리모집
           </a>
-          <Link to="/matchingBoard" className="matchingSearch">
+          <a href="/matchingBoard" className="matchingSearch">
             끼리찾기
-          </Link>
+          </a>
           <a href="/" className="review">
             끼리후기
           </a>
-          <Link to="/bestPost" className="community">
+          <a href="/bestPost" className="community">
             커뮤니티
-          </Link>
+          </a>
         </div>
         <div
           className="navbar-alarm"

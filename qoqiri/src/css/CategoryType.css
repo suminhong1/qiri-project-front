@@ -1,13 +1,13 @@
 .main-body {
-  min-width: 1400px;
+  min-width: 1200px;
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .cTypeSelect {
-  min-width: 1400px;
-  max-width: 1400px;
+  min-width: 1200px;
+  max-width: 1200px;
   height: 100%;
   display: flex;
   flex-wrap: wrap; /* flexbox 레이아웃에서 줄 바꿈을 허용 */

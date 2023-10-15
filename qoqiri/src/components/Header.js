@@ -21,7 +21,7 @@ const StyledHeader = styled.header`
     display: flex;
     height: 130px;
     justify-content: space-between;
-    min-width: 1400px;
+    min-width: 1200px;
   }
 
   .header-logo {
@@ -173,9 +173,9 @@ const Header = () => {
               로그아웃
             </button>
             <button className="header-user">
-              <Link to="/myinfo" className="myInfo">
+              <a href="/myinfo" className="myInfo">
                 내정보
-              </Link>
+              </a>
             </button>
           </>
         )}
