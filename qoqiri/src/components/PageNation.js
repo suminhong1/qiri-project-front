@@ -8,7 +8,7 @@ const Page = () => {
     return (
         <>
             {/* //         <PageNation maxPage={49} currentPage={pagenation} setCurrentPage={setPagenation} visiblePageCount={5} /> */}
-            <section className="pagination">
+            <section id="pagination">
                 <div className="prev"></div>
                 <div className="number">
                     <a className="selected">1</a>
