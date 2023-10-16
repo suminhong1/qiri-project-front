@@ -25,9 +25,10 @@ const SignUp = () => {
   const [location, setLocation] = useState('');
   const [mbti, setMbti] = useState('');
   const [statusMessage, setStatusMessage] = useState("");
-  const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 제한 경고 관련
+  const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [profileImg, setProfileImg] = useState(null);
   const [selectlike, setSelectlike] = useState([]);
+
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -337,7 +338,6 @@ const SignUp = () => {
     placeTypeAPI();
   }, []);
 
-  const [interestCategories, setInterestCategories] = useState([]);
 
   useEffect(() => {
 
@@ -360,16 +360,22 @@ const SignUp = () => {
       bloodtype: selectedBloodType,
       mbti,
       statusMessage,
-      selectlike,
     };
 
     try {
-      const response = await axios.post("http://localhost:8080/userInfo/signup", userData);
-
-      if (response.status === 200) {
-        alert('회원가입이 완료되었습니다.');
+      const userResponse = await axios.post("http://localhost:8080/userInfo/signup", userData);
+  
+      if (userResponse.status === 200) {
+        const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo", {
+          selectlike,
+        });
+        if (categoryResponse.status === 200) {
+          alert('회원가입이 완료되었습니다.');
+        } else {
+          alert(categoryResponse.data.message || '회원가입에 실패했습니다.');
+        }
       } else {
-        alert(response.data.message || '회원가입에 실패했습니다.');
+        alert(userResponse.data.message || '회원가입에 실패했습니다.');
       }
     } catch (error) {
       console.error(error);
