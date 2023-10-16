@@ -3,7 +3,9 @@ import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Test from "../components/Date";
-// import black from "../assets/black.gif";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowTurnDown } from '@fortawesome/free-solid-svg-icons';
+import { faMessage } from '@fortawesome/free-regular-svg-icons';
 
 import axios from "axios";
 
@@ -84,8 +86,8 @@ const DetailView = () => {
             내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글
             작성 내용
             <a href="#" className="comment-count">
-              <img src="" alt="comment" />
-              <div className="count">0</div>
+            <FontAwesomeIcon icon={faMessage} />
+            <div className="count">0</div>
             </a>
           </div>
         </div>
@@ -103,7 +105,7 @@ const DetailView = () => {
         <div className="comment">
           <textarea placeholder="댓글달기"></textarea>
           <button>
-            <img alt="댓글달기 버튼" />
+          <FontAwesomeIcon icon={faArrowTurnDown} rotation={90} />
           </button>
         </div>
         <hr />
@@ -200,7 +202,7 @@ const MatchingBoard = () => {
           </div>
           <section className="section">
             {post.map((po) => (
-              <div onClick={toggleModal} className="board">
+             <div onClick={() => console.log(po.postSEQ)} className="board">
                 <div className="board-header">
                   <div className="board-header-time" key={po.postSEQ}>
                     <Test postDate={po.postDate} />
@@ -231,8 +233,8 @@ const MatchingBoard = () => {
                   <div className="write" key={po.postSEQ}>
                     {po.postContent}
                     <a href="#" className="comment-count">
-                      <img src="" alt="comment" />
-                      <div className="count">0</div>
+                    <FontAwesomeIcon icon={faMessage} />
+                    <div className="count">0</div>
                     </a>
                   </div>
                 </div>
