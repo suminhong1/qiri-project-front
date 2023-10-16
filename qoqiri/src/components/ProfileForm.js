@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Modal from "./modal";
 import "../css/ProfileForm.css";
 import son from "../assets/son.jpg";
-import { getUser, login } from "../api/user";
+import { getUser } from "../api/user";
 
-const ProfileForm = () => {
+const ProfileForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -14,22 +14,20 @@ const ProfileForm = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await getUser("user10"); // 해당 주인계정만 나오도록 하기
+      const response = await getUser(userId);
       setUserData(response.data);
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]);
 
-  const currentUserId = "user10"; //  현재 접속한 계정  (수정해야함)
+  const currentUserId = userId; //  현재 접속한 계정  (수정해야함)
 
-  const handleEditClick = () => {
-    setIsEditing(true); // 편집 모드 활성화
-  };
-
-  const handleSaveClick = () => {
-    setIsEditing(false); // 편집 모드 종료및 저장
-    // 변경된 데이터를 API나 데이터베이스에 저장하는 코드를 여기에 작성해야함 (추가 필요)
+  const handleInputChange = (key, value) => {
+    setUserData((prevData) => ({
+      ...prevData,
+      [key]: value,
+    }));
   };
 
   const handleCardClick = () => {
@@ -46,14 +44,14 @@ const ProfileForm = () => {
   };
 
   const customButtonStyle = {
-    display: isFlipped || isEditing ? "none" : "block", // <-- isEditing 추가
+    display: isFlipped || isEditing ? "none" : "block",
     transform: "none",
     cursor: "pointer",
     borderRadius: "4px",
   };
 
   const customBackButtonStyle = {
-    display: isFlipped && !isEditing ? "block" : "none", // <-- Added !isEditing here
+    display: isFlipped && !isEditing ? "block" : "none",
     transform: "scale(-1, 1)",
     cursor: "pointer",
     borderRadius: "4px",
@@ -103,39 +101,9 @@ const ProfileForm = () => {
           </div>
           <div className="pf-card-body">
             <h1>{userData?.userNickname}</h1>
-            {isEditing ? (
-              <input
-                className="pf-text-input"
-                defaultValue={userData.introduction}
-                onChange={(e) =>
-                  setUserData((prevData) => ({
-                    ...prevData,
-                    introduction: e.target.value,
-                  }))
-                }
-              />
-            ) : (
-              <p className="pf-text">{userData.introduction || "자기소개"}</p>
-            )}
+
+            <p className="pf-text">{userData.statusMessage}</p>
           </div>
-          {currentUserId === userData?.userId && !isEditing && (
-            <button
-              className="pf-front-editBtn"
-              style={customFrontEditButtonStyle}
-              onClick={handleEditClick}
-            >
-              프로필 수정
-            </button>
-          )}
-          {isEditing && (
-            <button
-              className="pf-front-saveBtn"
-              style={customFrontSaveButtonStyle}
-              onClick={handleSaveClick}
-            >
-              저장
-            </button>
-          )}
         </div>
 
         <div className="pf-front-Btn">
@@ -150,9 +118,14 @@ const ProfileForm = () => {
         <div className="pf-card-back">
           <div className="pf-card-body">
             <div className="pf-info-row">
-              <div className="pf-info-label">이름:</div>
+              <div className="pf-info-label">닉네임:</div>
               {isEditing ? (
-                <input defaultValue={userData?.userName} />
+                <input
+                  value={userData?.userNickname}
+                  onChange={(e) =>
+                    handleInputChange("userNickname", e.target.value)
+                  }
+                />
               ) : (
                 <div className="pf-info-value">{userData?.userNickname}</div>
               )}
@@ -198,26 +171,6 @@ const ProfileForm = () => {
           >
             앞!
           </button>
-
-          {currentUserId === userData?.userId &&
-            !isEditing && ( // 아이디가 같고 편집 모드가 아닐 때만 '프로필 수정' 버튼을 보여줍니다.
-              <button
-                className="pf-back-editBtn"
-                style={customBackButtonStyle}
-                onClick={handleEditClick}
-              >
-                프로필 수정
-              </button>
-            )}
-          {isEditing && (
-            <button
-              className="pf-back-saveBtn"
-              style={customSaveButtonStyle}
-              onClick={handleSaveClick}
-            >
-              저장
-            </button>
-          )}
         </div>
       </div>
       {isModalOpen && (

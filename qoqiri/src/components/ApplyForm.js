@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/ApplyForm.css";
 import Modal from "./modal";
 import son from "../assets/son.jpg";
+import { getUser, login } from "../api/user";
 
 const ApplyForm = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [userData, setUserData] = useState();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const response = await getUser("user3"); // 해당 주인계정만 나오도록 하기
+      setUserData(response.data);
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
@@ -50,10 +61,8 @@ const ApplyForm = () => {
             />
           </div>
           <div className="ap-card-body">
-            <h1>#이름#</h1>
-            <p className="ap-text">
-              한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개aergaergaergaergaergargaergaergaergaergaergreaaergaergaergaergaerg한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개한줄소개
-            </p>
+            <h1>{userData?.userNickname}</h1>
+            <p className="ap-text">{userData?.statusMessage}</p>
           </div>
         </div>
 
@@ -76,38 +85,38 @@ const ApplyForm = () => {
         <div className="ap-card-back">
           <div className="ap-card-body">
             <div className="ap-info-row">
-              <div className="ap-info-label">이름 :</div>
-              <div className="ap-info-value">#사용자명#</div>
+              <div className="ap-info-label">닉네임:</div>
+              <div className="ap-info-value">{userData?.userNickname}</div>
             </div>
             <hr />
             <div className="ap-info-row">
-              <div className="ap-info-label">성별 :</div>
-              <div className="ap-info-value">#성별#</div>
+              <div className="ap-info-label">성별:</div>
+              <div className="ap-info-value">{userData?.gender}</div>
             </div>
             <hr />
             <div className="ap-info-row">
-              <div className="ap-info-label">지역 :</div>
-              <div className="ap-info-value">#거주지#</div>
+              <div className="ap-info-label">혈액형:</div>
+              <div className="ap-info-value">{userData?.bloodType}</div>
             </div>
             <hr />
             <div className="ap-info-row">
-              <div className="ap-info-label">나이 :</div>
-              <div className="ap-info-value">#나이#</div>
+              <div className="ap-info-label">지역:</div>
+              <div className="ap-info-value">{userData?.addr}</div>
             </div>
             <hr />
             <div className="ap-info-row">
-              <div className="ap-info-label">취미1 :</div>
-              <div className="ap-info-value">#취미1#</div>
+              <div className="ap-info-label">MBTI:</div>
+              <div className="ap-info-value">{userData?.mbti}</div>
             </div>
             <hr />
             <div className="ap-info-row">
-              <div className="ap-info-label">취미2 :</div>
-              <div className="ap-info-value">#취미2#</div>
+              <div className="ap-info-label">생일:</div>
+              <div className="ap-info-value">{userData?.birthday}</div>
             </div>
             <hr />
             <div className="ap-info-row">
-              <div className="ap-info-label">취미3 :</div>
-              <div className="ap-info-value">#취미3#</div>
+              <div className="ap-info-label">관심사:</div>
+              <div className="ap-info-value">{userData?.categorys}</div>
             </div>
           </div>
         </div>
