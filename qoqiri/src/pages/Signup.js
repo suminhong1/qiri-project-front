@@ -8,32 +8,42 @@ import { getPlaceTypes } from '../api/placeType';
 const SignUp = () => {
   // 상태 변수들
   const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
   const [isIdAvailable, setIsIdAvailable] = useState(true);
   const [isNameAvailable, setIsNameAvailable] = useState(true);
-  const [name, setName] = useState("");
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState(true);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
+  const [age, setAge] = useState("");
   const [selectedGender, setSelectedGender] = useState('');
+  const [hasPartner, setHasPartner] = useState("없음");
   const [selectedBloodType, setSelectedBloodType] = useState('');
   const [location, setLocation] = useState('');
   const [mbti, setMbti] = useState('');
-  const [selectlike, setSelectlike] = useState([]); // 관심사
+  const [statusMessage, setStatusMessage] = useState("");
+  const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
+  const [profileImg, setProfileImg] = useState(null);
+  const [selectlike, setSelectlike] = useState([]);
+
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
-  const [nameMessage, setNameMessage] = useState("");
+  const [nicknameMessage, setNicknameMessage] = useState("");
   const [passwordMessage, setPasswordMessage] = useState("");
   const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
   const [emailMessage, setEmailMessage] = useState("");
   const [phoneMessage, setPhoneMessage] = useState("");
   const [birthMessage, setBirthMessage] = useState("");
+  const [nameMessage, setNameMessage] = useState("");
 
   // 유효성 검사
   const [isId, setIsId] = useState(false);
   const [isName, setIsName] = useState(false);
+  const [isNickname, setIsNickname] = useState(false);
   const [isPassword, setIsPassword] = useState(false);
   const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
   const [isEmail, setIsEmail] = useState(false);
@@ -60,17 +70,34 @@ const SignUp = () => {
       .catch(error => console.error(error));
   };
 
-  // 닉네임 중복 확인 함수
-  const checkNicknameDuplicate = (currentName) => {
-    fetch(`/api/checkNicknameDuplicate?nickname=${currentName}`)
+  // 이름 중복 확인 함수
+  const checkNameDuplicate = (currentName) => {
+    fetch(`/api/checkNameDuplicate?name=${currentName}`)
       .then(response => response.json())
       .then(data => {
         if (data.isAvailable) {
           setIsNameAvailable(true);
-          alert("사용 가능한 닉네임입니다.");
+          setNameMessage("사용 가능한 이름입니다.");
         } else {
           setIsNameAvailable(false);
-          alert("이미 사용 중인 닉네임입니다.");
+          setNameMessage("이미 사용 중인 이름입니다.");
+        }
+      })
+      .catch(error => console.error(error));
+  };
+
+
+  // 닉네임 중복 확인 함수
+  const checkNicknameDuplicate = (currentNickname) => {
+    fetch(`/api/checkNicknameDuplicate?nickname=${currentNickname}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.isAvailable) {
+          setIsNicknameAvailable(true);
+          setNicknameMessage("사용 가능한 닉네임입니다.");
+        } else {
+          setIsNicknameAvailable(false);
+          setNicknameMessage("이미 사용 중인 닉네임입니다.");
         }
       })
       .catch(error => console.error(error));
@@ -92,20 +119,36 @@ const SignUp = () => {
     }
   };
 
-  // 닉네임 입력 핸들러
+  {/* 이름 입력 핸들러 */ }
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
 
     if (currentName.length < 2 || currentName.length > 8) {
-      setNameMessage("닉네임은 2글자 이상 8글자 이하로 입력해주세요.");
+      setNameMessage("이름은 2글자 이상 8글자 이하로 입력해주세요.");
       setIsName(false);
     } else {
       setNameMessage("");
       setIsName(true);
-      checkNicknameDuplicate(currentName);
+      checkNameDuplicate(currentName);
     }
   };
+
+  {/* 닉네임 입력 핸들러 */ }
+  const onChangeNickname = (e) => {
+    const currentNickname = e.target.value;
+    setNickname(currentNickname);
+
+    if (currentNickname.length < 2 || currentNickname.length > 8) {
+      setNicknameMessage("닉네임은 2글자 이상 8글자 이하로 입력해주세요.");
+      setIsNickname(false);
+    } else {
+      setNicknameMessage("");
+      setIsNickname(true);
+      checkNicknameDuplicate(currentNickname);
+    }
+  };
+
 
   // 비밀번호 입력 핸들러
   const onChangePassword = (e) => {
@@ -189,11 +232,36 @@ const SignUp = () => {
   const onChangeBirth = (e) => {
     const currentBirth = e.target.value;
     setBirth(currentBirth);
+
+    // 생일 기반 나이 계산
+    const birthDate = new Date(currentBirth);
+    const today = new Date();
+    const ageDiff = today.getFullYear() - birthDate.getFullYear();
+    // 현재 월과 생일 월 비교
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    // 만약 현재 월이 생일 월보다 이전이거나, 현재 월과 생일 월이 같지만 현재 날짜가 생일보다 전일 경우 1 빼기
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      setAge(ageDiff - 1);
+    } else {
+      setAge(ageDiff);
+    }
+  };
+
+  // 나이 입력 핸들러
+  const onChangeAge = (e) => {
+    const currentAge = e.target.value;
+    setAge(currentAge);
   };
 
   // 성별 변경 핸들러
   const handleGenderChange = (e) => {
     setSelectedGender(e.target.value);
+  };
+
+  // 애인 여부 선택 핸들러
+  const handleHasPartnerChange = (e) => {
+    setHasPartner(e.target.value);
   };
 
   // 혈액형 변경 핸들러
@@ -210,6 +278,24 @@ const SignUp = () => {
   const handleMbtiChange = (e) => {
     setMbti(e.target.value);
   };
+
+  // 상태 메시지 입력 핸들러
+  const onChangeStatusMessage = (e) => {
+    const currentStatusMessage = e.target.value;
+    if (currentStatusMessage.length > 20) {
+      setWarningMessage("최대 20자까지 입력 가능합니다.");
+    } else {
+      setStatusMessage(currentStatusMessage);
+      setWarningMessage("");
+    }
+  };
+
+  // 프로필 사진 핸들러
+  const handleProfileImageChange = (e) => {
+    const imageFile = e.target.files[0];
+    setProfileImg(imageFile);
+  };
+
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
@@ -252,7 +338,6 @@ const SignUp = () => {
     placeTypeAPI();
   }, []);
 
-  const [interestCategories, setInterestCategories] = useState([]);
 
   useEffect(() => {
 
@@ -263,26 +348,34 @@ const SignUp = () => {
 
     const userData = {
       id,
+      pwd: password,
       name,
-      password,
-      email,
+      nickname,
+      place: location,
+      gender: selectedGender,
       phone,
-      birth,
-      selectedGender,
-      selectedBloodType,
-      location,
+      email,
+      hasPartner,
+      birthday: birth,
+      bloodtype: selectedBloodType,
       mbti,
-      selectlike,
-      location,
+      statusMessage,
     };
 
     try {
-      const response = await axios.post("http://localhost:8080/userInfo/signup", userData);
-
-      if (response.status === 200) {
-        alert('회원가입이 완료되었습니다.');
+      const userResponse = await axios.post("http://localhost:8080/userInfo/signup", userData);
+  
+      if (userResponse.status === 200) {
+        const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo", {
+          selectlike,
+        });
+        if (categoryResponse.status === 200) {
+          alert('회원가입이 완료되었습니다.');
+        } else {
+          alert(categoryResponse.data.message || '회원가입에 실패했습니다.');
+        }
       } else {
-        alert(response.data.message || '회원가입에 실패했습니다.');
+        alert(userResponse.data.message || '회원가입에 실패했습니다.');
       }
     } catch (error) {
       console.error(error);
@@ -302,13 +395,22 @@ const SignUp = () => {
             <p className="message">{idMessage}</p>
           </div>
 
+          {/* 이름 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="name">이름</label> <br />
+            <input id="name" name="name" value={name} onChange={onChangeName} />
+            <br />
+            {!isNameAvailable && <p>이미 사용 중인 이름입니다.</p>}
+            <p className="message">{nameMessage}</p>
+          </div>
+
           {/* 닉네임 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="name">닉네임</label> <br />
-            <input id="name" name="name" value={name} onChange={onChangeName} />
+            <label htmlFor="nickname">닉네임</label> <br />
+            <input id="nickname" name="nickname" value={nickname} onChange={onChangeNickname} />
             <br></br>
-            {!isNameAvailable && <p>이미 사용 중인 닉네임입니다.</p>}
-            <p className="message">{nameMessage}</p>
+            {!isNicknameAvailable && <p>이미 사용 중인 닉네임입니다.</p>}
+            <p className="message">{nicknameMessage}</p>
           </div>
 
           {/* 비밀번호 입력 양식 */}
@@ -376,11 +478,23 @@ const SignUp = () => {
             <input
               id="birth"
               name="birth"
-              type="date"
+              type="Date"
               value={birth}
               onChange={onChangeBirth}
             />
             <p className="message">{birthMessage}</p>
+          </div>
+
+          {/* 나이 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="age">나이 (생일 선택시 자동 선택. 만나이)</label> <br />
+            <input
+              id="age"
+              name="age"
+              type="number"
+              value={age}
+              onChange={onChangeAge}
+            />
           </div>
 
           {/* 성별 입력 양식 */}
@@ -412,12 +526,44 @@ const SignUp = () => {
             </div>
             <br></br>
 
+            {/* 애인 여부 입력 양식 */}
+            <div className="form-el">
+              <label>애인 여부</label> <br />
+              <div className="gender-options">
+                <div className="gender-option">
+                  <input
+                    type="radio"
+                    id="hasPartnerYes"
+                    name="hasPartner"
+                    value="있음"
+                    checked={hasPartner === "있음"}
+                    onChange={handleHasPartnerChange}
+                  />
+                  <label htmlFor="hasPartnerYes">있음</label>
+                </div>
+                <div className="gender-option">
+                  <input
+                    type="radio"
+                    id="hasPartnerNo"
+                    name="hasPartner"
+                    value="없음"
+                    checked={hasPartner === "없음"}
+                    onChange={handleHasPartnerChange}
+                  />
+                  <label htmlFor="hasPartnerNo">없음</label>
+                </div>
+              </div>
+            </div>
+            <br></br>
+
+
             {/* 혈액형 입력 양식 */}
             <div className="blood-type">
               <label>혈액형</label> <br />
               <select
                 id="bloodType"
                 name="bloodType"
+                type="String"
                 value={selectedBloodType}
                 onChange={handleBloodTypeChange}
               >
@@ -436,6 +582,7 @@ const SignUp = () => {
             <select
               id="location"
               name="location"
+              type="Place"
               value={location}
               onChange={handleLocationChange}
             >
@@ -452,6 +599,7 @@ const SignUp = () => {
             <select
               id="mbti"
               name="mbti"
+              type="String"
               value={mbti}
               onChange={handleMbtiChange}
             >
@@ -475,6 +623,39 @@ const SignUp = () => {
             </select>
           </div>
           <br></br>
+
+          {/* 상태 메시지 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="statusMessage">상태 메시지 (최대 20자)</label> <br />
+            <input
+              id="statusMessage"
+              name="statusMessage"
+              value={statusMessage}
+              onChange={onChangeStatusMessage}
+              maxLength={20}
+            />
+            <p className="message">{warningMessage}</p>
+          </div>
+
+          {/* 프로필 사진 추가 */}
+          <div className="form-el">
+            <label htmlFor="profileImg">프로필 사진</label> <br />
+            <input
+              type="file"
+              id="profileImg"
+              name="profileImg"
+              accept="image/*"
+              onChange={handleProfileImageChange}
+            />
+            {profileImg && (
+              <img
+                src={URL.createObjectURL(profileImg)}
+                alt="프로필 미리보기"
+                className="profile-preview"
+              />
+            )}
+          </div>
+
 
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
