@@ -5,7 +5,7 @@
   z-index: 10;
   width: 100%;
   display: flex;
-  border-top: 1px solid #ff7f38;
+  border-top: 1px solid #dddddd;
   border-bottom: 4px solid #ff7f38;
   box-shadow: 0 5px 4px -4px #ff7f38;
   justify-content: space-between;
