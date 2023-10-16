@@ -1,19 +1,19 @@
-.pagination {
+#pagination {
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 32px 0;
 }
 
-.pagination .prev,
-.pagination .next {
+#pagination .prev,
+#pagination .next {
     box-sizing: border-box;
     width: 50px;
     height: 30px;
 }
 
-.pagination .prev a,
-.pagination .next a {
+#pagination .prev a,
+#pagination .next a {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -25,13 +25,13 @@
     color: white;
 }
 
-.pagination .number {
+#pagination .number {
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.pagination .number a {
+#pagination .number a {
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -43,16 +43,16 @@
     border-radius: 4px;
 }
 
-.pagination .number .selected {
+#pagination .number .selected {
     color: white;
     background-color: #ff7f38;
 }
 
-.pagination a {
+#pagination a {
     text-decoration: none;
 }
 
-.pagination .number .notSelected {
+#pagination .number .notSelected {
     background-color: rgba(8, 8, 8, 0.05);
 }
 

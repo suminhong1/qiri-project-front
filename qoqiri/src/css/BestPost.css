@@ -88,7 +88,7 @@ section {
 }
 
 #bestList .item .best .commentCount {
-    color: black;
+    color:  #ff7f38;;
     font-size: 0.7em;
 }
 #bestList .item .titleContainer .commentCount {

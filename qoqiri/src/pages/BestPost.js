@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+
 const BestPost = () => {
     const [posts, setPosts] = useState([]);
     const [boards, setBoards] = useState([]);
@@ -73,9 +74,11 @@ const BestPost = () => {
                             </div>
                         </div>
                     </div>
+                    
                     {posts.map((post) => (
+                        
                         <div className="item">
-                            <Link to={`/viewpost/${post.postSEQ}`} className="post">
+                            <a href={`/viewpost/${post.postSEQ}`} className="post">
                                 <div className="best">
                                     <div className="titleContainer">
                                         <div className="bestImage">
@@ -119,11 +122,10 @@ const BestPost = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </Link>
-                        </div>
+                            </a>
+                        </div>                     
                     ))}
                 </section>
-
                 <NavBtn />
             </article>
             <PageNation />
