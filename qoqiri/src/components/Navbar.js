@@ -133,7 +133,7 @@ const Navbar = () => {
           <a href="/matchingBoard" className="matchingSearch">
             끼리찾기
           </a>
-          <a href="/" className="review">
+          <a href="/review" className="review">
             끼리후기
           </a>
           <a href="/bestPost" className="community">

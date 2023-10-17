@@ -11,6 +11,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import UserInfoPage from "./pages/Myinfo";
 import Post from "./pages/Post";
+import Review from "./pages/Review";
+import MiniUp from "./pages/MiniUp";
 
 const router = createBrowserRouter([
   {
@@ -55,10 +57,18 @@ const router = createBrowserRouter([
         path: "Post/:id",
         element: <Post />,
       },
+      {
+        path: "/review",
+        element: <Review />,
+      },
     ],
   },
   {
-    path: "/mini",
+    path: "/miniup/:userId",
+    element: <MiniUp />,
+  },
+  {
+    path: "/mini/:userId",
     element: <Mini />,
   },
   {

@@ -80,7 +80,8 @@ const StyledHeader = styled.header`
   }
 
   .header-user .login,
-  .header-user .join {
+  .header-user .join,
+  .header-user .myInfo {
     color: gray;
   }
 
@@ -170,7 +171,7 @@ const Header = () => {
         {Object.keys(user).length !== 0 && (
           <>
             <button onClick={logout} className="header-user">
-              로그아웃
+              <a className="logout">로그아웃</a>
             </button>
             <button className="header-user">
               <a href="/myinfo" className="myInfo">

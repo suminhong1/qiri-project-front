@@ -1,4 +1,4 @@
-.pf-container {
+.pfU-container {
   text-align: center;
   margin-top: 20px;
   background-color: rgba(253, 236, 217, 0.973);
@@ -8,7 +8,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
-.pf-header-sign {
+.pfU-header-sign {
   display: flex;
   justify-content: center;
   font-size: 15px;
@@ -18,7 +18,7 @@
   text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.pf-custom-card {
+.pfU-custom-card {
   width: 18rem;
   perspective: 1000px;
   transition: transform 0.5s ease-in-out;
@@ -27,18 +27,18 @@
   position: relative;
 }
 
-.pf-custom-card.flipped {
+.pfU-custom-card.flipped {
   transform: rotateY(180deg);
 }
 
-.pf-card-front {
+.pfU-card-front {
   width: 288px;
   height: 444px;
   transform-style: preserve-3d;
   position: relative;
 }
 
-.pf-card-front .pf-main-image {
+.pfU-card-front .pfU-main-image {
   margin-left: 10px;
   width: 268px;
   height: 268px;
@@ -50,17 +50,17 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.39), 0 6px 6px rgba(0, 0, 0, 0.41);
 }
 
-.pf-card-body {
+.pfU-card-body {
   padding: 1rem;
 }
 
-.pf-card-body h1 {
+.pfU-card-body h1 {
   height: 30px;
   font-size: 30px;
   margin-bottom: 30px;
   font-weight: bold;
 }
-.pf-text {
+.pfU-text {
   font-size: 18px;
   margin-left: 10px;
   overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
@@ -74,7 +74,7 @@
   width: 230px;
 }
 
-.pf-front-editBtn {
+.pfU-front-editBtn {
   background-color: rgb(6, 6, 165);
   border: none;
   height: 40px;
@@ -84,7 +84,7 @@
   margin-top: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-.pf-card-back {
+.pfU-card-back {
   width: 288px;
   height: 444px;
   background: rgba(253, 236, 217, 0.973);
@@ -95,31 +95,31 @@
   transform-style: preserve-3d;
 }
 
-.pf-info-row {
+.pfU-info-row {
   display: flex;
   margin-bottom: 8px;
   padding: 7px;
 }
 
-.pf-info-label {
+.pfU-info-label {
   flex: 1;
   font-size: 16px;
 }
 
-.pf-info-value {
+.pfU-info-value {
   flex: 2;
   font-size: 16px;
 }
 
-.pf-custom-card.flipped .pf-card-front {
+.pfU-custom-card.flipped .pfU-card-front {
   display: none;
 }
 
-.pf-custom-card.flipped .pf-card-back {
+.pfU-custom-card.flipped .pfU-card-back {
   display: block;
 }
 
-.pf-front-applyBtn {
+.pfU-front-applyBtn {
   margin-left: 4px;
   background-color: rgba(25, 107, 25, 0.966);
   border: none;
@@ -130,7 +130,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.pf-front-infoBtn {
+.pfU-front-infoBtn {
   margin-top: 60px;
   margin-left: 4px;
   background-color: rgb(255, 167, 96);
@@ -141,7 +141,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.pf-back-infoBtn {
+.pfU-back-infoBtn {
   background-color: rgb(255, 167, 96);
   border: none;
   height: 40px;
@@ -152,7 +152,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.pf-back-editBtn {
+.pfU-back-editBtn {
   position: relative;
   bottom: 155px;
   background-color: rgb(6, 6, 165);
@@ -165,17 +165,17 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.pf-container {
+.pfU-container {
   position: relative;
   /* 기타 스타일 설정 */
 }
 
-.pf-back-upBtn {
+.pfU-back-upBtn {
   position: absolute;
   bottom: 50px; /* 원하는 위치에 따라 조절 */
 }
 
-.pf-back-saveBtn {
+.pfU-back-saveBtn {
   position: relative;
   font-weight: bold;
   top: 50px;
@@ -188,7 +188,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
 
-.pf-front-saveBtn {
+.pfU-front-saveBtn {
   position: relative;
   font-weight: bold;
   top: 60px;
