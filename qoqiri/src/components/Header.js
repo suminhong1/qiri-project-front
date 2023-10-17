@@ -5,7 +5,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { userSave, userLogout } from "../store/userSlice";
 import { useLocation } from "react-router-dom";
 
@@ -80,8 +80,7 @@ const StyledHeader = styled.header`
   }
 
   .header-user .login,
-  .header-user .join,
-  .header-user .myInfo {
+  .header-user .join {
     color: gray;
   }
 
@@ -139,11 +138,12 @@ const Header = () => {
         <div className="header-search">
           <input
             type="search"
-            name="search"
             id="search"
             className="search"
             placeholder="원하는 끼리를 검색해보세요"
+            name="search"
           />
+
           <button className="searchBtn">
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
@@ -171,7 +171,7 @@ const Header = () => {
         {Object.keys(user).length !== 0 && (
           <>
             <button onClick={logout} className="header-user">
-              <a className="logout">로그아웃</a>
+              로그아웃
             </button>
             <button className="header-user">
               <a href="/myinfo" className="myInfo">

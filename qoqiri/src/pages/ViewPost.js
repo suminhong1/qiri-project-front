@@ -1,6 +1,5 @@
 import "../css/ViewPost.css";
 import logo from "../assets/logo.png";
-import PageNation from "../components/PageNation";
 import Counter from "../components/Counter";
 import RightModal from "../components/RightModal";
 import NavBtn from "../components/NavBtn";
@@ -9,14 +8,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getPost } from "../api/post";
-import { getBoards, getPosts } from "../api/post";
+import { getPost, getSearch } from "../api/post";
+import { getBoards, getPostList } from "../api/post";
 import kkorang from "../assets/kkorang3.jpg";
-import { Link, useNavigate } from "react-router-dom";
+import Paging from "../components/Paging";
+import styled from "styled-components";
 
 const ViewPost = () => {
   const [bookMark, setBookMark] = useState(false);
+  const [selectedPostSEQ, setSelectedPostSEQ] = useState(null);
   // const [likeCount, setLikeCount] = useState(0);
+  const [post, setPost] = useState(null);
+  const [postList, setPostList] = useState([]);
+  const [board, setBoard] = useState(null);
+  const [boards, setBoards] = useState([]);
+  const [page, setPage] = useState(1);
   const handleBookMark = () => {
     setBookMark(!bookMark);
     if (bookMark) {
@@ -28,31 +34,24 @@ const ViewPost = () => {
 
   const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // 컴포넌트 내부에서 useNavigate 훅을 사용하여 navigate 함수를 가져오기 '미니프로필'
-  const [post, setPost] = useState(null);
-  const [posts, setPosts] = useState([]);
-  const [board, setBoard] = useState(null);
-  const [boards, setBoards] = useState([]);
-  const [page, setPage] = useState(1);
-  const loggedInUser = useSelector((state) => state.user);
+
   //댓글 관련 추가해야됨
 
   // 프론트단에서 보여질수있게 하는것
   // post API에서 getBoards랑 getPosts를 둘다써야함 강사님 유튜브 home.js랑 watch.js참고
 
+  const handlePostClick = (id) => {
+    console.log(id, post?.postSEQ, selectedPostSEQ);
+    if (id === selectedPostSEQ) {
+      setSelectedPostSEQ(null);
+    } else {
+      setSelectedPostSEQ(id);
+    }
+  };
+
   const getPostAPI = async () => {
     const result = await getPost(id);
     setPost(result.data);
-  };
-
-  //  클릭시 미니 프로필로 이동! 같은아이디면 프로필수정페이지로 다르면 그냥 미니 프로필로 이동!!
-
-  const goToMiniPage = (userId) => {
-    if (loggedInUser?.id === userId) {
-      navigate(`/miniUp/${userId}`);
-    } else {
-      navigate(`/mini/${userId}`);
-    }
   };
 
   const boardAPI = async () => {
@@ -60,32 +59,15 @@ const ViewPost = () => {
     setBoards(result.data);
   };
 
-  const PostAPI = async () => {
-    const result = await getPosts(page, board);
-    console.log(result.data);
-    setPosts([...posts, ...result.data]);
+  const getPostListAPI = async () => {
+    const result = await getPostList(page, board);
+    setPostList([...postList, ...result.data]);
   };
 
   const boardFilterAPI = async () => {
-    const result = await getPosts(page, board);
-    setPosts(result.data);
+    const result = await getPostList(page, board);
+    setPostList(result.data);
   };
-
-  useEffect(() => {
-    boardAPI();
-    PostAPI();
-  }, []);
-
-  useEffect(() => {
-    if (board != null) {
-      console.log(board);
-      PostAPI();
-    }
-  }, [board]);
-
-  useEffect(() => {
-    getPostAPI();
-  }, [id]);
 
   const filterBoard = (e) => {
     e.preventDefault();
@@ -93,8 +75,36 @@ const ViewPost = () => {
     console.log(href[href.length - 1]);
     setBoard(parseInt(href[href.length - 1]));
     setPage(1);
-    setPosts([]);
+    setPostList([]);
   };
+
+  const searchHandler = (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+    formData.append("keyword", e.target.keyword.value);
+
+    getSearch(formData.get("keyword"));
+  };
+
+  useEffect(() => {
+    boardAPI();
+    getPostListAPI();
+  }, []);
+
+  useEffect(() => {
+    getPostAPI();
+  }, [id]);
+
+  useEffect(() => {
+    handlePostClick(id);
+  }, [post]);
+
+  useEffect(() => {
+    if (board != null) {
+      console.log(board);
+      getPostListAPI();
+    }
+  }, [board]);
 
   //댓글관련 유즈이펙트 추가해야됨
 
@@ -108,7 +118,7 @@ const ViewPost = () => {
                     <input type="hidden" className="url" value /> */}
           <div className="back">
             <div className="bestBox">
-              <Link to="/bestPost">
+              <a href="/bestPost">
                 <span className="gobest">Best</span>
                 <img
                   src={logo}
@@ -116,7 +126,7 @@ const ViewPost = () => {
                   alt="logo"
                   style={{ height: "30px", width: "auto" }}
                 />
-              </Link>
+              </a>
             </div>
           </div>
           <div className="item">
@@ -134,13 +144,7 @@ const ViewPost = () => {
               <div className="etc">
                 <div className="left">
                   <div className="userImage"></div>
-                  <div
-                    className="nickName"
-                    onClick={() => goToMiniPage(post?.userInfo.userId)}
-                  >
-                    {post?.userInfo.userNickname}
-                  </div>
-                  {/* 함수 추가하여 닉네임 클릭시 프로필로 이동 */}
+                  <div className="nickName">{post?.userInfo.userNickname}</div>
                   <div className="dot"></div>
                   <div className="dateTime">
                     {post?.postDate.substr(5, 5)}일
@@ -153,7 +157,7 @@ const ViewPost = () => {
                   </div>
                 </div>
                 <div className="right">
-                  <RightModal></RightModal>
+                  <RightModal />
                 </div>
               </div>
             </div>
@@ -247,9 +251,7 @@ const ViewPost = () => {
             <div className="right"></div>
           </div>
         </div>
-
         <h2 className="bottomBoardListHeader"> 전체글</h2>
-        {/*map 처리 아래 수정해야함*/}
         <section id="boardList" className="simple">
           <div className="item listHeader">
             <div className="info2">
@@ -270,8 +272,18 @@ const ViewPost = () => {
             </div>
           </div>
 
-          {posts.map((post) => (
-            <a href={`/viewpost/${post?.postSEQ}`} className="underList">
+          {postList.map((post) => (
+            <a
+              key={post.postSEQ}
+              href={`/viewpost/${post?.postSEQ}`}
+              className={`underList ${
+                selectedPostSEQ === post?.postSEQ ? "clicked" : ""
+              }`}
+              style={{
+                backgroundColor:
+                  selectedPostSEQ === post?.postSEQ ? "black" : "transparent",
+              }}
+            >
               <div className="info3">
                 <div className="titleContainer">
                   <span className="title">
@@ -317,7 +329,24 @@ const ViewPost = () => {
           ))}
         </section>
         <NavBtn />
-        <PageNation />
+        <Paging />
+        <div className="searchAndWrite">
+          <div></div>
+          <div>
+            <form onSubmit={searchHandler}>
+              <div className="search">
+                <select name="searchType">
+                  <option value={"title"}>제목</option>
+                  <option value={"titleAndContent"}>제목+내용</option>
+                  <option value={"nickName"}>글쓴이</option>
+                </select>
+                <input type="text" name="keyword" maxLength={50} />
+                <button type="submit">검색</button>
+              </div>
+            </form>
+          </div>
+          <div className="write"> </div>
+        </div>
       </main>
     </>
   );

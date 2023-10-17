@@ -14,7 +14,7 @@ export const getBoards = async () => {
     return await instance.get('public/board');
 };
 
-export const getPosts = async (page, board) => {
+export const getPostList = async (page, board) => {
     let url = `public/post?page=${page}`;
     if (board !== null) {
         url += `&board=${board}`;
@@ -28,4 +28,8 @@ export const getPost = async (id) => {
 
 export const getComments = async (id) => {
     return await instance.get('public/post/' + id + '/comment');
+};
+
+export const getSearch = async (keyword) => {
+    return await instance.get('public/post/search/' + keyword);
 };

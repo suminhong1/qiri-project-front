@@ -1,18 +1,18 @@
 import '../css/BestPost.css';
-import PageNation from '../components/PageNation';
+import Paging from '../components/Paging';
 import NavBtn from '../components/NavBtn';
 import kkorang from '../assets/kkorang3.jpg';
-import { getPosts, getBoards } from '../api/post';
+import { getPostList, getBoards, getSearch } from '../api/post';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 const BestPost = () => {
-    const [posts, setPosts] = useState([]);
+    const [postList, setPostList] = useState([]);
     const [boards, setBoards] = useState([]);
     const [page, setPage] = useState(1);
     const [board, setBoard] = useState(null);
+    const [userInput, setUserInput] = useState('');
+
+    // const searched = posts.filter((item) => item.name.toLowerCase().includes(userInput));
 
     const boardAPI = async () => {
         const result = await getBoards();
@@ -20,14 +20,14 @@ const BestPost = () => {
     };
 
     const PostAPI = async () => {
-        const result = await getPosts(page, board);
+        const result = await getPostList(page, board);
         console.log(result.data);
-        setPosts([...posts, ...result.data]);
+        setPostList([...postList, ...result.data]);
     };
 
     const boardFilterAPI = async () => {
-        const result = await getPosts(page, board);
-        setPosts(result.data);
+        const result = await getPostList(page, board);
+        setPostList(result.data);
     };
     useEffect(() => {
         boardAPI();
@@ -47,12 +47,21 @@ const BestPost = () => {
         console.log(href[href.length - 1]);
         setBoard(parseInt(href[href.length - 1]));
         setPage(1);
-        setPosts([]);
+        setPostList([]);
     };
+
+    const searchHandler = (e) => {
+        e.preventDefault();
+        let formData = new FormData();
+        formData.append('keyword', e.target.keyword.value);
+
+        getSearch(formData.get('keyword'));
+    };
+
     return (
         <>
             <article id="list">
-                <section id="bestList" className="bestPost" key={posts?.postSEQ}>
+                <section id="bestList" className="bestPost" key={postList?.postSEQ}>
                     <div className="item bestlistHeader">
                         <div className="info2">
                             <div className="titleContainer">
@@ -74,9 +83,8 @@ const BestPost = () => {
                             </div>
                         </div>
                     </div>
-                    
-                    {posts.map((post) => (
-                        
+
+                    {postList.map((post) => (
                         <div className="item">
                             <a href={`/viewpost/${post.postSEQ}`} className="post">
                                 <div className="best">
@@ -123,12 +131,30 @@ const BestPost = () => {
                                     </div>
                                 </div>
                             </a>
-                        </div>                     
+                        </div>
                     ))}
                 </section>
                 <NavBtn />
             </article>
-            <PageNation />
+            <Paging />
+
+            <div className="searchAndWrite">
+                <div></div>
+                <div>
+                    <form onSubmit={searchHandler}>
+                        <div className="search">
+                            <select name="searchType">
+                                <option value={'title'}>제목</option>
+                                <option value={'titleAndContent'}>제목+내용</option>
+                                <option value={'nickName'}>글쓴이</option>
+                            </select>
+                            <input type="text" name="keyword" maxLength={50} />
+                            <button type="submit"> 검색</button>
+                        </div>
+                    </form>
+                </div>
+                <div className="write"></div>
+            </div>
         </>
     );
 };
