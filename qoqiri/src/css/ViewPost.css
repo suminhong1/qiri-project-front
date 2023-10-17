@@ -59,10 +59,6 @@
     border-radius: 6px;
 }
 
-#main a {
-    text-decoration: none;
-}
-
 #main .item .info h1 {
     display: inline;
     color: black;
@@ -308,6 +304,15 @@ h2 {
     padding: 5px;
 }
 
+/* #boardList .simple .underList.current {
+    background-color: #ff7f38;
+    padding: 5px;
+}
+
+#boardList .underList:visited {
+    color: #bbb;
+} */
+
 #boardList .titleContainer,
 #boardList .titleContainer .title {
     justify-content: center;
@@ -448,63 +453,6 @@ h2 {
     background-position: center;
 }
 
-.pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 32px 0;
-}
-
-.pagination .prev,
-.pagination .next {
-    box-sizing: border-box;
-    width: 50px;
-    height: 30px;
-}
-
-.pagination .prev a,
-.pagination .next a {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-
-    background-color: #ff7f38;
-    color: white;
-}
-
-.pagination .number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.pagination .number a {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    margin: 0 5px;
-    border-right: 0;
-    border-radius: 4px;
-}
-
-.pagination .number .selected {
-    color: white;
-    background-color: #ff7f38;
-}
-
-.pagination a {
-    text-decoration: none;
-}
-
-.pagination .number .notSelected {
-    background-color: rgba(8, 8, 8, 0.05);
-}
 #list .searchAndWrite {
     display: flex;
     justify-content: space-between;
@@ -565,6 +513,73 @@ h2 {
 }
 
 #list .searchAndWrite .write {
+    display: flex;
+    justify-content: flex-end;
+}
+.searchAndWrite {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 30px 0;
+}
+
+.searchAndWrite {
+    padding: 0 10px;
+}
+
+.searchAndWrite form {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    width: 440px;
+    height: 40px;
+}
+
+.searchAndWrite .search {
+    display: flex;
+    flex: 1;
+}
+
+.searchAndWrite .search select {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    font-size: 1em;
+    color: white;
+    cursor: pointer;
+    border: 0;
+    border-radius: 8px;
+    appearance: none;
+    background-color: #ff7f38;
+}
+
+.searchAndWrite .search input {
+    box-sizing: border-box;
+    flex: 1;
+    height: 40px;
+    padding: 0 16px;
+    margin: 0 14px;
+    font-size: 1em;
+    background-color: #ff7f38;
+    color: whitesmoke;
+    border: 0;
+    border-radius: 8px;
+}
+
+.searchAndWrite .search button {
+    box-sizing: border-box;
+    height: 40px;
+    padding: 0 20px;
+    margin: 0;
+    font-size: 0.9em;
+    color: white;
+    background-color: #ff7f38;
+    border: 0;
+    border-radius: 8px;
+}
+
+.searchAndWrite .write {
     display: flex;
     justify-content: flex-end;
 }

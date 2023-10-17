@@ -2,12 +2,13 @@ import '../css/PostComp.css';
 import PageNation from '../components/PageNation';
 import NavBtn from './NavBtn';
 import { useState, useEffect } from 'react';
-import { getBoards, getPosts } from '../api/post';
+import { getBoards, getPostList } from '../api/post';
 import kkorang from '../assets/kkorang3.jpg';
 import { Link } from 'react-router-dom';
+import Paging from './Paging';
 
 const PostComp = () => {
-    const [posts, setPosts] = useState([]);
+    const [postList, setPostList] = useState([]);
     const [boards, setBoards] = useState([]);
     const [page, setPage] = useState(1);
     const [board, setBoard] = useState(null);
@@ -18,14 +19,14 @@ const PostComp = () => {
     };
 
     const PostAPI = async () => {
-        const result = await getPosts(page, board);
+        const result = await getPostList(page, board);
         console.log(result.data);
-        setPosts([...posts, ...result.data]);
+        setPostList([...postList, ...result.data]);
     };
 
     const boardFilterAPI = async () => {
-        const result = await getPosts(page, board);
-        setPosts(result.data);
+        const result = await getPostList(page, board);
+        setPostList(result.data);
     };
     useEffect(() => {
         boardAPI();
@@ -45,13 +46,13 @@ const PostComp = () => {
         console.log(href[href.length - 1]);
         setBoard(parseInt(href[href.length - 1]));
         setPage(1);
-        setPosts([]);
+        setPostList([]);
     };
 
     return (
         <>
             <article id="list">
-                <section id="postList" className="justPost" key={posts?.postSEQ}>
+                <section id="postList" className="justPost" key={postList?.postSEQ}>
                     <div className="item listHeader">
                         <div className="info2">
                             <div className="titleContainer">
@@ -73,9 +74,9 @@ const PostComp = () => {
                             </div>
                         </div>
                     </div>
-                    {posts.map((post) => (
+                    {postList.map((post) => (
                         <div className="item">
-                            <Link to={`/viewpost/${post.postSEQ}`} className="post">
+                            <a href={`/viewpost/${post?.postSEQ}`} className="post">
                                 <div className="titleContainer">
                                     <div className="postThumbnail">
                                         {/* 여기 이제 url 방식으로 Blob써서 넣어야함 css도 수정 지금 이미지 사이즈랑 베스트글 카테고리 사이즈랑 같이커짐*/}
@@ -119,13 +120,30 @@ const PostComp = () => {
                                         <span className="like Icon">👍</span>
                                     </div>
                                 </div>
-                            </Link>
+                            </a>
                         </div>
                     ))}
                 </section>
                 <NavBtn />
+                <Paging />
             </article>
-            <PageNation />
+            <div className="searchAndWrite">
+                <div></div>
+                <div>
+                    <form action="/post">
+                        <div className="search">
+                            <select name="searchType">
+                                <option value={'title'}>제목</option>
+                                <option value={'titleAndContent'}>제목+내용</option>
+                                <option value={'nickName'}>글쓴이</option>
+                            </select>
+                            <input type="text" name="keyword" maxLength={50} />
+                            <button>검색</button>
+                        </div>
+                    </form>
+                </div>
+                <div className="write"> </div>
+            </div>
         </>
     );
 };
