@@ -13,6 +13,7 @@ import UserInfoPage from "./pages/Myinfo";
 import Post from "./pages/Post";
 import Review from "./pages/Review";
 import MiniUp from "./pages/MiniUp";
+import PostWrite from "./pages/PostWrite";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "viewPost/:id",
         element: <ViewPost />,
+      },
+      {
+        path: "postWrite",
+        element: <PostWrite />,
       },
       {
         path: "matchingBoard",

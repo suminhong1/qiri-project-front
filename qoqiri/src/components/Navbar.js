@@ -127,7 +127,7 @@ const Navbar = () => {
           </a>
         </div>
         <div className="navbar-menu">
-          <a href="/" className="matchingPost">
+          <a href="/postWrite" className="matchingPost">
             끼리모집
           </a>
           <a href="/matchingBoard" className="matchingSearch">

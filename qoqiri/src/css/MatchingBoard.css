@@ -183,6 +183,11 @@ a {
   width: 90%;
 }
 
+.Detail-write-board {
+  padding: 30px;
+  width: 90%;
+}
+
 .write {
   font-size: 15px;
   font-weight: 600;
@@ -194,6 +199,15 @@ a {
   overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
   text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
 }
+
+.Detail-write {
+  font-size: 15px;
+  font-weight: 600;
+  color: #757575;
+  line-height: 18px;
+  /* font-family: "NanumSquareRoundL"; */
+}
+
 .comment-count {
   width: 20px;
   height: 20px;
@@ -233,11 +247,11 @@ a {
 
 /* 모달 스타일 */
 
-.modal-main {
+.Matching-modal-main {
   z-index: 11;
 }
 
-.modal-overlay {
+.Matching-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -249,7 +263,7 @@ a {
   align-items: center;
 }
 
-.modal {
+.Matching-modal {
   background: white;
   width: 900px; /* 너비 조절 */
   height: 700px; /* 높이 조절 */
@@ -289,7 +303,7 @@ a {
   text-align: center;
 }
 
-.modal img {
+.Matching-modal img {
   max-width: 500px;
   max-height: 500px;
   display: block;
@@ -299,6 +313,7 @@ a {
 button {
   margin-top: 10px;
 }
+
 .close-button {
   position: absolute;
   top: 10px; /* 수직 위치를 조정하려면 top 값을 조정하세요. */
@@ -309,6 +324,10 @@ button {
 }
 
 /* comment */
+
+.comment {
+  display: flex;
+}
 
 .comment textarea {
   border-style: none;
@@ -321,4 +340,12 @@ button {
   border-style: none;
   cursor: pointer;
   min-height: 10px;
+}
+
+.comment-profile {
+  margin-right: 10px;
+}
+
+.commentList {
+  display: flex;
 }
