@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import Test from "../components/Date";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowTurnDown } from '@fortawesome/free-solid-svg-icons';
-import { faMessage } from '@fortawesome/free-regular-svg-icons';
+import Date from "../components/Date";
+import { getPost } from "../api/post";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
+import { faMessage } from "@fortawesome/free-regular-svg-icons";
+import { getCategoryTypes } from "../api/categoryType";
+import { getCategories } from "../api/category";
+import UserRating from "../components/UserRating";
 
 import axios from "axios";
 
@@ -13,7 +17,7 @@ const instance = axios.create({
   baseURL: "http://localhost:8080/qiri",
 });
 
-export const getPost = async () => {
+export const getPosts = async () => {
   return await instance.get("/public/post");
 };
 
@@ -21,10 +25,12 @@ export const getComments = async () => {
   return await instance.get("/comments");
 };
 
-const DetailView = () => {
+const DetailView = ({ selectedPostSEQ }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [comments, setComments] = useState([]);
+  const [post, setPost] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(0);
 
   const openModal = (imageIndex) => {
     setSelectedImageIndex(imageIndex);
@@ -36,30 +42,40 @@ const DetailView = () => {
     setIsModalOpen(false);
   };
 
+  const postAPI = async () => {
+    const result = await getPost(selectedPostSEQ);
+    setPost(result.data);
+  };
+
   const commentsAPI = async () => {
     const result = await getComments();
     setComments(result.data);
   };
 
   useEffect(() => {
+    console.log(selectedPostSEQ);
     commentsAPI();
-  }, []);
+    postAPI();
+    setCommentsCount(comments.length);
+  }, [selectedPostSEQ]);
 
   const images = ["", "", ""];
   return (
     <>
-      <div className="board-detail">
+      <div className="board-detail" key={post?.postSEQ}>
         <div className="board-header">
-          <div className="board-header-time">3분전</div>
+          <div className="board-header-time">
+            <Date postDate={post?.postDate} />
+          </div>
           <div className="titleNickname">
-            <div className="title">솔로랭크 상관없이 구해요</div>
+            <div className="title">{post?.postTitle}</div>
           </div>
           <div className="board-header-main">
             <div className="profile">
               <img src="" alt="프로필 이미지" className="profileImg" />
-              <img src="" alt="유저 인기도" className="profileLike" />
+              <UserRating rating={post?.userInfo?.rating} />
             </div>
-            <span className="nickname">냐오잉</span>
+            <span className="nickname">{post?.userInfo?.userNickname}</span>
             <div className="board-image-main">
               <div className="board-image">
                 {images.map((imageSrc, index) => (
@@ -74,57 +90,48 @@ const DetailView = () => {
             </div>
           </div>
         </div>
-        <div className="write-board">
-          <div className="write">
-            글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-            내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글
-            작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-            내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글
-            작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-            내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글
-            작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성
-            내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글 작성 내용글
-            작성 내용
+        <div className="Detail-write-board">
+          <div className="Detail-write">
+            {post?.postContent}
             <a href="#" className="comment-count">
-            <FontAwesomeIcon icon={faMessage} />
-            <div className="count">0</div>
+              <FontAwesomeIcon icon={faMessage} />
+              <div className="count">{commentsCount}</div>
             </a>
           </div>
         </div>
         <div className="board-foot">
-          <div className="board-foot-tag">
-            <p className="foot-tag-type">#빡겜지향</p>
-            <p className="foot-tag-type">#외향적</p>
-            <p className="foot-tag-type">#직장인</p>
-          </div>
           <div className="foot-place-detail">
-            <p>서울특별시</p> <p>강남구</p>
+            <p>{post?.placeSeq?.placeName}</p>
+            <p>{post?.placeSeq?.placeType?.placeTypeName}</p>
           </div>
         </div>
         <hr />
         <div className="comment">
+          <div className="coment-profile-img">
+            <img alt="프로필 이미지" />
+          </div>
           <textarea placeholder="댓글달기"></textarea>
           <button>
-          <FontAwesomeIcon icon={faArrowTurnDown} rotation={90} />
+            <FontAwesomeIcon icon={faArrowTurnDown} rotation={90} />
           </button>
         </div>
         <hr />
         {comments.map((co) => (
-          <div className="commentList">
-            <div comment-profile>
-              <img alt="프로필 이미지" />
-              <div comment-profile-nickname>닉네임</div>
-            </div>
-            <div className="comment-content" key={co.commentsSeq}>
-              {co.commentDesc}
+          <div className="commentList-main" key={co.commentsSeq}>
+            <div className="commentList">
+              <div className="comment-profile">
+                <img alt="프로필 이미지" />
+                <div comment-profile-nickname>{co.userInfo.userNickname}</div>
+              </div>
+              <div className="comment-content">{co.commentDesc}</div>
             </div>
             <hr />
           </div>
         ))}
       </div>
       {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="Matching-modal-overlay">
+          <div className="Matching-modal">
             {/* 왼쪽 화살표 */}
             <div
               onClick={() => {
@@ -170,15 +177,30 @@ const DetailView = () => {
 };
 
 const MatchingBoard = () => {
-  const [post, setPost] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedPostSEQ, setSelectedPostSEQ] = useState(null); // 선택된 게시물의 postSEQ를 저장
+  const [category, setCategory] = useState([]);
+  const [categoryType, setCategoryType] = useState([]);
+  const [selectedCatSEQ, setSelectedCatSEQ] = useState(null); // 초기값을 null로 설정
 
-  const postAPI = async () => {
-    const result = await getPost();
-    setPost(result.data);
+  const postsAPI = async () => {
+    const result = await getPosts();
+    setPosts(result.data);
   };
 
-  const toggleModal = () => {
+  const categoryAPI = async () => {
+    const result = await getCategories();
+    setCategory(result.data);
+  };
+
+  const categoryTypeAPI = async () => {
+    const result = await getCategoryTypes();
+    setCategoryType(result.data);
+  };
+
+  const toggleModal = (postSEQ) => {
+    setSelectedPostSEQ(postSEQ); // 선택된 게시물의 postSEQ를 설정
     setIsOpen(!isOpen);
   };
 
@@ -187,39 +209,62 @@ const MatchingBoard = () => {
   };
 
   useEffect(() => {
-    postAPI();
-  }, []);
+    postsAPI();
+    categoryTypeAPI();
+    categoryAPI();
+    console.log(selectedCatSEQ);
+  }, [selectedCatSEQ]);
+
   return (
     <>
       <div className="main-content">
         <main className="main">
           <div className="select-bar">
             <div className="active-button">
-              <a href="#" className="active">
-                전체
-              </a>
+              {categoryType.map((cat) => (
+                <a
+                  href="#"
+                  className="active"
+                  key={cat.ctSEQ}
+                  onClick={() => {
+                    setSelectedCatSEQ(cat.ctSEQ); // 클릭한 cat.ctSEQ를 선택된 상태 변수에 저장
+                  }}
+                >
+                  {cat.ctName}
+                </a>
+              ))}
+              {/* {category.map((ca) => (
+                <a href="#" className="active" key={ca.categorySEQ}>
+                  {ca.categoryName}
+                </a>
+              ))} */}
             </div>
           </div>
           <section className="section">
-            {post.map((po) => (
-             <div onClick={() => console.log(po.postSEQ)} className="board">
+            {posts.map((po) => (
+              <div
+                onClick={() => toggleModal(po.postSEQ)}
+                className="board"
+                key={po.postSEQ}
+              >
+                {/* 이 부분에서 게시물 클릭 시 toggleModal 함수 호출, postSEQ를 전달 */}
                 <div className="board-header">
-                  <div className="board-header-time" key={po.postSEQ}>
-                    <Test postDate={po.postDate} />
+                  <div className="board-header-time">
+                    <Date postDate={po.postDate} />
                   </div>
                   <div className="titleNickname">
-                    <div className="title" key={po.postSEQ}>
-                      {po.postTitle}
-                    </div>
+                    <div className="title">{po.postTitle}</div>
                   </div>
                   <div className="board-header-main">
                     <div className="profile">
-                      <img src="" alt="프로필 이미지" className="profileImg" />
-                      <img src="" alt="유저 인기도" className="profileLike" />
+                      <a href="" className="profileImg">
+                        <img src="" alt="프로필 이미지" />
+                      </a>
+                      <div>
+                        <UserRating rating={po.userInfo.rating} />
+                      </div>
                     </div>
-                    <span className="nickname" key={po.postSEQ}>
-                      {po.postNickName}
-                    </span>
+                    <span className="nickname">{po.userInfo.userNickname}</span>
                     <div className="board-image-main">
                       <div className="board-image">
                         <img src="" />
@@ -230,37 +275,30 @@ const MatchingBoard = () => {
                   </div>
                 </div>
                 <div className="write-board">
-                  <div className="write" key={po.postSEQ}>
+                  <div className="write">
                     {po.postContent}
                     <a href="#" className="comment-count">
-                    <FontAwesomeIcon icon={faMessage} />
-                    <div className="count">0</div>
+                      <FontAwesomeIcon icon={faMessage} />
+                      <div className="count">0</div>
                     </a>
                   </div>
                 </div>
                 <div className="board-foot">
-                  <div className="board-foot-tag">
-                    <p className="foot-tag-type">#빡겜지향</p>
-                    <p className="foot-tag-type">#외향적</p>
-                    <p className="foot-tag-type">#직장인</p>
-                  </div>
-                  <div className="foot-place-detail" key={po.postSEQ}>
-                    <p key={po.postSEQ}>{po.placeSeq.placeName}</p>
-                    <p key={po.postSEQ}>
-                      {po.placeSeq.placeType.placeTypeName}
-                    </p>
+                  <div className="foot-place-detail">
+                    <p>{po.placeSeq.placeName}</p>
+                    <p>{po.placeSeq.placeType.placeTypeName}</p>
                   </div>
                 </div>
               </div>
             ))}
             {isOpen && (
-              <div className="modal-main">
-                <div className="modal-overlay">
-                  <div className="modal">
+              <div className="Matching-modal-main">
+                <div className="Matching-modal-overlay">
+                  <div className="Matching-modal">
                     <div className="close-button" onClick={closeModal}>
                       &times;
                     </div>
-                    <DetailView />
+                    <DetailView selectedPostSEQ={selectedPostSEQ} />
                   </div>
                 </div>
               </div>
