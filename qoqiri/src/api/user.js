@@ -13,6 +13,6 @@ export const getUser = async (userId) => {
   return response;
 };
 
-export const updateUser = async (userId, data) => {
-  return await instance.put(`${userId}`, data);
+export const signUp = async (data) => {
+  return await instance.post("signUp", data);
 };

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import "../css/login.css";
 import axios from "axios";
 import logo from "../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [id, setId] = useState(""); // 이메일 대신 ID를 사용합니다.
+  const [id, setId] = useState("");
   const [pw, setPw] = useState("");
-  const [idValid, setIdValid] = useState(true); // ID 유효성 검사를 위한 상태
+  const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (idValid && pwValid) {
@@ -20,32 +22,31 @@ export default function Login() {
 
   const handleId = (e) => {
     setId(e.target.value);
-    // ID 유효성 검사를 원한다면 여기에 로직을 추가하십시오.
-    // 현재는 모든 ID를 유효하다고 가정합니다.
-    setIdValid(true);
+
+    if (e.target.value.trim() !== "") {
+      setIdValid(true);
+    } else {
+      setIdValid(false);
+    }
   };
 
   const handlePw = (e) => {
     setPw(e.target.value);
-    const regex =
-      /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])(?!.*[^a-zA-z0-9$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/;
-    if (regex.test(e.target.value)) {
+    if (e.target.value.trim() !== "") {
       setPwValid(true);
     } else {
       setPwValid(false);
     }
   };
 
-  const onClickConfirmButton = async () => {
+  const onClickConfirmButton = async (event) => {
+    event.preventDefault();
+
     try {
       const response = await axios.post(
         "http://localhost:8080/qiri/userInfo/signin",
-        {
-          id: id, // 이메일 대신 ID를 사용합니다.
-          pwd: pw,
-        }
+        { id: id, pwd: pw }
       );
-
       const data = response.data;
 
       if (response.status === 200) {
@@ -55,6 +56,7 @@ export default function Login() {
           JSON.stringify({ id: data.id, nickname: data.nickname })
         );
         alert("로그인 성공.");
+        navigate("/");
       } else {
         alert(data.message || "로그인 실패");
       }
@@ -72,51 +74,51 @@ export default function Login() {
         <div className="titleWrap">
           <br />
         </div>
-        <div className="inputTitle">아이디</div>{" "}
-        {/* "이메일 주소"를 "아이디"로 변경합니다. */}
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="text"
-            placeholder="사용자 아이디"
-            value={id}
-            onChange={handleId}
-          />
-        </div>
-        <div style={{ marginTop: "26px" }} className="inputTitle">
-          비밀번호
-        </div>
-        <div className="inputWrap">
-          <input
-            className="input"
-            type="password"
-            placeholder="영문, 숫자, 특수문자 포함 8자 이상"
-            value={pw}
-            onChange={handlePw}
-          />
-        </div>
-        <div className="errorMessageWrap">
-          {!pwValid && pw.length > 0 && (
-            <div>영문, 숫자, 특수문자 포함 8자 이상 입력해주세요.</div>
-          )}
-        </div>
-        <div className="linksWrap">
-          <a href="/find-password">비밀번호 찾기</a>
-          <span> ㅣ </span>
-          <a href="/find-id">아이디 찾기</a>
-          <span> ㅣ </span>
-          <a href="/signup">회원가입</a>
-        </div>
-        <br></br>
-        <div>
-          <button
-            onClick={onClickConfirmButton}
-            disabled={notAllow} // 빈 칸 & 잘못 입력한 경우에도 로그인버튼 활성화 방지
-            className="bottomButton"
-          >
-            로그인
-          </button>
-        </div>
+        <form onSubmit={onClickConfirmButton}>
+          <div className="inputTitle">아이디</div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="text"
+              placeholder="아이디 입력"
+              value={id}
+              onChange={handleId}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!idValid && id.length > 0 && <div>아이디를 입력해주세요.</div>}
+          </div>
+
+          <div style={{ marginTop: "26px" }} className="inputTitle">
+            비밀번호
+          </div>
+          <div className="inputWrap">
+            <input
+              className="input"
+              type="password"
+              placeholder="비밀번호 입력"
+              value={pw}
+              onChange={handlePw}
+            />
+          </div>
+          <div className="errorMessageWrap">
+            {!pwValid && pw.length > 0 && <div>비밀번호를 입력해주세요.</div>}
+          </div>
+
+          <div className="linksWrap">
+            <a href="/find-password">비밀번호 찾기</a>
+            <span> ㅣ </span>
+            <a href="/find-id">아이디 찾기</a>
+            <span> ㅣ </span>
+            <a href="/signup">회원가입</a>
+          </div>
+          <br />
+          <div>
+            <button type="submit" disabled={notAllow} className="bottomButton">
+              로그인
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

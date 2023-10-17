@@ -123,7 +123,7 @@
 }
 
 /* 지역 선택창 조정 */
-.form-el select#location {
+.form-el select#place {
   width: 30%;
 }
 
