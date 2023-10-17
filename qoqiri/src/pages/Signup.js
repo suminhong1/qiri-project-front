@@ -4,9 +4,12 @@ import '../css/Signup.css';
 import { getCategoryTypes } from '../api/categoryType';
 import { getCategories } from '../api/category';
 import { getPlaceTypes } from '../api/placeType';
+import { signUp } from '../api/user';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
   // 상태 변수들
+  const navigate = useNavigate();
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
@@ -22,11 +25,11 @@ const SignUp = () => {
   const [selectedGender, setSelectedGender] = useState('');
   const [hasPartner, setHasPartner] = useState("없음");
   const [selectedBloodType, setSelectedBloodType] = useState('');
-  const [location, setLocation] = useState('');
+  const [placeType, setPlaceType] = useState('');
   const [mbti, setMbti] = useState('');
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
-  const [profileImg, setProfileImg] = useState(null);
+ // const [profileImg, setProfileImg] = useState(null);
   const [selectlike, setSelectlike] = useState([]);
 
 
@@ -270,8 +273,14 @@ const SignUp = () => {
   };
 
   // 지역 변경 핸들러
-  const handleLocationChange = (e) => {
-    setLocation(e.target.value);
+  const handlePlaceChange = (e) => {
+    const selectedPlaceTypeName = e.target.value;
+    const selectedPlaceTypeObj = placeTypes.find((placeType) => placeType.placeTypeName === selectedPlaceTypeName);
+  
+    setSelectedPlaceType({
+      placeTypeSEQ: selectedPlaceTypeObj ? selectedPlaceTypeObj.placeTypeSEQ : "",
+      placeTypeName: selectedPlaceTypeName,
+    });
   };
 
   // MBTI 변경 핸들러
@@ -288,12 +297,6 @@ const SignUp = () => {
       setStatusMessage(currentStatusMessage);
       setWarningMessage("");
     }
-  };
-
-  // 프로필 사진 핸들러
-  const handleProfileImageChange = (e) => {
-    const imageFile = e.target.files[0];
-    setProfileImg(imageFile);
   };
 
 
@@ -338,44 +341,49 @@ const SignUp = () => {
     placeTypeAPI();
   }, []);
 
-
-  useEffect(() => {
-
+  const [selectedPlaceType, setSelectedPlaceType] = useState({
+    placeTypeSEQ: "",   // 선택한 placeType의 placeTypeSEQ
+    placeTypeName: "", // 선택한 placeType의 placeTypeName
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // 폼 기본 제출 방지
 
-    const userData = {
+  
+
+  const handleSubmit = async (e) => {
+    if (e) {
+      e.preventDefault(); // 폼 기본 제출 방지
+    }
+
+    const userInfoDTO = {
       id,
       pwd: password,
       name,
       nickname,
-      place: location,
+      placeType:selectedPlaceType,
+      age,
       gender: selectedGender,
       phone,
       email,
       hasPartner,
       birthday: birth,
-      bloodtype: selectedBloodType,
+      bloodType: selectedBloodType,
       mbti,
       statusMessage,
     };
-
-    try {
-      const userResponse = await axios.post("http://localhost:8080/userInfo/signup", userData);
   
-      if (userResponse.status === 200) {
-        const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo", {
-          selectlike,
-        });
-        if (categoryResponse.status === 200) {
-          alert('회원가입이 완료되었습니다.');
-        } else {
-          alert(categoryResponse.data.message || '회원가입에 실패했습니다.');
-        }
+    const signUpDTO = {
+      userInfoDTO,
+      userCategories: selectlike.map((categoryName) => ({ categoryName })),
+    };
+  
+    try {
+      const userResponse = await axios.post("http://localhost:8080/qiri/userInfo/signup", signUpDTO);
+    
+      if (userResponse.data) {
+        alert('회원가입 성공. 로그인 해주세요');
+        navigate('/');
       } else {
-        alert(userResponse.data.message || '회원가입에 실패했습니다.');
+        alert('회원가입 실패. 다시 시도해주세요.');
       }
     } catch (error) {
       console.error(error);
@@ -504,10 +512,10 @@ const SignUp = () => {
               <div className="gender-option">
                 <input
                   type="radio"
-                  id="male"
+                  id="남"
                   name="gender"
-                  value="male"
-                  checked={selectedGender === 'male'}
+                  value="남"
+                  checked={selectedGender === '남'}
                   onChange={handleGenderChange}
                 />
                 <label htmlFor="male">남</label>
@@ -515,10 +523,10 @@ const SignUp = () => {
               <div className="gender-option">
                 <input
                   type="radio"
-                  id="female"
+                  id="여"
                   name="gender"
-                  value="female"
-                  checked={selectedGender === 'female'}
+                  value="여"
+                  checked={selectedGender === '여'}
                   onChange={handleGenderChange}
                 />
                 <label htmlFor="female">여</label>
@@ -535,8 +543,8 @@ const SignUp = () => {
                     type="radio"
                     id="hasPartnerYes"
                     name="hasPartner"
-                    value="있음"
-                    checked={hasPartner === "있음"}
+                    value="Y"
+                    checked={hasPartner === "Y"}
                     onChange={handleHasPartnerChange}
                   />
                   <label htmlFor="hasPartnerYes">있음</label>
@@ -546,8 +554,8 @@ const SignUp = () => {
                     type="radio"
                     id="hasPartnerNo"
                     name="hasPartner"
-                    value="없음"
-                    checked={hasPartner === "없음"}
+                    value="N"
+                    checked={hasPartner === "N"}
                     onChange={handleHasPartnerChange}
                   />
                   <label htmlFor="hasPartnerNo">없음</label>
@@ -577,14 +585,13 @@ const SignUp = () => {
           </div>
 
           {/* 지역 입력 양식 */}
-          <div className="form-el select-for-location">
-            <label htmlFor="location">지역</label> <br />
+          <div className="form-el select-for-place">
+            <label htmlFor="place">지역</label> <br />
             <select
-              id="location"
-              name="location"
-              type="Place"
-              value={location}
-              onChange={handleLocationChange}
+              id="place"
+              name="place"
+              value={placeType.placeTypeName} 
+              onChange={handlePlaceChange}
             >
               <option value="">선택하세요</option>
               {placeTypes.map((placeType) => (
@@ -636,26 +643,6 @@ const SignUp = () => {
             />
             <p className="message">{warningMessage}</p>
           </div>
-
-          {/* 프로필 사진 추가 */}
-          <div className="form-el">
-            <label htmlFor="profileImg">프로필 사진</label> <br />
-            <input
-              type="file"
-              id="profileImg"
-              name="profileImg"
-              accept="image/*"
-              onChange={handleProfileImageChange}
-            />
-            {profileImg && (
-              <img
-                src={URL.createObjectURL(profileImg)}
-                alt="프로필 미리보기"
-                className="profile-preview"
-              />
-            )}
-          </div>
-
 
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">

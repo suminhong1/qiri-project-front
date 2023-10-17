@@ -12,3 +12,7 @@ export const getUser = async (userId) => {
   const response = await instance.get(`${userId}`);
   return response;
 };
+
+export const signUp = async (data) => {
+  return await instance.post("signUp", data);
+};
