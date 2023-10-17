@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "./modal";
 import "../css/ProfileUp.css";
 import son from "../assets/son.jpg";
-import { getUser, updateUser } from "../api/user";
+import { getUser, signUp } from "../api/user";
 
 const ProfileUp = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -31,7 +31,7 @@ const ProfileUp = ({ userId }) => {
     setIsEditing(false); // 편집 모드 종료
     try {
       // 변경된 데이터를 API를 통해 서버로 전송
-      await updateUser(currentUserId, userData);
+      await signUp(currentUserId, userData);
       alert("프로필이 성공적으로 업데이트되었습니다.");
     } catch (error) {
       alert("프로필 업데이트 중 오류가 발생했습니다.");
