@@ -140,7 +140,7 @@ const ViewPost = () => {
                   >
                     {post?.userInfo.userNickname}
                   </div>
-                  {/* 핸들러 추가하여 닉네임 클릭시 프로필로 이동 */}
+                  {/* 함수 추가하여 닉네임 클릭시 프로필로 이동 */}
                   <div className="dot"></div>
                   <div className="dateTime">
                     {post?.postDate.substr(5, 5)}일

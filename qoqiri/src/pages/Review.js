@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../css/Review.css";
-import Modal from "../components/modalReview"; // 모달 컴포넌트를 임포트합니다.
+import Modal from "../components/modalReview";
 
 const ReviewBoard = () => {
   const [reviews, setReviews] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 표시 상태
-  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null); // 선택된 리뷰의 인덱스
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedReviewIndex, setSelectedReviewIndex] = useState(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [sortByLikes, setSortByLikes] = useState(false);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -16,13 +19,30 @@ const ReviewBoard = () => {
   }, []);
 
   const handleWriteClick = () => {
-    const title = prompt("리뷰 제목을 입력하세요:");
-    const content = prompt("리뷰 내용을 입력하세요:");
-    if (title && content && loggedInUser) {
+    // Check if content length is 0
+    if (content.length === 0) {
+      alert("댓글을 입력해 주세요!!");
+      return;
+    }
+
+    if (content.length <= 50 && loggedInUser) {
       setReviews([
-        ...reviews,
         { title, content, writer: loggedInUser.nickname, likes: 0, views: 0 },
+        ...reviews,
       ]);
+      setTitle("");
+      setContent("");
+    } else if (content.length > 50) {
+      alert("댓글은 50자를 초과할 수 없습니다.");
+    }
+  };
+
+  const handleContentChange = (e) => {
+    const value = e.target.value;
+    if (value.length <= 50) {
+      setContent(value);
+    } else {
+      alert("댓글은 50자를 초과할 수 없습니다.");
     }
   };
 
@@ -35,12 +55,41 @@ const ReviewBoard = () => {
     setIsModalOpen(false);
   };
 
+  const handleLikeClick = (index) => (event) => {
+    event.stopPropagation();
+    const updatedReviews = [...reviews];
+    updatedReviews[index].likes += 1;
+    setReviews(updatedReviews);
+    alert("추천하였습니다.");
+  };
+
+  const handleSortByLikesClick = () => {
+    const sortedReviews = [...reviews].sort((a, b) => b.likes - a.likes);
+    setReviews(sortedReviews);
+    setSortByLikes(false); // 추천순 상태값을 false로 재설정
+  };
+
   return (
     <div className="rv-container">
-      <h1>끼리후기</h1>
-      <button className="rv-write-button" onClick={handleWriteClick}>
-        글쓰기
-      </button>
+      <h1>우리끼리한줄평</h1>
+      <div className="rv-input-area">
+        <textarea
+          placeholder="리뷰 내용을 입력하세요. (50자를 초과할 수 없습니다.)"
+          value={content}
+          onChange={handleContentChange}
+        ></textarea>
+        <div className="rv-character-count">{content.length}/50</div>
+        <button className="rv-write-button" onClick={handleWriteClick}>
+          글쓰기
+        </button>
+        <div
+          type="button"
+          className="rv-like-array"
+          onClick={handleSortByLikesClick}
+        >
+          추천순
+        </div>
+      </div>
       <div className="rv-review-board">
         {reviews.map((review, index) => (
           <div
@@ -48,20 +97,19 @@ const ReviewBoard = () => {
             className="rv-review-item"
             onClick={() => handleReviewClick(index)}
           >
-            <h2>{review.title}</h2>
             <p>{review.content}</p>
-            <span className="rv-writer">글쓴이: {review.writer}</span>
+            <span className="rv-writer">끼리: {review.writer}</span>
+
             <div className="rv-stats-thums">
-              <span>👍 {review.likes}</span>
-            </div>
-            <div className="rv-stats-views">
-              <span>👁️ {review.views}</span>
+              <span className="rv-like-button" onClick={handleLikeClick(index)}>
+                👍 {review.likes}
+              </span>
             </div>
           </div>
         ))}
       </div>
       {isModalOpen && (
-        <modalReview
+        <Modal
           images={[
             reviews[selectedReviewIndex].title,
             reviews[selectedReviewIndex].content,
