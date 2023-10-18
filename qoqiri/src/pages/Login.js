@@ -57,6 +57,7 @@ export default function Login() {
         );
         alert("로그인 성공.");
         navigate("/");
+        window.location.reload(); // 오류 못잡아서 일단 강제새로고침 기능 추가
       } else {
         alert(data.message || "로그인 실패");
       }

@@ -343,7 +343,7 @@ const SignUp = () => {
 
   const [selectedPlaceType, setSelectedPlaceType] = useState({
     placeTypeSEQ: "",   // 선택한 placeType의 placeTypeSEQ
-    placeTypeName: "", // 선택한 placeType의 placeTypeName
+    placeTypeName: "", 
   });
 
 

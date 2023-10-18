@@ -16,3 +16,7 @@ export const getUser = async (userId) => {
 export const signUp = async (data) => {
   return await instance.post("signUp", data);
 };
+
+export const EditProfile = async (data) => {
+  return await instance.put("editProfile", data);
+}

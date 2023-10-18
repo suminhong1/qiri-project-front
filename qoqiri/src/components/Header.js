@@ -102,7 +102,7 @@ const Header = () => {
     if (Object.keys(user).length === 0 && save !== null) {
       dispatch(userSave(JSON.parse(save)));
     }
-  }, []);
+  }, [user]);
 
   const logout = () => {
     console.log("logout!");
