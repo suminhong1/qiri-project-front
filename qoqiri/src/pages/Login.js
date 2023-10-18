@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../css/login.css";
-import axios from "axios";
 import logo from "../assets/logo.png";
+import { useSelector, useDispatch } from "react-redux"; 
+import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
   const [id, setId] = useState("");
@@ -10,14 +12,17 @@ export default function Login() {
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
+
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (idValid && pwValid) {
       setNotAllow(false);
-      return;
+    } else {
+      setNotAllow(true);
     }
-    setNotAllow(true);
   }, [idValid, pwValid]);
 
   const handleId = (e) => {
@@ -43,21 +48,18 @@ export default function Login() {
     event.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/qiri/userInfo/signin",
-        { id: id, pwd: pw }
-      );
+      const response = await axios.post("http://localhost:8080/qiri/userInfo/signin", { id: id, pwd: pw });
       const data = response.data;
 
       if (response.status === 200) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ id: data.id, nickname: data.nickname })
-        );
-        alert("로그인 성공.");
-        navigate("/");
-        window.location.reload(); // 오류 못잡아서 일단 강제새로고침 기능 추가
+        await dispatch(asyncLogin({ id: id, pwd: pw }));
+        
+        if (user && user.token) {
+          alert("로그인 성공.");
+          navigate("/");
+        } else {
+          alert("로그인 실패");
+        }
       } else {
         alert(data.message || "로그인 실패");
       }
