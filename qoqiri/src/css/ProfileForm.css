@@ -38,7 +38,7 @@
   position: relative;
 }
 
-.pf-card-front .pf-main-image {
+.pf-main-image {
   margin-left: 10px;
   width: 268px;
   height: 268px;
@@ -48,6 +48,12 @@
   box-sizing: border-box;
   cursor: pointer;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.39), 0 6px 6px rgba(0, 0, 0, 0.41);
+}
+.pf-main-image img {
+  margin-left: 10px;
+  width: 268px;
+  height: 268px;
+  border-radius: 100%;
 }
 
 .pf-card-body {

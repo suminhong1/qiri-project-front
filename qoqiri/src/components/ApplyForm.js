@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/ApplyForm.css";
 import Modal from "./modal";
-import son from "../assets/son.jpg";
+import defaultimg from "../assets/defaultimg.png";
 import { getUser, login } from "../api/user";
 
 const ApplyForm = () => {
@@ -55,7 +55,7 @@ const ApplyForm = () => {
           <div>
             <img
               className="ap-main-image"
-              src={son}
+              src={userData?.profileImage || defaultimg}
               alt="User"
               onClick={() => handleImageClick(0)}
             />
@@ -133,7 +133,7 @@ const ApplyForm = () => {
       </div>
       {isModalOpen && (
         <Modal
-          images={[son]}
+          images={[userData?.profileImage || defaultimg]}
           index={currentImageIndex}
           close={handleModalClose}
         />
