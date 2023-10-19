@@ -1,7 +1,7 @@
 import React from "react";
-import "../css/modalReview.css";
+import "../css/imgmodal.css";
 
-const modalReview = ({ images, index, close }) => {
+const imgmodal = ({ images, index, close }) => {
   const currentImage = images[index];
 
   if (!currentImage) {
@@ -10,7 +10,8 @@ const modalReview = ({ images, index, close }) => {
 
   return (
     <div className="modal-overlay" onClick={close}>
-      <div className="modal-maina">
+      <div className="modal-main">
+        <img src={currentImage} alt="imgmodal" />
         <button className="modal-close" onClick={close}>
           닫기
         </button>
@@ -19,4 +20,4 @@ const modalReview = ({ images, index, close }) => {
   );
 };
 
-export default modalReview;
+export default imgmodal;

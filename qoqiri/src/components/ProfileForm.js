@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Modal from "./modal";
+import Imgmodal from "./imgmodal";
 import "../css/ProfileForm.css";
 import { getUser } from "../api/user";
 import defaultimg from "../assets/defaultimg.png";
@@ -128,7 +128,7 @@ const ProfileForm = ({ userId }) => {
         </div>
       </div>
       {isModalOpen && (
-        <Modal
+        <Imgmodal
           images={[userData?.profileImage || defaultimg]}
           index={currentImageIndex}
           close={handleModalClose}

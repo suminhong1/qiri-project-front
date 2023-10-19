@@ -33,3 +33,7 @@ export const getComments = async (id) => {
 export const getSearch = async (keyword) => {
   return await instance.get("public/post/search/" + keyword);
 };
+
+export const saveReview = async (data) => {
+  return await instance.post("reviews", data);
+};
