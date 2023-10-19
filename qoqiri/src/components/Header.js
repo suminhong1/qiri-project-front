@@ -170,37 +170,6 @@ const Header = () => {
           </>
         )}
 
-        <div className="header-search">
-          <input
-            type="search"
-            name="search"
-            id="search"
-            className="search"
-            placeholder="원하는 끼리를 검색해보세요"
-          />
-          <button className="searchBtn">
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              style={{ height: "20px", width: "auto" }}
-            />
-          </button>
-        </div>
-        {/* 로그인이 되어 있지 않은 경우 */}
-        {Object.keys(user).length === 0 && (
-          <>
-            <button className="header-user">
-              <Link to="/Login" className="login">
-                로그인
-              </Link>
-            </button>
-            <button className="header-user">
-              <Link to="/signup" className="join">
-                회원가입
-              </Link>
-            </button>
-          </>
-        )}
-
         {/* 로그인이 되어 있는 경우 */}
         {Object.keys(user).length !== 0 && (
           <>
