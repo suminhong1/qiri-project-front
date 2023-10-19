@@ -98,6 +98,15 @@
     cursor: pointer;
 }
 
+#main .item .info .etc .left .viewCount {
+    color: black;
+}
+
+#main .item .info .etc .left .viewCount .viewIcon {
+    color: rgb(250, 169, 137);
+    margin-right: 8px;
+}
+
 .dot {
     position: relative;
     display: flex;
@@ -303,15 +312,6 @@ h2 {
 #boardList .simple .underList {
     padding: 5px;
 }
-
-/* #boardList .simple .underList.current {
-    background-color: #ff7f38;
-    padding: 5px;
-}
-
-#boardList .underList:visited {
-    color: #bbb;
-} */
 
 #boardList .titleContainer,
 #boardList .titleContainer .title {
@@ -582,4 +582,11 @@ h2 {
 .searchAndWrite .write {
     display: flex;
     justify-content: flex-end;
+}
+
+.selectedPost {
+    background-color: beige;
+    color: #bbb;
+    display: block;
+    height: 40px;
 }

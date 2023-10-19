@@ -33,3 +33,9 @@ export const getComments = async (id) => {
 export const getSearch = async (keyword) => {
     return await instance.get('public/post/search/' + keyword);
 };
+
+export const getPostView = async (id) => {
+    const response = await instance.get('public/post/' + id);
+    // await instance.get('public/post/' + id + '/viewCount/');
+    return response;
+};

@@ -1,10 +1,8 @@
 import '../css/PostComp.css';
-import PageNation from '../components/PageNation';
 import NavBtn from './NavBtn';
 import { useState, useEffect } from 'react';
 import { getBoards, getPostList } from '../api/post';
 import kkorang from '../assets/kkorang3.jpg';
-import { Link } from 'react-router-dom';
 import Paging from './Paging';
 
 const PostComp = () => {
