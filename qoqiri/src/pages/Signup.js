@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../css/Signup.css';
-import { getCategoryTypes } from '../api/categoryType';
-import { getCategories } from '../api/category';
-import { getPlaceTypes } from '../api/placeType';
-import { signUp } from '../api/user';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import "../css/Signup.css";
+import { getCategoryTypes } from "../api/categoryType";
+import { getCategories } from "../api/category";
+import { getPlaceTypes } from "../api/placeType";
+import { signUp } from "../api/user";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
   // 상태 변수들
@@ -22,15 +22,14 @@ const SignUp = () => {
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
   const [age, setAge] = useState("");
-  const [selectedGender, setSelectedGender] = useState('');
+  const [selectedGender, setSelectedGender] = useState("");
   const [hasPartner, setHasPartner] = useState("없음");
-  const [selectedBloodType, setSelectedBloodType] = useState('');
-  const [placeType, setPlaceType] = useState('');
-  const [mbti, setMbti] = useState('');
+  const [selectedBloodType, setSelectedBloodType] = useState("");
+  const [placeType, setPlaceType] = useState("");
+  const [mbti, setMbti] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [selectlike, setSelectlike] = useState([]);
-
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -59,8 +58,8 @@ const SignUp = () => {
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {
     fetch(`/api/checkDuplicate?id=${currentId}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.isAvailable) {
           setIsIdAvailable(true);
           setIdMessage("사용 가능한 아이디입니다.");
@@ -69,14 +68,14 @@ const SignUp = () => {
           setIdMessage("이미 사용 중인 아이디입니다.");
         }
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   // 이름 중복 확인 함수
   const checkNameDuplicate = (currentName) => {
     fetch(`/api/checkNameDuplicate?name=${currentName}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.isAvailable) {
           setIsNameAvailable(true);
           setNameMessage("사용 가능한 이름입니다.");
@@ -85,15 +84,14 @@ const SignUp = () => {
           setNameMessage("이미 사용 중인 이름입니다.");
         }
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
-
 
   // 닉네임 중복 확인 함수
   const checkNicknameDuplicate = (currentNickname) => {
     fetch(`/api/checkNicknameDuplicate?nickname=${currentNickname}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.isAvailable) {
           setIsNicknameAvailable(true);
           setNicknameMessage("사용 가능한 닉네임입니다.");
@@ -102,7 +100,7 @@ const SignUp = () => {
           setNicknameMessage("이미 사용 중인 닉네임입니다.");
         }
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   // 아이디 입력 핸들러
@@ -121,7 +119,9 @@ const SignUp = () => {
     }
   };
 
-  {/* 이름 입력 핸들러 */ }
+  {
+    /* 이름 입력 핸들러 */
+  }
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -136,7 +136,9 @@ const SignUp = () => {
     }
   };
 
-  {/* 닉네임 입력 핸들러 */ }
+  {
+    /* 닉네임 입력 핸들러 */
+  }
   const onChangeNickname = (e) => {
     const currentNickname = e.target.value;
     setNickname(currentNickname);
@@ -150,7 +152,6 @@ const SignUp = () => {
       checkNicknameDuplicate(currentNickname);
     }
   };
-
 
   // 비밀번호 입력 핸들러
   const onChangePassword = (e) => {
@@ -243,7 +244,10 @@ const SignUp = () => {
     const monthDiff = today.getMonth() - birthDate.getMonth();
 
     // 만약 현재 월이 생일 월보다 이전이거나, 현재 월과 생일 월이 같지만 현재 날짜가 생일보다 전일 경우 1 빼기
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       setAge(ageDiff - 1);
     } else {
       setAge(ageDiff);
@@ -274,10 +278,14 @@ const SignUp = () => {
   // 지역 변경 핸들러
   const handlePlaceChange = (e) => {
     const selectedPlaceTypeName = e.target.value;
-    const selectedPlaceTypeObj = placeTypes.find((placeType) => placeType.placeTypeName === selectedPlaceTypeName);
+    const selectedPlaceTypeObj = placeTypes.find(
+      (placeType) => placeType.placeTypeName === selectedPlaceTypeName
+    );
 
     setSelectedPlaceType({
-      placeTypeSEQ: selectedPlaceTypeObj ? selectedPlaceTypeObj.placeTypeSEQ : "",
+      placeTypeSEQ: selectedPlaceTypeObj
+        ? selectedPlaceTypeObj.placeTypeSEQ
+        : "",
       placeTypeName: selectedPlaceTypeName,
     });
   };
@@ -324,7 +332,9 @@ const SignUp = () => {
   }, []);
 
   const getCategoriesByType = (ctSEQ) => {
-    return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ
+    return categories.filter(
+      (category) =>
+        category.categoryType && category.categoryType.ctSEQ === ctSEQ
     );
   };
 
@@ -340,12 +350,9 @@ const SignUp = () => {
   }, []);
 
   const [selectedPlaceType, setSelectedPlaceType] = useState({
-    placeTypeSEQ: "",   // 선택한 placeType의 placeTypeSEQ
+    placeTypeSEQ: "", // 선택한 placeType의 placeTypeSEQ
     placeTypeName: "",
   });
-
-
-
 
   const handleSubmit = async (e) => {
     if (e) {
@@ -375,17 +382,20 @@ const SignUp = () => {
     };
 
     try {
-      const userResponse = await axios.post("http://localhost:8080/qiri/userInfo/signup", signUpDTO);
+      const userResponse = await axios.post(
+        "http://localhost:8080/qiri/userInfo/signup",
+        signUpDTO
+      );
 
       if (userResponse.data) {
-        alert('회원가입 성공. 로그인 해주세요');
-        navigate('/');
+        alert("회원가입 성공. 로그인 해주세요");
+        navigate("/");
       } else {
-        alert('회원가입 실패. 다시 시도해주세요.');
+        alert("회원가입 실패. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error(error);
-      alert('오류가 발생했습니다. 다시 시도해주세요.');
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -413,7 +423,12 @@ const SignUp = () => {
           {/* 닉네임 입력 양식 */}
           <div className="form-el">
             <label htmlFor="nickname">닉네임</label> <br />
-            <input id="nickname" name="nickname" value={nickname} onChange={onChangeNickname} />
+            <input
+              id="nickname"
+              name="nickname"
+              value={nickname}
+              onChange={onChangeNickname}
+            />
             <br></br>
             {!isNicknameAvailable && <p>이미 사용 중인 닉네임입니다.</p>}
             <p className="message">{nicknameMessage}</p>
@@ -427,7 +442,8 @@ const SignUp = () => {
               name="password"
               type={showPassword ? "text" : "password"} // 비밀번호 보이기 입력에 따라 변경
               value={password}
-              onChange={onChangePassword} />
+              onChange={onChangePassword}
+            />
             <br></br>
             <button
               type="button"
@@ -447,7 +463,8 @@ const SignUp = () => {
               name="passwordConfirm"
               type={showPassword ? "text" : "password"}
               value={passwordConfirm}
-              onChange={onChangePasswordConfirm} />
+              onChange={onChangePasswordConfirm}
+            />
             <br></br>
             <button
               type="button"
@@ -493,7 +510,8 @@ const SignUp = () => {
 
           {/* 나이 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="age">나이 (생일 선택시 자동 선택. 만나이)</label> <br />
+            <label htmlFor="age">나이 (생일 선택시 자동 선택. 만나이)</label>{" "}
+            <br />
             <input
               id="age"
               name="age"
@@ -513,7 +531,7 @@ const SignUp = () => {
                   id="남"
                   name="gender"
                   value="남"
-                  checked={selectedGender === '남'}
+                  checked={selectedGender === "남"}
                   onChange={handleGenderChange}
                 />
                 <label htmlFor="male">남</label>
@@ -524,14 +542,13 @@ const SignUp = () => {
                   id="여"
                   name="gender"
                   value="여"
-                  checked={selectedGender === '여'}
+                  checked={selectedGender === "여"}
                   onChange={handleGenderChange}
                 />
                 <label htmlFor="female">여</label>
               </div>
             </div>
             <br></br>
-
             {/* 애인 여부 입력 양식 */}
             <div className="form-el">
               <label>애인 여부</label> <br />
@@ -561,8 +578,6 @@ const SignUp = () => {
               </div>
             </div>
             <br></br>
-
-
             {/* 혈액형 입력 양식 */}
             <div className="blood-type">
               <label>혈액형</label> <br />
@@ -593,7 +608,12 @@ const SignUp = () => {
             >
               <option value="">선택하세요</option>
               {placeTypes.map((placeType) => (
-                <option value={placeType.placeTypeName} key={placeType.placeTypeSEQ}>{placeType.placeTypeName}</option>
+                <option
+                  value={placeType.placeTypeName}
+                  key={placeType.placeTypeSEQ}
+                >
+                  {placeType.placeTypeName}
+                </option>
               ))}
             </select>
           </div>
@@ -631,7 +651,8 @@ const SignUp = () => {
 
           {/* 상태 메시지 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="statusMessage">상태 메시지 (최대 20자)</label> <br />
+            <label htmlFor="statusMessage">상태 메시지 (최대 20자)</label>{" "}
+            <br />
             <input
               id="statusMessage"
               name="statusMessage"
@@ -642,26 +663,33 @@ const SignUp = () => {
             <p className="message">{warningMessage}</p>
           </div>
 
-         
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
             <div className="form-el">
               <label>관심 주제를 선택해주세요</label>
               <br />
               <div className="selectlike-box">
-                {categoryTypes.map(categoryType => (
+                {categoryTypes.map((categoryType) => (
                   <div key={categoryType.ctSEQ}>
                     <h3>{categoryType.ctName}</h3>
                     <div className="box-options">
-                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
-                        <div
-                          key={category.categorySEQ}
-                          className={`selectlike-box-item ${selectlike.includes(category.categoryName) ? 'selected' : ''}`}
-                          onClick={() => handleInterestClick(category.categoryName)}
-                        >
-                          {category.categoryName}
-                        </div>
-                      ))}
+                      {getCategoriesByType(categoryType.ctSEQ).map(
+                        (category) => (
+                          <div
+                            key={category.categorySEQ}
+                            className={`selectlike-box-item ${
+                              selectlike.includes(category.categoryName)
+                                ? "selected"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              handleInterestClick(category.categoryName)
+                            }
+                          >
+                            {category.categoryName}
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 ))}
