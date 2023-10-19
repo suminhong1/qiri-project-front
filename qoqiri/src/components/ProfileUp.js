@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Modal from "./modal";
+import Imgmodal from "./imgmodal";
 import "../css/ProfileUp.css";
-import son from "../assets/son.jpg";
+import defaultimg from "../assets/defaultimg.png";
 import { getUser, signUp } from "../api/user";
 
 const ProfileUp = ({ userId }) => {
@@ -109,7 +109,7 @@ const ProfileUp = ({ userId }) => {
           <div>
             <img
               className="pfU-main-image"
-              src={son}
+              src={userData?.profileImage || defaultimg}
               alt="User"
               onClick={() => handleImageClick(0)}
             />
@@ -227,8 +227,8 @@ const ProfileUp = ({ userId }) => {
         </div>
       </div>
       {isModalOpen && (
-        <Modal
-          images={[son]}
+        <Imgmodal
+          images={[userData?.profileImage || defaultimg]}
           index={currentImageIndex}
           close={handleModalClose}
         />

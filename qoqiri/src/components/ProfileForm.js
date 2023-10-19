@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Modal from "./modal";
+import Imgmodal from "./imgmodal";
 import "../css/ProfileForm.css";
-import son from "../assets/son.jpg";
 import { getUser } from "../api/user";
+import defaultimg from "../assets/defaultimg.png";
 
 const ProfileForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -10,7 +10,6 @@ const ProfileForm = ({ userId }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const [userData, setUserData] = useState({ introduction: "" });
-  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -20,15 +19,6 @@ const ProfileForm = ({ userId }) => {
 
     fetchUserData();
   }, [userId]);
-
-  const currentUserId = userId; //  현재 접속한 계정  (수정해야함)
-
-  const handleInputChange = (key, value) => {
-    setUserData((prevData) => ({
-      ...prevData,
-      [key]: value,
-    }));
-  };
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
@@ -44,43 +34,15 @@ const ProfileForm = ({ userId }) => {
   };
 
   const customButtonStyle = {
-    display: isFlipped || isEditing ? "none" : "block",
+    display: isFlipped ? "none" : "block",
     transform: "none",
-    cursor: "pointer",
-    borderRadius: "4px",
-  };
-
-  const customBackButtonStyle = {
-    display: isFlipped && !isEditing ? "block" : "none",
-    transform: "scale(-1, 1)",
     cursor: "pointer",
     borderRadius: "4px",
   };
 
   const customBackBtn = {
-    display: isFlipped && !isEditing ? "block" : "none", // 아이디가 같지않으면 안보임
+    display: isFlipped ? "block" : "none", // 아이디가 같지않으면 안보임
     transform: "scale(-1, 1)",
-    cursor: "pointer",
-    borderRadius: "4px",
-  };
-
-  const customSaveButtonStyle = {
-    display: isFlipped && isEditing ? "block" : "none", // 편집 모드일 때만 보이게 변경
-    transform: "scale(-1, 1)",
-    cursor: "pointer",
-    borderRadius: "4px",
-  };
-
-  const customFrontEditButtonStyle = {
-    display: !isFlipped && !isEditing ? "block" : "none",
-    transform: "none",
-    cursor: "pointer",
-    borderRadius: "4px",
-  };
-
-  const customFrontSaveButtonStyle = {
-    display: !isFlipped && isEditing ? "block" : "none",
-    transform: "none",
     cursor: "pointer",
     borderRadius: "4px",
   };
@@ -94,7 +56,7 @@ const ProfileForm = ({ userId }) => {
           <div>
             <img
               className="pf-main-image"
-              src={son}
+              src={userData?.profileImage || defaultimg}
               alt="User"
               onClick={() => handleImageClick(0)}
             />
@@ -119,16 +81,8 @@ const ProfileForm = ({ userId }) => {
           <div className="pf-card-body">
             <div className="pf-info-row">
               <div className="pf-info-label">닉네임:</div>
-              {isEditing ? (
-                <input
-                  value={userData?.userNickname}
-                  onChange={(e) =>
-                    handleInputChange("userNickname", e.target.value)
-                  }
-                />
-              ) : (
-                <div className="pf-info-value">{userData?.userNickname}</div>
-              )}
+
+              <div className="pf-info-value">{userData?.userNickname}</div>
             </div>
             <hr />
             <div className="pf-info-row">
@@ -174,8 +128,8 @@ const ProfileForm = ({ userId }) => {
         </div>
       </div>
       {isModalOpen && (
-        <Modal
-          images={[son]}
+        <Imgmodal
+          images={[userData?.profileImage || defaultimg]}
           index={currentImageIndex}
           close={handleModalClose}
         />

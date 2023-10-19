@@ -64,7 +64,7 @@ const router = createBrowserRouter([
         element: <Post />,
       },
       {
-        path: "/review",
+        path: "review",
         element: <Review />,
       },
       {
@@ -82,7 +82,7 @@ const router = createBrowserRouter([
     element: <Mini />,
   },
   {
-    path: "/apply",
+    path: "apply",
     element: <Apply />,
   },
 ]);
