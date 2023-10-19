@@ -104,7 +104,7 @@ const Header = () => {
     if (Object.keys(user).length === 0 && save !== null) {
       dispatch(userSave(JSON.parse(save)));
     }
-  }, []);
+  }, [user]);
 
   if (location.pathname === "/Login" || location.pathname === "/signup") {
     return null; // 로그인, 회원가입 페이지일때 헤더 숨김

@@ -1,41 +1,63 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import '../Signup.css';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../css/Signup.css';
+import { getCategoryTypes } from '../api/categoryType';
+import { getCategories } from '../api/category';
+import { getPlaceTypes } from '../api/placeType';
+import { useNavigate } from 'react-router-dom';
+import { EditProfile } from '../api/user';
 
-function EditProfile() {
+const EditMyInfo = () => {
   // 상태 변수들
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+
   const [id, setId] = useState("");
+  const [name, setName] = useState("");
+  const [nickname, setNickname] = useState("");
   const [isIdAvailable, setIsIdAvailable] = useState(true);
   const [isNameAvailable, setIsNameAvailable] = useState(true);
-  const [name, setName] = useState("");
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState(true);
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
+  const [age, setAge] = useState("");
   const [selectedGender, setSelectedGender] = useState('');
+  const [hasPartner, setHasPartner] = useState("없음");
   const [selectedBloodType, setSelectedBloodType] = useState('');
-  const [location, setLocation] = useState('');
+  const [placeType, setPlaceType] = useState('');
   const [mbti, setMbti] = useState('');
-  const [selectlike, setSelectlike] = useState([]); // 관심사
+  const [statusMessage, setStatusMessage] = useState("");
+  const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
+ // const [profileImg, setProfileImg] = useState(null);
+  const [selectlike, setSelectlike] = useState([]);
+
 
   // 알림창(에러 메시지)
-  const [idMessage, setIdMessage] = React.useState("");
-  const [nameMessage, setNameMessage] = React.useState("");
-  const [passwordMessage, setPasswordMessage] = React.useState("");
-  const [passwordConfirmMessage, setPasswordConfirmMessage] = React.useState("");
-  const [emailMessage, setEmailMessage] = React.useState("");
-  const [phoneMessage, setPhoneMessage] = React.useState("");
-  const [birthMessage, setBirthMessage] = React.useState("");
+  const [idMessage, setIdMessage] = useState("");
+  const [nicknameMessage, setNicknameMessage] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordConfirmMessage, setPasswordConfirmMessage] = useState("");
+  const [emailMessage, setEmailMessage] = useState("");
+  const [phoneMessage, setPhoneMessage] = useState("");
+  const [birthMessage, setBirthMessage] = useState("");
+  const [nameMessage, setNameMessage] = useState("");
 
   // 유효성 검사
-  const [isId, setIsId] = React.useState(false);
-  const [isname, setIsName] = React.useState(false);
-  const [isPassword, setIsPassword] = React.useState(false);
-  const [isPasswordConfirm, setIsPasswordConfirm] = React.useState(false);
-  const [isEmail, setIsEmail] = React.useState(false);
-  const [isPhone, setIsPhone] = React.useState(false);
+  const [isId, setIsId] = useState(false);
+  const [isName, setIsName] = useState(false);
+  const [isNickname, setIsNickname] = useState(false);
+  const [isPassword, setIsPassword] = useState(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState(false);
+  const [isEmail, setIsEmail] = useState(false);
+  const [isPhone, setIsPhone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // 관심사 관련
+  const [categories, setCategories] = useState([]);
+  const [categoryTypes, setCategoryTypes] = useState([]);
 
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {
@@ -53,17 +75,34 @@ function EditProfile() {
       .catch(error => console.error(error));
   };
 
-  // 닉네임 중복 확인 함수
-  const checkNicknameDuplicate = (currentName) => {
-    fetch(`/api/checkNicknameDuplicate?nickname=${currentName}`)
+  // 이름 중복 확인 함수
+  const checkNameDuplicate = (currentName) => {
+    fetch(`/api/checkNameDuplicate?name=${currentName}`)
       .then(response => response.json())
       .then(data => {
         if (data.isAvailable) {
           setIsNameAvailable(true);
-          alert("사용 가능한 닉네임입니다.");
+          setNameMessage("사용 가능한 이름입니다.");
         } else {
           setIsNameAvailable(false);
-          alert("이미 사용 중인 닉네임입니다.");
+          setNameMessage("이미 사용 중인 이름입니다.");
+        }
+      })
+      .catch(error => console.error(error));
+  };
+
+
+  // 닉네임 중복 확인 함수
+  const checkNicknameDuplicate = (currentNickname) => {
+    fetch(`/api/checkNicknameDuplicate?nickname=${currentNickname}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.isAvailable) {
+          setIsNicknameAvailable(true);
+          setNicknameMessage("사용 가능한 닉네임입니다.");
+        } else {
+          setIsNicknameAvailable(false);
+          setNicknameMessage("이미 사용 중인 닉네임입니다.");
         }
       })
       .catch(error => console.error(error));
@@ -85,20 +124,36 @@ function EditProfile() {
     }
   };
 
-  // 닉네임 입력 핸들러
+  {/* 이름 입력 핸들러 */ }
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
 
     if (currentName.length < 2 || currentName.length > 8) {
-      setNameMessage("닉네임은 2글자 이상 8글자 이하로 입력해주세요.");
+      setNameMessage("이름은 2글자 이상 8글자 이하로 입력해주세요.");
       setIsName(false);
     } else {
       setNameMessage("");
       setIsName(true);
-      checkNicknameDuplicate(currentName);
+      checkNameDuplicate(currentName);
     }
   };
+
+  {/* 닉네임 입력 핸들러 */ }
+  const onChangeNickname = (e) => {
+    const currentNickname = e.target.value;
+    setNickname(currentNickname);
+
+    if (currentNickname.length < 2 || currentNickname.length > 8) {
+      setNicknameMessage("닉네임은 2글자 이상 8글자 이하로 입력해주세요.");
+      setIsNickname(false);
+    } else {
+      setNicknameMessage("");
+      setIsNickname(true);
+      checkNicknameDuplicate(currentNickname);
+    }
+  };
+
 
   // 비밀번호 입력 핸들러
   const onChangePassword = (e) => {
@@ -128,6 +183,11 @@ function EditProfile() {
       setPasswordConfirmMessage("");
       setIsPasswordConfirm(true);
     }
+  };
+
+  // 비밀번호 보이기 토글 핸들러
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   // 이메일 입력 핸들러
@@ -177,11 +237,36 @@ function EditProfile() {
   const onChangeBirth = (e) => {
     const currentBirth = e.target.value;
     setBirth(currentBirth);
+
+    // 생일 기반 나이 계산
+    const birthDate = new Date(currentBirth);
+    const today = new Date();
+    const ageDiff = today.getFullYear() - birthDate.getFullYear();
+    // 현재 월과 생일 월 비교
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    // 만약 현재 월이 생일 월보다 이전이거나, 현재 월과 생일 월이 같지만 현재 날짜가 생일보다 전일 경우 1 빼기
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      setAge(ageDiff - 1);
+    } else {
+      setAge(ageDiff);
+    }
+  };
+
+  // 나이 입력 핸들러
+  const onChangeAge = (e) => {
+    const currentAge = e.target.value;
+    setAge(currentAge);
   };
 
   // 성별 변경 핸들러
   const handleGenderChange = (e) => {
     setSelectedGender(e.target.value);
+  };
+
+  // 애인 여부 선택 핸들러
+  const handleHasPartnerChange = (e) => {
+    setHasPartner(e.target.value);
   };
 
   // 혈액형 변경 핸들러
@@ -190,14 +275,32 @@ function EditProfile() {
   };
 
   // 지역 변경 핸들러
-  const handleLocationChange = (e) => {
-    setLocation(e.target.value);
+  const handlePlaceChange = (e) => {
+    const selectedPlaceTypeName = e.target.value;
+    const selectedPlaceTypeObj = placeTypes.find((placeType) => placeType.placeTypeName === selectedPlaceTypeName);
+  
+    setSelectedPlaceType({
+      placeTypeSEQ: selectedPlaceTypeObj ? selectedPlaceTypeObj.placeTypeSEQ : "",
+      placeTypeName: selectedPlaceTypeName,
+    });
   };
 
   // MBTI 변경 핸들러
   const handleMbtiChange = (e) => {
     setMbti(e.target.value);
   };
+
+  // 상태 메시지 입력 핸들러
+  const onChangeStatusMessage = (e) => {
+    const currentStatusMessage = e.target.value;
+    if (currentStatusMessage.length > 20) {
+      setWarningMessage("최대 20자까지 입력 가능합니다.");
+    } else {
+      setStatusMessage(currentStatusMessage);
+      setWarningMessage("");
+    }
+  };
+
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
@@ -208,37 +311,125 @@ function EditProfile() {
     }
   };
 
-  // 비밀번호 보이기 토글 핸들러
-  const toggleShowPassword = () => {
-    setShowPassword(!showPassword);
+  useEffect(() => {
+    const fetchCategoryTypes = async () => {
+      const result = await getCategoryTypes();
+      setCategoryTypes(result.data);
+    };
+
+    const fetchCategories = async () => {
+      const result = await getCategories();
+      console.log(result.data);
+      setCategories(result.data);
+    };
+
+    fetchCategoryTypes();
+    fetchCategories();
+  }, []);
+
+  const getCategoriesByType = (ctSEQ) => {
+    return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ
+    );
   };
 
-  const interestCategories = [
-    {
-      name: '엔터테인먼트 & 예술',
-      options: ['영화', '드라마', '음악', '미술'],
-    },
+  const [placeTypes, setPlaceTypes] = useState([]);
 
-    {
-      name: '스포츠',
-      options: ['축구', '야구', '농구', '서핑', '수영', '볼링', '러닝 & 산책', '헬스', '클라이밍', '테니스', '스키'],
-    },
+  const placeTypeAPI = async () => {
+    const result = await getPlaceTypes();
+    setPlaceTypes(result.data);
+  };
 
-    {
-      name: '게임',
-      options: ['롤', '피파', '스타', '메이플', '배그', '스팀 게임', '던파', '오버워치'],
-    },
-  ];
+  useEffect(() => {
+    placeTypeAPI();
+  }, []);
+
+  const [selectedPlaceType, setSelectedPlaceType] = useState({
+    placeTypeSEQ: "",   // 선택한 placeType의 placeTypeSEQ
+    placeTypeName: "", // 선택한 placeType의 placeTypeName
+  });
+
+
+
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/qiri/userInfo");
+        const userInfo = response.data;
+  
+        setUser(userInfo);
+        setId(userInfo.id);
+        setName(userInfo.name);
+        setNickname(userInfo.nickname);
+        setPassword(userInfo.pwd);
+        setEmail(userInfo.email);
+        setPhone(userInfo.phone);
+        setBirth(userInfo.birthday);
+        setAge(userInfo.age);
+        setSelectedGender(userInfo.gender);
+        setHasPartner(userInfo.hasPartner);
+        setSelectedBloodType(userInfo.bloodType);
+        setMbti(userInfo.mbti);
+        setStatusMessage(userInfo.statusMessage);
+        if (userInfo.userCategories) {
+          setSelectlike(userInfo.userCategories.map(category => category.categoryName));
+        }
+      } catch (error) {
+        console.error('사용자 정보 가져오기 실패:', error);
+      }
+    };
+  
+    getUserInfo();
+  }, []);
+  
+
+  const handleSubmit = async (e) => {
+    if (e) {
+      e.preventDefault(); // 폼 기본 제출 방지
+    }
+
+    const updatedInfo = {
+      id,
+      pwd: password,
+      name,
+      nickname,
+      placeType:selectedPlaceType,
+      age,
+      gender: selectedGender,
+      phone,
+      email,
+      hasPartner,
+      birthday: birth,
+      bloodType: selectedBloodType,
+      mbti,
+      statusMessage,
+      userCategories: selectlike.map((categoryName) => ({ categoryName })),
+    };
+  
+   
+    try {
+      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updatedInfo, {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        },
+      });
+
+      if (updateResponse.status === 200) {
+        alert('회원정보 수정 완료.');
+        navigate('/');
+      } else {
+        alert('회원정보 수정 실패. 다시 시도해주세요.');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('오류가 발생했습니다. 다시 시도해주세요.');
+    }
+  };
 
   return (
     <>
       <div className="form-container">
-        <img src="/elephant.png" alt="로고이미지" style={{ width: '100px', height: 'auto' }} />
-        <img src="/title.jpg" alt="타이틀" style={{ width: '150px', height: 'auto', marginTop: '-200px' }} />
-
-        <h3></h3>
         <div className="form">
-        <div className="form-el">
+          <div className="form-el">
             <label htmlFor="id">아이디</label> <br />
             <input id="id" name="id" value={id} onChange={onChangeId} />
             <br></br>
@@ -246,24 +437,34 @@ function EditProfile() {
             <p className="message">{idMessage}</p>
           </div>
 
+          {/* 이름 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="name">닉네임</label> <br />
+            <label htmlFor="name">이름</label> <br />
             <input id="name" name="name" value={name} onChange={onChangeName} />
-            <br></br>
-            {!isNameAvailable && <p>이미 사용 중인 닉네임입니다.</p>}
+            <br />
+            {!isNameAvailable && <p>이미 사용 중인 이름입니다.</p>}
             <p className="message">{nameMessage}</p>
           </div>
-          
 
+          {/* 닉네임 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="nickname">닉네임</label> <br />
+            <input id="nickname" name="nickname" value={nickname} onChange={onChangeNickname} />
+            <br></br>
+            {!isNicknameAvailable && <p>이미 사용 중인 닉네임입니다.</p>}
+            <p className="message">{nicknameMessage}</p>
+          </div>
+
+          {/* 비밀번호 입력 양식 */}
           <div className="form-el">
             <label htmlFor="password">비밀번호</label> <br />
             <input
               id="password"
               name="password"
-              type={showPassword ? "text" : "password"} // 비밀번호 보이기 여부에 따라 타입 변경
+              type={showPassword ? "text" : "password"} // 비밀번호 보이기 입력에 따라 변경
               value={password}
               onChange={onChangePassword} />
-              <br></br>
+            <br></br>
             <button
               type="button"
               onClick={toggleShowPassword}
@@ -274,17 +475,27 @@ function EditProfile() {
             <p className="message">{passwordMessage}</p>
           </div>
 
+          {/* 비밀번호 확인 입력 양식 */}
           <div className="form-el">
             <label htmlFor="passwordConfirm">비밀번호 확인</label> <br />
             <input
               id="passwordConfirm"
               name="passwordConfirm"
+              type={showPassword ? "text" : "password"}
               value={passwordConfirm}
-              onChange={onChangePasswordConfirm}
-            />
+              onChange={onChangePasswordConfirm} />
+            <br></br>
+            <button
+              type="button"
+              onClick={toggleShowPassword}
+              className="show-password-button"
+            >
+              {showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+            </button>
             <p className="message">{passwordConfirmMessage}</p>
           </div>
 
+          {/* 이메일 입력 양식 */}
           <div className="form-el">
             <label htmlFor="email">이메일</label> <br />
             <input
@@ -296,34 +507,49 @@ function EditProfile() {
             <p className="message">{emailMessage}</p>
           </div>
 
+          {/* 휴대전화번호 입력 양식 */}
           <div className="form-el">
             <label htmlFor="phone">휴대전화번호</label> <br />
             <input id="phone" name="phone" value={phone} onChange={addHyphen} />
             <p className="message">{phoneMessage}</p>
           </div>
 
+          {/* 생일 입력 양식 */}
           <div className="form-el">
             <label htmlFor="birth">생일</label> <br />
             <input
               id="birth"
               name="birth"
-              type="date"
+              type="Date"
               value={birth}
               onChange={onChangeBirth}
             />
             <p className="message">{birthMessage}</p>
           </div>
 
+          {/* 나이 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="age">나이 (생일 선택시 자동 선택. 만나이)</label> <br />
+            <input
+              id="age"
+              name="age"
+              type="number"
+              value={age}
+              onChange={onChangeAge}
+            />
+          </div>
+
+          {/* 성별 입력 양식 */}
           <div className="form-el">
             <label>성별</label> <br />
             <div className="gender-options">
               <div className="gender-option">
                 <input
                   type="radio"
-                  id="male"
+                  id="남"
                   name="gender"
-                  value="male"
-                  checked={selectedGender === 'male'}
+                  value="남"
+                  checked={selectedGender === '남'}
                   onChange={handleGenderChange}
                 />
                 <label htmlFor="male">남</label>
@@ -331,10 +557,10 @@ function EditProfile() {
               <div className="gender-option">
                 <input
                   type="radio"
-                  id="female"
+                  id="여"
                   name="gender"
-                  value="female"
-                  checked={selectedGender === 'female'}
+                  value="여"
+                  checked={selectedGender === '여'}
                   onChange={handleGenderChange}
                 />
                 <label htmlFor="female">여</label>
@@ -342,11 +568,44 @@ function EditProfile() {
             </div>
             <br></br>
 
+            {/* 애인 여부 입력 양식 */}
+            <div className="form-el">
+              <label>애인 여부</label> <br />
+              <div className="gender-options">
+                <div className="gender-option">
+                  <input
+                    type="radio"
+                    id="hasPartnerYes"
+                    name="hasPartner"
+                    value="Y"
+                    checked={hasPartner === "Y"}
+                    onChange={handleHasPartnerChange}
+                  />
+                  <label htmlFor="hasPartnerYes">있음</label>
+                </div>
+                <div className="gender-option">
+                  <input
+                    type="radio"
+                    id="hasPartnerNo"
+                    name="hasPartner"
+                    value="N"
+                    checked={hasPartner === "N"}
+                    onChange={handleHasPartnerChange}
+                  />
+                  <label htmlFor="hasPartnerNo">없음</label>
+                </div>
+              </div>
+            </div>
+            <br></br>
+
+
+            {/* 혈액형 입력 양식 */}
             <div className="blood-type">
               <label>혈액형</label> <br />
               <select
                 id="bloodType"
                 name="bloodType"
+                type="String"
                 value={selectedBloodType}
                 onChange={handleBloodTypeChange}
               >
@@ -359,39 +618,29 @@ function EditProfile() {
             </div>
           </div>
 
-          <div className="form-el select-for-location">
-            <label htmlFor="location">지역</label> <br />
+          {/* 지역 입력 양식 */}
+          <div className="form-el select-for-place">
+            <label htmlFor="place">지역</label> <br />
             <select
-              id="location"
-              name="location"
-              value={location}
-              onChange={handleLocationChange}
+              id="place"
+              name="place"
+              value={placeType.placeTypeName} 
+              onChange={handlePlaceChange}
             >
               <option value="">선택하세요</option>
-              <option value="서울">서울</option>
-              <option value="인천">인천</option>
-              <option value="경기">경기</option>
-              <option value="강원">강원</option>
-              <option value="충북">충북</option>
-              <option value="충남">충남</option>
-              <option value="대구">대구</option>
-              <option value="경북">경북</option>
-              <option value="부산">부산</option>
-              <option value="울산">울산</option>
-              <option value="광주">광주</option>
-              <option value="대전">대전</option>
-              <option value="전북">전북</option>
-              <option value="전남">전남</option>
-              <option value="제주">제주</option>
-              <option value="기타">기타(해외 등)</option>
+              {placeTypes.map((placeType) => (
+                <option value={placeType.placeTypeName} key={placeType.placeTypeSEQ}>{placeType.placeTypeName}</option>
+              ))}
             </select>
           </div>
 
+          {/* MBTI 입력 양식 */}
           <div className="form-el select-for-mbti">
             <label htmlFor="mbti">MBTI</label> <br />
             <select
               id="mbti"
               name="mbti"
+              type="String"
               value={mbti}
               onChange={handleMbtiChange}
             >
@@ -416,37 +665,54 @@ function EditProfile() {
           </div>
           <br></br>
 
-          <div class="interest-section">
+          {/* 상태 메시지 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="statusMessage">상태 메시지 (최대 20자)</label> <br />
+            <input
+              id="statusMessage"
+              name="statusMessage"
+              value={statusMessage}
+              onChange={onChangeStatusMessage}
+              maxLength={20}
+            />
+            <p className="message">{warningMessage}</p>
+          </div>
+
+          {/* 관심 주제 선택 양식 */}
+          <div className="interest-section">
             <div className="form-el">
-              <label>관심 주제 설정</label>
+              <label>관심 주제를 선택해주세요</label>
               <br />
-              {interestCategories.map((category) => (
-                <div key={category.name}>
-                  <div className="interest-category">{category.name}</div>
-                  <div className="selectlike-box">
-                    {category.options.map((interest) => (
-                      <div
-                        key={interest}
-                        className={`selectlike-box-item ${selectlike.includes(interest) ? 'selected' : ''
-                          }`}
-                        onClick={() => handleInterestClick(interest)}
-                      >
-                        {interest}
-                      </div>
-                    ))}
+              <div className="selectlike-box">
+                {categoryTypes.map(categoryType => (
+                  <div key={categoryType.ctSEQ}>
+                    <h3>{categoryType.ctName}</h3>
+                    <div className="box-options">
+                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
+                        <div
+                          key={category.categorySEQ}
+                          className={`selectlike-box-item ${selectlike.includes(category.categoryName) ? 'selected' : ''}`}
+                          onClick={() => handleInterestClick(category.categoryName)}
+                        >
+                          {category.categoryName}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
           <br />
           <br />
-          <button type="submit">회원 정보 수정</button>
+          <form onSubmit={handleSubmit} className="signup-form">
+            <button type="submit">프로필 수정</button>
+          </form>
         </div>
       </div>
     </>
   );
-}
+};
 
-export default EditProfile;
+export default EditMyInfo;

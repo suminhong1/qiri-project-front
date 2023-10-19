@@ -22,3 +22,6 @@ export const getUserNickname = async (data) => {
   const response = await axios.get(data);
   return response.data;
 };
+export const EditProfile = async (data) => {
+  return await instance.put("editProfile", data);
+};

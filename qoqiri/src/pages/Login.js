@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../css/login.css";
-import axios from "axios";
 import logo from "../assets/logo.png";
+import { useDispatch } from "react-redux"; 
+import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -10,14 +11,17 @@ export default function Login() {
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
+
+ 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (idValid && pwValid) {
       setNotAllow(false);
-      return;
+    } else {
+      setNotAllow(true);
     }
-    setNotAllow(true);
   }, [idValid, pwValid]);
 
   const handleId = (e) => {
@@ -43,22 +47,14 @@ export default function Login() {
     event.preventDefault();
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/qiri/userInfo/signin",
-        { id: id, pwd: pw }
-      );
-      const data = response.data;
-
-      if (response.status === 200) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ id: data.id, nickname: data.nickname })
-        );
+      const resultAction = await dispatch(asyncLogin({ id: id, pwd: pw }));
+      const { payload } = resultAction;
+      
+      if (payload && payload.token) {
         alert("로그인 성공.");
         navigate("/");
       } else {
-        alert(data.message || "로그인 실패");
+        alert("로그인 실패");
       }
     } catch (error) {
       alert("로그인 중 오류 발생");

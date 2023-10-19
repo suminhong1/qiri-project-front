@@ -29,7 +29,6 @@ const SignUp = () => {
   const [mbti, setMbti] = useState('');
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
- // const [profileImg, setProfileImg] = useState(null);
   const [selectlike, setSelectlike] = useState([]);
 
 
@@ -276,7 +275,7 @@ const SignUp = () => {
   const handlePlaceChange = (e) => {
     const selectedPlaceTypeName = e.target.value;
     const selectedPlaceTypeObj = placeTypes.find((placeType) => placeType.placeTypeName === selectedPlaceTypeName);
-  
+
     setSelectedPlaceType({
       placeTypeSEQ: selectedPlaceTypeObj ? selectedPlaceTypeObj.placeTypeSEQ : "",
       placeTypeName: selectedPlaceTypeName,
@@ -298,7 +297,6 @@ const SignUp = () => {
       setWarningMessage("");
     }
   };
-
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
@@ -343,11 +341,11 @@ const SignUp = () => {
 
   const [selectedPlaceType, setSelectedPlaceType] = useState({
     placeTypeSEQ: "",   // 선택한 placeType의 placeTypeSEQ
-    placeTypeName: "", // 선택한 placeType의 placeTypeName
+    placeTypeName: "",
   });
 
 
-  
+
 
   const handleSubmit = async (e) => {
     if (e) {
@@ -359,7 +357,7 @@ const SignUp = () => {
       pwd: password,
       name,
       nickname,
-      placeType:selectedPlaceType,
+      placeType: selectedPlaceType,
       age,
       gender: selectedGender,
       phone,
@@ -370,15 +368,15 @@ const SignUp = () => {
       mbti,
       statusMessage,
     };
-  
+
     const signUpDTO = {
       userInfoDTO,
       userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
-  
+
     try {
       const userResponse = await axios.post("http://localhost:8080/qiri/userInfo/signup", signUpDTO);
-    
+
       if (userResponse.data) {
         alert('회원가입 성공. 로그인 해주세요');
         navigate('/');
@@ -590,7 +588,7 @@ const SignUp = () => {
             <select
               id="place"
               name="place"
-              value={placeType.placeTypeName} 
+              value={placeType.placeTypeName}
               onChange={handlePlaceChange}
             >
               <option value="">선택하세요</option>
@@ -644,6 +642,7 @@ const SignUp = () => {
             <p className="message">{warningMessage}</p>
           </div>
 
+         
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
             <div className="form-el">

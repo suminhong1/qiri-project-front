@@ -15,6 +15,7 @@ import Review from "./pages/Review";
 import MiniUp from "./pages/MiniUp";
 import PostWrite from "./pages/PostWrite";
 import Chat from "./pages/Chat";
+import EditProfile from "./pages/EditProfile";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
       {
         path: "/chat",
         element: <Chat />,
+      },
+      {
+        path: "/EditProfile",
+        element: <EditProfile />,
       },
     ],
   },
