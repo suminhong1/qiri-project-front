@@ -4,6 +4,7 @@ import NavBtn from '../components/NavBtn';
 import kkorang from '../assets/kkorang3.jpg';
 import { getPostList, getBoards, getSearch } from '../api/post';
 import { useState, useEffect } from 'react';
+import Date from '../components/Date';
 
 const BestPost = () => {
     const [postList, setPostList] = useState([]);
@@ -58,6 +59,10 @@ const BestPost = () => {
         getSearch(formData.get('keyword'));
     };
 
+    const postWritehandler = (e) => {
+        window.location.href = '/postwrite';
+    };
+
     return (
         <>
             <article id="list">
@@ -85,7 +90,7 @@ const BestPost = () => {
                     </div>
 
                     {postList.map((post) => (
-                        <div className="item">
+                        <div className="item" key={post.postSEQ}>
                             <a href={`/viewpost/${post.postSEQ}`} className="post">
                                 <div className="best">
                                     <div className="titleContainer">
@@ -118,10 +123,11 @@ const BestPost = () => {
                                             <i className="nicknameIcon"></i>
                                         </div>
                                         <div className="dot"></div>
-                                        <div className="datetime">n일전</div>
+                                        <Date postDate={post?.postDate} />
                                         <div className="dot"></div>
                                         <div className="viewCount">
-                                            <i className="viewIcon"></i>뷰
+                                            {/* <i className="viewIcon"></i> */}
+                                            {post?.postView}
                                         </div>
                                         <div className="dot"></div>
                                         <div className="likeCount">
@@ -153,7 +159,9 @@ const BestPost = () => {
                         </div>
                     </form>
                 </div>
-                <div className="write"></div>
+                <div className="write">
+                    <div onClick={postWritehandler}>글쓰기</div>
+                </div>
             </div>
         </>
     );

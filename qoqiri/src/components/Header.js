@@ -106,6 +106,10 @@ const Header = () => {
     }
   }, []);
 
+  if (location.pathname === "/Login" || location.pathname === "/signup") {
+    return null; // 로그인, 회원가입 페이지일때 헤더 숨김
+  }
+
   const logout = () => {
     console.log("logout!");
     localStorage.removeItem("token");
@@ -113,10 +117,6 @@ const Header = () => {
     dispatch(userLogout());
     window.location.reload(); // 현재 페이지를 새로고침
   };
-
-  if (location.pathname === "/Login" || location.pathname === "/signup") {
-    return null; // 로그인, 회원가입 페이지일때 헤더 숨김
-  }
 
   return (
     <StyledHeader>
@@ -137,6 +137,38 @@ const Header = () => {
             />
           </a>
         </div>
+
+        <div className="header-search">
+          <input
+            type="search"
+            id="search"
+            className="search"
+            placeholder="원하는 끼리를 검색해보세요"
+            name="search"
+          />
+
+          <button className="searchBtn">
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              style={{ height: "20px", width: "auto" }}
+            />
+          </button>
+        </div>
+        {/* 로그인이 되어 있지 않은 경우 */}
+        {Object.keys(user).length === 0 && (
+          <>
+            <button className="header-user">
+              <Link to="/Login" className="login">
+                로그인
+              </Link>
+            </button>
+            <button className="header-user">
+              <Link to="/signup" className="join">
+                회원가입
+              </Link>
+            </button>
+          </>
+        )}
 
         <div className="header-search">
           <input
