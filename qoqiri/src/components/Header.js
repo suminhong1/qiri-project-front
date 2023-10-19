@@ -5,7 +5,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { userSave, userLogout } from "../store/userSlice";
 import { useLocation } from "react-router-dom";
 
@@ -80,7 +80,9 @@ const StyledHeader = styled.header`
   }
 
   .header-user .login,
-  .header-user .join {
+  .header-user .join,
+  .header-user .myInfo,
+  .header-user .logout {
     color: gray;
   }
 
@@ -109,6 +111,7 @@ const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     dispatch(userLogout());
+    window.location.reload(); // 현재 페이지를 새로고침
   };
 
   if (location.pathname === "/Login" || location.pathname === "/signup") {
@@ -138,12 +141,11 @@ const Header = () => {
         <div className="header-search">
           <input
             type="search"
+            name="search"
             id="search"
             className="search"
             placeholder="원하는 끼리를 검색해보세요"
-            name="search"
           />
-
           <button className="searchBtn">
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
@@ -170,13 +172,13 @@ const Header = () => {
         {/* 로그인이 되어 있는 경우 */}
         {Object.keys(user).length !== 0 && (
           <>
-            <button onClick={logout} className="header-user">
-              로그아웃
-            </button>
             <button className="header-user">
-              <a href="/myinfo" className="myInfo">
+              <Link to="/myinfo" className="myInfo">
                 내정보
-              </a>
+              </Link>
+            </button>
+            <button onClick={logout} className="header-user">
+              <div className="logout">로그아웃</div>
             </button>
           </>
         )}

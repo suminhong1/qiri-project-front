@@ -1,19 +1,36 @@
-import { useEffect } from "react";
+import React, { useRef } from "react";
+
+import SockJsClient from "react-stomp";
 
 const Chat = () => {
-  var sock = new SockJS("http://localhost:8080/chat");
-  let client = Stomp.over(sock);
-  useEffect(() => {
-    client.connect({},() => {
-        console.log('Connected : ' + auth.userInfo.userNickname)
-        client.send("/app/join", {}, JSON.stringify(auth.userInfo.userId))
+  const $websocket = useRef(null);
 
-        client.send(`/app/chat/${(메세지받을대상)userInfo.userId}`,{},JSON.stringify(res.data))
+  const handleMsg = (msg) => {
+    console.log(msg);
+  };
 
-        client.subscribe('/queue/addChatToClient/'+auth.userInfo.userId, function(chatMessage) {
-            const chatmessage = JSON.parse(chatMessage.body)
-        })
-    })
-    return () => client.disconnect();
-  }, [client, auth.userInfo.userId, dispatch]);
+  const handleClickSendTo = () => {
+    $websocket.current.sendMessage("/sendTo");
+  };
+
+  const handleClickSendTemplate = () => {
+    $websocket.current.sendMessage("/Template");
+  };
+
+  return (
+    <div>
+      <SockJsClient
+        url="http://localhost:8080/chat"
+        topics={["/topics/sendTo", "/topics/template", "/topics/api"]}
+        onMessage={(msg) => {
+          console.log(msg);
+        }}
+        ref={$websocket}
+      />
+      <button onClick={handleClickSendTo}>SendTo</button>
+      <button onClick={handleClickSendTemplate}>SendTemplate</button>
+    </div>
+  );
 };
+
+export default Chat;

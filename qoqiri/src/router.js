@@ -14,6 +14,7 @@ import Post from "./pages/Post";
 import Review from "./pages/Review";
 import MiniUp from "./pages/MiniUp";
 import PostWrite from "./pages/PostWrite";
+import Chat from "./pages/Chat";
 
 const router = createBrowserRouter([
   {
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: "/review",
         element: <Review />,
+      },
+      {
+        path: "/chat",
+        element: <Chat />,
       },
     ],
   },
