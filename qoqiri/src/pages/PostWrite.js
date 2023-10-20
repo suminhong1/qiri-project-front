@@ -109,7 +109,7 @@ const PostWrite = () => {
   useEffect(() => {
     placeTypeAPI();
     boardAPI();
-    UserInfoAPI();
+    // UserInfoAPI();
   }, []);
 
   const [selectedPlaceType, setSelectedPlaceType] = useState({
