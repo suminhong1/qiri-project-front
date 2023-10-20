@@ -90,6 +90,7 @@ const ReviewBoard = () => {
 
   const handleSortByLikesClick = () => {
     if (sortByLikes) {
+      // 원래 순서로 되돌리기 (예: 가장 최근 작성된 리뷰부터)
       const originalReviews = [...reviews].reverse(); // 혹은 원하는 정렬 방식 사용
       setReviews(originalReviews);
     } else {
