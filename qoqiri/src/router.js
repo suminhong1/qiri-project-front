@@ -16,6 +16,7 @@ import MiniUp from "./pages/MiniUp";
 import PostWrite from "./pages/PostWrite";
 import Chat from "./pages/Chat";
 import EditProfile from "./pages/EditProfile";
+import SignupInfo from "./pages/SignupInfo";
 
 const router = createBrowserRouter([
   {
@@ -76,6 +77,10 @@ const router = createBrowserRouter([
         path: "/EditProfile",
         element: <EditProfile />,
       },
+      {
+        path: "/SignupInfo",
+        element: <SignupInfo />,
+      }
     ],
   },
   {

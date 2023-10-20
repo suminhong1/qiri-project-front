@@ -1,20 +1,18 @@
-.selected-category {
+.selected-category { 
   position: relative;
-  padding-top: 60px; 
-  padding-bottom: 30px;
+  padding-top: 60px; /* 60px에서 조정 */
+  padding-bottom: 20px; /* 30px에서 조정 */
+  text-align: center;
 }
 
 .selected-category h2 {
-  position: absolute;
-  top: 20px;   
-  left: 120px auto;
-  margin: 0;   
+  margin: 0;
 }
 
 .user-info-table {
   width: 80%;
   border-collapse: collapse;
-  margin-top: 10px; /* 표의 상단 가격 줄이기 */
+  margin-top: 10px;
   margin-bottom: 80px;
   margin-left: auto;
   margin-right: auto;
@@ -30,23 +28,13 @@
 /* 항목 칸 너비 설정 */
 .user-info-table th:nth-child(1),
 .user-info-table td:nth-child(1) {
-  width: 10%; 
+  width: 20%;
 }
 
-/* 날짜 칸 너비 설정 */
-.user-info-table th:nth-child(2),
-.user-info-table td:nth-child(2) {
-  width: 15%; 
-}
-
-.user-info-table th:nth-child(3),
-.user-info-table td:nth-child(3) {
-  width: 75%;
-}
 
 .category-buttons {
-  text-align: center; /* 가로 중앙 정렬 */
-  margin-top: 300px;
+  text-align: center;
+  margin-top: 100px;
 }
 
 .category-buttons button {
@@ -59,8 +47,8 @@
 
 .pagination {
   position: absolute;
-  bottom: 0; 
-  left: 50%; 
+  bottom: 0;
+  left: 50%;
   transform: translateX(-50%);
   display: flex;
   justify-content: center;
@@ -68,9 +56,8 @@
   margin-top: 10px;
 }
 
-
 .pagination button {
-  margin: 0 5px; /* 페이지 버튼 사이의 간격 조절 */
+  margin: 0 5px;
   padding: 5px 10px;
   border: 1px solid #ccc;
   cursor: pointer;
@@ -78,10 +65,6 @@
 }
 
 .pagination button.active {
-  background-color: #FF9615; 
+  background-color: #FF9615;
   color: #fff;
 }
-
-  
-  
-  
