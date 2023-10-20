@@ -48,7 +48,7 @@ const ViewPost = () => {
 
     // 글쓰기 버튼 핸들러
     const postWritehandler = (e) => {
-        window.location.href = '/postwrite';
+        window.location.href = '/postWrite';
     };
 
     // Post 안에 내용들을 전부 불러옴

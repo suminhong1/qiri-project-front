@@ -60,7 +60,7 @@ const BestPost = () => {
     };
 
     const postWritehandler = (e) => {
-        window.location.href = '/postwrite';
+        window.location.href = '/postWrite';
     };
 
     return (
