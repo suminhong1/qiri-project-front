@@ -37,9 +37,3 @@ export const getSearch = async (keyword) => {
 export const saveReview = async (data) => {
   return await instance.post("reviews", data);
 };
-
-export const getPostView = async (id) => {
-    const response = await instance.get('public/post/' + id);
-    // await instance.get('public/post/' + id + '/viewCount/');
-    return response;
-};
