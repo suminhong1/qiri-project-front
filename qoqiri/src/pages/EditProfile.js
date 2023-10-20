@@ -6,6 +6,7 @@ import { getCategories } from '../api/category';
 import { getPlaceTypes } from '../api/placeType';
 import { useNavigate } from 'react-router-dom';
 import { EditProfile } from '../api/user';
+import { useContext } from 'react'; 
 
 const EditMyInfo = () => {
   // 상태 변수들
@@ -31,7 +32,7 @@ const EditMyInfo = () => {
   const [mbti, setMbti] = useState('');
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
- // const [profileImg, setProfileImg] = useState(null);
+  // const [profileImg, setProfileImg] = useState(null);
   const [selectlike, setSelectlike] = useState([]);
 
 
@@ -278,7 +279,7 @@ const EditMyInfo = () => {
   const handlePlaceChange = (e) => {
     const selectedPlaceTypeName = e.target.value;
     const selectedPlaceTypeObj = placeTypes.find((placeType) => placeType.placeTypeName === selectedPlaceTypeName);
-  
+
     setSelectedPlaceType({
       placeTypeSEQ: selectedPlaceTypeObj ? selectedPlaceTypeObj.placeTypeSEQ : "",
       placeTypeName: selectedPlaceTypeName,
@@ -351,36 +352,30 @@ const EditMyInfo = () => {
 
 
   useEffect(() => {
-    const getUserInfo = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/qiri/userInfo");
-        const userInfo = response.data;
-  
-        setUser(userInfo);
-        setId(userInfo.id);
-        setName(userInfo.name);
-        setNickname(userInfo.nickname);
-        setPassword(userInfo.pwd);
-        setEmail(userInfo.email);
-        setPhone(userInfo.phone);
-        setBirth(userInfo.birthday);
-        setAge(userInfo.age);
-        setSelectedGender(userInfo.gender);
-        setHasPartner(userInfo.hasPartner);
-        setSelectedBloodType(userInfo.bloodType);
-        setMbti(userInfo.mbti);
-        setStatusMessage(userInfo.statusMessage);
-        if (userInfo.userCategories) {
-          setSelectlike(userInfo.userCategories.map(category => category.categoryName));
-        }
-      } catch (error) {
-        console.error('사용자 정보 가져오기 실패:', error);
-      }
-    };
-  
-    getUserInfo();
-  }, []);
-  
+    const userInfo = localStorage.getItem('user');
+    if (userInfo) {
+      const parsedUserInfo = JSON.parse(userInfo);
+      setUser(parsedUserInfo);
+      setId(parsedUserInfo.id);
+      setName(parsedUserInfo.name);
+      setNickname(parsedUserInfo.nickname);
+      setPassword('');
+      setEmail(parsedUserInfo.email);
+      setPhone(parsedUserInfo.phone);
+      setBirth(parsedUserInfo.birthday.substring(0, 10)); // YYYY-MM-DD 형식으로 자르기
+      setAge(parsedUserInfo.age);
+      setSelectedGender(parsedUserInfo.gender);
+      setHasPartner(parsedUserInfo.hasPartner);
+      setSelectedBloodType(parsedUserInfo.bloodType);
+      setMbti(parsedUserInfo.mbti);
+      setStatusMessage(parsedUserInfo.statusMessage);
+    if (parsedUserInfo.userCategories) {
+      setSelectlike(parsedUserInfo.userCategories.map(category => category.categoryName));
+    }
+  } 
+}, []);
+
+
 
   const handleSubmit = async (e) => {
     if (e) {
@@ -392,7 +387,7 @@ const EditMyInfo = () => {
       pwd: password,
       name,
       nickname,
-      placeType:selectedPlaceType,
+      placeType: selectedPlaceType,
       age,
       gender: selectedGender,
       phone,
@@ -404,8 +399,8 @@ const EditMyInfo = () => {
       statusMessage,
       userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
-  
-   
+
+
     try {
       const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updatedInfo, {
         headers: {
@@ -624,7 +619,7 @@ const EditMyInfo = () => {
             <select
               id="place"
               name="place"
-              value={placeType.placeTypeName} 
+              value={placeType.placeTypeName}
               onChange={handlePlaceChange}
             >
               <option value="">선택하세요</option>
