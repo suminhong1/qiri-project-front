@@ -10,6 +10,11 @@ import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
 import UserRating from "../components/UserRating";
+import { viewComments } from "../store/commentSlice";
+import { useSelector, useDispatch } from "react-redux";
+import AddComment from "../components/AddComment";
+import Comment from "../components/Comment";
+import { useParams } from "react-router-dom";
 
 import axios from "axios";
 
@@ -28,9 +33,24 @@ export const getComments = async () => {
 const DetailView = ({ selectedPostSEQ }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [comments, setComments] = useState([]);
   const [post, setPost] = useState([]);
+  // const [posts, setPosts] = useState([]);
   const [commentsCount, setCommentsCount] = useState(0);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+
+  const comments = useSelector((state) => {
+    return state.comment;
+  });
+
+  // const getPostAPI = async () => {
+  //   const result = await getPost(id);
+  //   setPosts(result.data);
+  // };
+
+  // useEffect(() => {
+  //   getPostAPI();
+  // }, []);
 
   const openModal = (imageIndex) => {
     setSelectedImageIndex(imageIndex);
@@ -43,21 +63,19 @@ const DetailView = ({ selectedPostSEQ }) => {
   };
 
   const postAPI = async () => {
-    const result = await getPost(selectedPostSEQ);
+    const result = await getPost(selectedPostSEQ, id);
     setPost(result.data);
-  };
-
-  const commentsAPI = async () => {
-    const result = await getComments();
-    setComments(result.data);
   };
 
   useEffect(() => {
     console.log(selectedPostSEQ);
-    commentsAPI();
     postAPI();
-    setCommentsCount(comments.length);
+    // setCommentsCount(comments.length);
   }, [selectedPostSEQ]);
+
+  useEffect(() => {
+    dispatch(viewComments(id));
+  }, [dispatch]);
 
   const images = ["", "", ""];
   return (
@@ -106,6 +124,10 @@ const DetailView = ({ selectedPostSEQ }) => {
           </div>
         </div>
         <hr />
+        <AddComment code={post !== null ? post.postSEQ : null} />
+        {/* {comments.map((comment) => (
+          <Comment key={comment.commentsSeq} comment={comment} />
+        ))}
         <div className="comment">
           <div className="coment-profile-img">
             <img alt="프로필 이미지" />
@@ -114,9 +136,9 @@ const DetailView = ({ selectedPostSEQ }) => {
           <button>
             <FontAwesomeIcon icon={faArrowTurnDown} rotation={90} />
           </button>
-        </div>
+        </div> */}
         <hr />
-        {comments.map((co) => (
+        {/* {comments.map((co) => (
           <div className="commentList-main" key={co.commentsSeq}>
             <div className="commentList">
               <div className="comment-profile">
@@ -127,7 +149,7 @@ const DetailView = ({ selectedPostSEQ }) => {
             </div>
             <hr />
           </div>
-        ))}
+        ))} */}
       </div>
       {isModalOpen && (
         <div className="Matching-modal-overlay">
