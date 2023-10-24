@@ -34,7 +34,8 @@ const EditMyInfo = () => {
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   // const [profileImg, setProfileImg] = useState(null);
   const [selectlike, setSelectlike] = useState([]);
-
+  const [categories, setCategories] = useState([]);
+  const [categoryTypes, setCategoryTypes] = useState([]);
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -55,10 +56,6 @@ const EditMyInfo = () => {
   const [isEmail, setIsEmail] = useState(false);
   const [isPhone, setIsPhone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  // 관심사 관련
-  const [categories, setCategories] = useState([]);
-  const [categoryTypes, setCategoryTypes] = useState([]);
 
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {
@@ -369,12 +366,20 @@ const EditMyInfo = () => {
       setSelectedBloodType(parsedUserInfo.bloodType);
       setMbti(parsedUserInfo.mbti);
       setStatusMessage(parsedUserInfo.statusMessage);
-    if (parsedUserInfo.userCategories) {
-      setSelectlike(parsedUserInfo.userCategories.map(category => category.categoryName));
-    }
-  } 
-}, []);
 
+      const userPlaceType = parsedUserInfo.placeType;
+      if (userPlaceType) {
+        setPlaceType(userPlaceType);
+      }
+      
+      axios.get(`/api/userCategories/${parsedUserInfo.id}`)
+      .then(response => {
+        const userCategories = response.data;
+        setSelectlike(userCategories.map(category => category.categoryName));
+      })
+      .catch(error => console.error(error));
+  }
+}, []);
 
 
   const handleSubmit = async (e) => {

@@ -30,6 +30,7 @@ const SignUp = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [selectlike, setSelectlike] = useState([]);
+  const maxlike = 5;
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -308,11 +309,14 @@ const SignUp = () => {
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
+
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
     } else {
+      if (selectlike.length < maxlike) {
       setSelectlike([...selectlike, interest]);
     }
+  }
   };
 
   useEffect(() => {
@@ -666,7 +670,7 @@ const SignUp = () => {
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
             <div className="form-el">
-              <label>관심 주제를 선택해주세요</label>
+              <label>관심 주제를 선택해주세요 (최대 5개)</label>
               <br />
               <div className="selectlike-box">
                 {categoryTypes.map((categoryType) => (
