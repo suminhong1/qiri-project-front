@@ -35,5 +35,5 @@ export const getSearch = async (keyword) => {
 };
 
 export const saveReview = async (data) => {
-  return await instance.post("reviews", data);
+  return await instance.post("reviewWrite", data);
 };

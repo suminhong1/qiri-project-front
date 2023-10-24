@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "../css/Review.css";
 import { saveReview } from "../api/post";
+import axios from "axios";
 
+const instance = axios.create({
+  baseURL: "http://localhost:8080/qiri",
+});
+
+export const getPosts = async () => {
+  return await instance.get("/public/post");
+};
 const ReviewBoard = () => {
   const [reviews, setReviews] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState("");
@@ -9,14 +17,20 @@ const ReviewBoard = () => {
   const [sortByLikes, setSortByLikes] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalContentURL, setModalContentURL] = useState("");
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    postsAPI();
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setLoggedInUser(user);
     }
   }, []);
 
+  const postsAPI = async () => {
+    const result = await getPosts();
+    setPosts(result.data);
+  };
   const handleWriteClick = async () => {
     if (content.length === 0) {
       alert("댓글을 입력해 주세요!!");
@@ -36,16 +50,12 @@ const ReviewBoard = () => {
     }
 
     if (content.length <= 50) {
+      // PostDTO 형식에 맞게 reviewData 객체를 수정
       const reviewData = {
-        postContent: content || "",
-        postTitle: content.substring(0, 50),
-        userInfo: {
-          userId: loggedInUser.id,
-        },
-        likes: 0,
-        board: {
-          boardSeq: 2,
-        },
+        token: loggedInUser.token, // 이는 로그인한 사용자의 토큰을 가정합니다.
+        postTitle: content,
+        postContent: content,
+        boardSeq: 2,
       };
       console.log(reviewData);
 
@@ -57,8 +67,10 @@ const ReviewBoard = () => {
         // UI 업데이트
         setReviews([
           {
+            title: content,
             content,
             userId: loggedInUser.id,
+            userNickname: loggedInUser.nickname,
           },
           ...reviews,
         ]);
@@ -136,19 +148,19 @@ const ReviewBoard = () => {
         </div>
       </div>
       <div className="rv-review-board">
-        {reviews.map((review, index) => (
-          <div key={index} className="rv-review-item">
-            <p>{review.content}</p>
+        {posts.map((po) => (
+          <div key={po.postSEQ} className="rv-review-item">
+            <p>{po.postContent}</p>
             <span
               className="rv-writer"
-              onClick={() => handleWriterClick(review.userId)}
+              onClick={() => handleWriterClick(po.userInfo.userId)}
             >
-              끼리: {review.writer}
+              끼리: {po.userInfo.userNickname}
             </span>
 
             <div className="rv-stats-thums">
-              <span className="rv-like-button" onClick={handleLikeClick(index)}>
-                👍 {review.likes}
+              <span className="rv-like-button" onClick={handleLikeClick()}>
+                👍 {po.likes}
               </span>
             </div>
           </div>
