@@ -369,9 +369,13 @@ const EditMyInfo = () => {
 
       const userPlaceType = parsedUserInfo.placeType;
       if (userPlaceType) {
-        setPlaceType(userPlaceType);
+        // 여기서 placeType 상태를 설정합니다.
+        setSelectedPlaceType({
+          placeTypeSEQ: userPlaceType.placeTypeSEQ,
+          placeTypeName: userPlaceType.placeTypeName
+        });
       }
-      
+    
       axios.get(`/api/userCategories/${parsedUserInfo.id}`)
       .then(response => {
         const userCategories = response.data;
@@ -624,7 +628,7 @@ const EditMyInfo = () => {
             <select
               id="place"
               name="place"
-              value={placeType.placeTypeName}
+              value={selectedPlaceType.placeTypeName}
               onChange={handlePlaceChange}
             >
               <option value="">선택하세요</option>

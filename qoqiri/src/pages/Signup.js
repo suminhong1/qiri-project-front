@@ -29,8 +29,9 @@ const SignUp = () => {
   const [mbti, setMbti] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [selectlike, setSelectlike] = useState([]);
-  const maxlike = 5;
+ 
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -307,16 +308,47 @@ const SignUp = () => {
     }
   };
 
+  // 프로필 사진 파일 업로드 핸들러
+  const handleProfilePictureUpload = async (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+
+    if (file) {
+      const formData = new FormData();
+      formData.append("profile_img", file);
+
+      try {
+        const response = await axios.post(
+          "http://localhost:8080/qiri/userinfo/signup",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data", 
+            },
+          }
+        );
+
+        if (response.data && response.data.profilePictureUrl) {
+
+          setProfilePictureUrl(response.data.profilePictureUrl);
+          alert("프로필 사진 업로드 완료");
+        } else {
+          alert("프로필 사진 업로드 실패");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("프로필 사진 업로드 중 오류 발생");
+      }
+    }
+  };
+
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
-
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
     } else {
-      if (selectlike.length < maxlike) {
       setSelectlike([...selectlike, interest]);
     }
-  }
   };
 
   useEffect(() => {
@@ -378,6 +410,7 @@ const SignUp = () => {
       bloodType: selectedBloodType,
       mbti,
       statusMessage,
+     // profileImg: profilePictureUrl
     };
 
     const signUpDTO = {
@@ -388,7 +421,12 @@ const SignUp = () => {
     try {
       const userResponse = await axios.post(
         "http://localhost:8080/qiri/userInfo/signup",
-        signUpDTO
+        signUpDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (userResponse.data) {
@@ -667,10 +705,30 @@ const SignUp = () => {
             <p className="message">{warningMessage}</p>
           </div>
 
+          {/* 프로필 사진 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="profilePicture">프로필 사진</label> <br />
+            <input
+              type="file"
+              id="profilePicture"
+              name="profilePicture"
+              accept="image/*"
+              onChange={handleProfilePictureUpload}
+              />
+              <br />
+              {profilePictureUrl && (
+                <img
+                  src={profilePictureUrl}
+                  alt="프로필 사진 미리보기"
+                  className="profile-picture-preview"
+                />
+              )}
+            </div>
+
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
             <div className="form-el">
-              <label>관심 주제를 선택해주세요 (최대 5개)</label>
+              <label>관심 주제를 선택해주세요</label>
               <br />
               <div className="selectlike-box">
                 {categoryTypes.map((categoryType) => (
@@ -681,11 +739,10 @@ const SignUp = () => {
                         (category) => (
                           <div
                             key={category.categorySEQ}
-                            className={`selectlike-box-item ${
-                              selectlike.includes(category.categoryName)
-                                ? "selected"
-                                : ""
-                            }`}
+                            className={`selectlike-box-item ${selectlike.includes(category.categoryName)
+                              ? "selected"
+                              : ""
+                              }`}
                             onClick={() =>
                               handleInterestClick(category.categoryName)
                             }
