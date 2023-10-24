@@ -1,0 +1,38 @@
+#boardbar {
+    width: 100%;
+}
+
+#board {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+#board-logo {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+#qiri-logo {
+    margin-left: 150px;
+    height: 40px;
+    width: auto;
+    display: flex;
+    justify-content: left;
+}
+#board-menu {
+    margin-right: 100px;
+    position: sticky;
+    top: -1px;
+    background-color: white;
+    display: flex;
+    border-top: 1px solid #dddddd;
+    border-bottom: 4px solid #ff7f38;
+    box-shadow: 0 5px 4px -4px #ff7f38;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    min-width: 1200px;
+    height: 50px;
+}

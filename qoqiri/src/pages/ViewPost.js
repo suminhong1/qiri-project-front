@@ -126,21 +126,6 @@ const ViewPost = () => {
         handlePostClick(id);
     }, [post]);
 
-    // 게시물 목록 리스트 요청하는 useEffect
-    // useEffect(() => {
-    //     if (board != null) {
-    //         // console.log(board);
-    //         getPostListAPI();
-    //         getPostAPI();
-    //     }
-    // }, [board]);
-
-    // useEffect(() => {
-    //     getPostView(id).then((response) => {
-    //         setPost(response.data);
-    //     });
-    // });
-
     //댓글관련 유즈이펙트 추가해야됨
 
     return (
