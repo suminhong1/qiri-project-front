@@ -37,7 +37,7 @@ const Reply = ({ reply }) => {
         commentsSeq: reply.commentsSeq,
         post: reply.post,
         commentDesc: content,
-        commentParentSeq: reply.commentParentSeq,
+        commentParentSeq: reply.commentsParentSeq,
       })
     );
   };

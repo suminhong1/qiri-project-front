@@ -33,8 +33,10 @@ const AddComment = ({ code, active, parent }) => {
     e.preventDefault();
     const data = { post: code, commentDesc: comment };
     if (parent !== undefined) {
-      data.commentParentSeq = parent;
+      data.commentsParentSeq = parent;
     }
+    console.log("댓글 추가 테스트!");
+    console.log(data);
     dispatch(addComment(data));
     setComment("");
   };

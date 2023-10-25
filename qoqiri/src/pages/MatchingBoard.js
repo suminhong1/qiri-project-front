@@ -26,31 +26,16 @@ export const getPosts = async () => {
   return await instance.get("/public/post");
 };
 
-export const getComments = async () => {
-  return await instance.get("/comments");
-};
-
 const DetailView = ({ selectedPostSEQ }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [post, setPost] = useState([]);
-  // const [posts, setPosts] = useState([]);
   const [commentsCount, setCommentsCount] = useState(0);
-  const { id } = useParams();
   const dispatch = useDispatch();
 
   const comments = useSelector((state) => {
     return state.comment;
   });
-
-  // const getPostAPI = async () => {
-  //   const result = await getPost(id);
-  //   setPosts(result.data);
-  // };
-
-  // useEffect(() => {
-  //   getPostAPI();
-  // }, []);
 
   const openModal = (imageIndex) => {
     setSelectedImageIndex(imageIndex);
@@ -63,18 +48,19 @@ const DetailView = ({ selectedPostSEQ }) => {
   };
 
   const postAPI = async () => {
-    const result = await getPost(selectedPostSEQ, id);
+    const result = await getPost(selectedPostSEQ);
     setPost(result.data);
   };
 
   useEffect(() => {
-    console.log(selectedPostSEQ);
+    // console.log(selectedPostSEQ);
     postAPI();
     // setCommentsCount(comments.length);
   }, [selectedPostSEQ]);
 
   useEffect(() => {
-    dispatch(viewComments(id));
+    dispatch(viewComments(selectedPostSEQ));
+    console.log(selectedPostSEQ);
   }, [dispatch]);
 
   const images = ["", "", ""];
@@ -111,10 +97,10 @@ const DetailView = ({ selectedPostSEQ }) => {
         <div className="Detail-write-board">
           <div className="Detail-write">
             {post?.postContent}
-            <a href="#" className="comment-count">
+            {/* <a href="#" className="comment-count">
               <FontAwesomeIcon icon={faMessage} />
               <div className="count">{commentsCount}</div>
-            </a>
+            </a> */}
           </div>
         </div>
         <div className="board-foot">
@@ -125,10 +111,10 @@ const DetailView = ({ selectedPostSEQ }) => {
         </div>
         <hr />
         <AddComment code={post !== null ? post.postSEQ : null} />
-        {/* {comments.map((comment) => (
+        {comments.map((comment) => (
           <Comment key={comment.commentsSeq} comment={comment} />
         ))}
-        <div className="comment">
+        {/* <div className="comment">
           <div className="coment-profile-img">
             <img alt="프로필 이미지" />
           </div>
@@ -234,7 +220,6 @@ const MatchingBoard = () => {
     postsAPI();
     categoryTypeAPI();
     categoryAPI();
-    console.log(selectedCatSEQ);
   }, [selectedCatSEQ]);
 
   return (

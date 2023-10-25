@@ -40,12 +40,11 @@ const Comment = ({ comment }) => {
     dispatch(
       updateComment({
         commentsSeq: comment.commentsSeq,
-        postSeq: comment.post,
+        post: comment.post,
         commentDesc: content,
       })
     );
   };
-
   const onDelete = () => {
     dispatch(deleteComment(comment.commentsSeq));
   };
