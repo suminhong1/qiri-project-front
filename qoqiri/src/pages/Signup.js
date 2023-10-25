@@ -121,9 +121,7 @@ const SignUp = () => {
     }
   };
 
-  {
-    /* 이름 입력 핸들러 */
-  }
+  // 이름 입력 핸들러
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -138,9 +136,8 @@ const SignUp = () => {
     }
   };
 
-  {
-    /* 닉네임 입력 핸들러 */
-  }
+  
+   // 닉네임 입력 핸들러
   const onChangeNickname = (e) => {
     const currentNickname = e.target.value;
     setNickname(currentNickname);

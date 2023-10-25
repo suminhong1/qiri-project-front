@@ -32,7 +32,8 @@ const EditMyInfo = () => {
   const [mbti, setMbti] = useState('');
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
-  // const [profileImg, setProfileImg] = useState(null);
+  const [profilePictureUrl, setProfilePictureUrl] = useState(""); // 현재 프사 URL
+  const [selectedProfilePicture, setSelectedProfilePicture] = useState(null); // 새로 선택한 프사
   const [selectlike, setSelectlike] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryTypes, setCategoryTypes] = useState([]);
@@ -299,6 +300,31 @@ const EditMyInfo = () => {
     }
   };
 
+   // 프로필 사진 파일 업로드 핸들러
+const handleProfilePictureUpload = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
+      const formData = new FormData();
+      formData.append("profileImg", file);
+
+      const response = await axios.post(
+        "http://localhost:8080/qiri/uploadProfilePicture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePictureUrl(imageUrl);
+    } catch (error) {
+      console.error(error);
+      alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  }
+};
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
@@ -366,10 +392,10 @@ const EditMyInfo = () => {
       setSelectedBloodType(parsedUserInfo.bloodType);
       setMbti(parsedUserInfo.mbti);
       setStatusMessage(parsedUserInfo.statusMessage);
+      setProfilePictureUrl(parsedUserInfo.profileImg);
 
       const userPlaceType = parsedUserInfo.placeType;
       if (userPlaceType) {
-        // 여기서 placeType 상태를 설정합니다.
         setSelectedPlaceType({
           placeTypeSEQ: userPlaceType.placeTypeSEQ,
           placeTypeName: userPlaceType.placeTypeName
@@ -391,6 +417,7 @@ const EditMyInfo = () => {
       e.preventDefault(); // 폼 기본 제출 방지
     }
 
+
     const updatedInfo = {
       id,
       pwd: password,
@@ -406,6 +433,7 @@ const EditMyInfo = () => {
       bloodType: selectedBloodType,
       mbti,
       statusMessage,
+      profileImg: profilePictureUrl,
       userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
 
@@ -681,6 +709,26 @@ const EditMyInfo = () => {
             />
             <p className="message">{warningMessage}</p>
           </div>
+
+          {/* 프로필 사진 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="profilePicture">프로필 사진</label> <br />
+            <input
+              type="file"
+              id="profilePicture"
+              name="profilePicture"
+              accept="image/*"
+              onChange={handleProfilePictureUpload}
+              />
+              <br />
+              {profilePictureUrl && (
+                <img
+                  src={profilePictureUrl}
+                  alt="프로필 사진 미리보기"
+                  className="profile-picture-preview"
+                />
+              )}
+            </div>
 
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">

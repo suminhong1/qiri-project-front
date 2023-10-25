@@ -179,3 +179,13 @@
   font-size: 17px; 
   color: #FF9615;
 }
+
+/* 프로필 사진 부분 */
+.profile-picture-preview {
+  width: 150px; 
+  height: 150px; 
+  margin-top: 10px; 
+  border: 1px solid #ccc; 
+  object-fit: cover; 
+  border-radius: 50%;
+}

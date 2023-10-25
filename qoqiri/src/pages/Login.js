@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "../css/login.css";
 import logo from "../assets/logo.png";
-import { useDispatch } from "react-redux"; 
+import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
   const [id, setId] = useState("");
@@ -11,8 +12,9 @@ export default function Login() {
   const [idValid, setIdValid] = useState(false);
   const [pwValid, setPwValid] = useState(false);
   const [notAllow, setNotAllow] = useState(true);
+  const [showFindIdModal, setShowFindIdModal] = useState(false);
+  const [findIdEmail, setFindIdEmail] = useState("");
 
- 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -49,7 +51,7 @@ export default function Login() {
     try {
       const resultAction = await dispatch(asyncLogin({ id: id, pwd: pw }));
       const { payload } = resultAction;
-      
+
       if (payload && payload.token) {
         alert("로그인 성공.");
         navigate("/");
@@ -58,6 +60,35 @@ export default function Login() {
       }
     } catch (error) {
       alert("로그인 중 오류 발생");
+    }
+  };
+
+  const openFindIdModal = () => {
+    setShowFindIdModal(true);
+  };
+
+  const closeFindIdModal = () => {
+    setShowFindIdModal(false);
+  };
+
+  const handleFindIdEmailChange = (e) => {
+    setFindIdEmail(e.target.value);
+  };
+
+  const handleFindIdSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.get(`/userInfo/findIdByEmail?email=${findIdEmail}`);
+      if (response.status === 200) {
+        const userId = response.data;
+        alert(`아이디는 ${userId} 입니다.`);
+        closeFindIdModal();
+      } else {
+        alert("아이디를 찾을 수 없습니다. 이메일 주소를 확인해주세요.");
+      }
+    } catch (error) {
+      alert("아이디 찾기 중 오류 발생");
     }
   };
 
@@ -104,7 +135,7 @@ export default function Login() {
           <div className="linksWrap">
             <a href="/find-password">비밀번호 찾기</a>
             <span> ㅣ </span>
-            <a href="/find-id">아이디 찾기</a>
+            <a href="#" onClick={openFindIdModal}>아이디 찾기</a>
             <span> ㅣ </span>
             <a href="/signup">회원가입</a>
           </div>
@@ -116,6 +147,31 @@ export default function Login() {
           </div>
         </form>
       </div>
+
+      {/* 아이디 찾기 모달 */}
+      {showFindIdModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeFindIdModal}>&times;</span>
+            <form onSubmit={handleFindIdSubmit}>
+              <div className="form-group">
+                <label htmlFor="findIdEmail">이메일 주소</label>
+                <input
+                  type="email"
+                  id="findIdEmail"
+                  placeholder="이메일 주소 입력"
+                  value={findIdEmail}
+                  onChange={handleFindIdEmailChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <button type="submit">아이디 찾기</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

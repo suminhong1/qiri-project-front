@@ -80,7 +80,7 @@ const router = createBrowserRouter([
       {
         path: "/SignupInfo",
         element: <SignupInfo />,
-      }
+      },
     ],
   },
   {
