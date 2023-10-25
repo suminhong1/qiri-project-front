@@ -29,7 +29,9 @@ const SignUp = () => {
   const [mbti, setMbti] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
+  const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [selectlike, setSelectlike] = useState([]);
+ 
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -119,9 +121,7 @@ const SignUp = () => {
     }
   };
 
-  {
-    /* 이름 입력 핸들러 */
-  }
+  // 이름 입력 핸들러
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -136,9 +136,8 @@ const SignUp = () => {
     }
   };
 
-  {
-    /* 닉네임 입력 핸들러 */
-  }
+  
+   // 닉네임 입력 핸들러
   const onChangeNickname = (e) => {
     const currentNickname = e.target.value;
     setNickname(currentNickname);
@@ -306,6 +305,33 @@ const SignUp = () => {
     }
   };
 
+  // 프로필 사진 파일 업로드 핸들러
+const handleProfilePictureUpload = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
+      const formData = new FormData();
+      formData.append("profileImg", file);
+
+      const response = await axios.post(
+        "http://localhost:8080/qiri/uploadProfilePicture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePictureUrl(imageUrl);
+    } catch (error) {
+      console.error(error);
+      alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  }
+};
+
+
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
     if (selectlike.includes(interest)) {
@@ -374,6 +400,7 @@ const SignUp = () => {
       bloodType: selectedBloodType,
       mbti,
       statusMessage,
+      profileImg: profilePictureUrl
     };
 
     const signUpDTO = {
@@ -384,7 +411,12 @@ const SignUp = () => {
     try {
       const userResponse = await axios.post(
         "http://localhost:8080/qiri/userInfo/signup",
-        signUpDTO
+        signUpDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (userResponse.data) {
@@ -663,6 +695,26 @@ const SignUp = () => {
             <p className="message">{warningMessage}</p>
           </div>
 
+          {/* 프로필 사진 입력 양식 */}
+          <div className="form-el">
+            <label htmlFor="profilePicture">프로필 사진</label> <br />
+            <input
+              type="file"
+              id="profilePicture"
+              name="profilePicture"
+              accept="image/*"
+              onChange={handleProfilePictureUpload}
+              />
+              <br />
+              {profilePictureUrl && (
+                <img
+                  src={profilePictureUrl}
+                  alt="프로필 사진 미리보기"
+                  className="profile-picture-preview"
+                />
+              )}
+            </div>
+
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
             <div className="form-el">
@@ -677,11 +729,10 @@ const SignUp = () => {
                         (category) => (
                           <div
                             key={category.categorySEQ}
-                            className={`selectlike-box-item ${
-                              selectlike.includes(category.categoryName)
-                                ? "selected"
-                                : ""
-                            }`}
+                            className={`selectlike-box-item ${selectlike.includes(category.categoryName)
+                              ? "selected"
+                              : ""
+                              }`}
                             onClick={() =>
                               handleInterestClick(category.categoryName)
                             }

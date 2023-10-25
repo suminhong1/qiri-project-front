@@ -16,3 +16,7 @@ export const getUser = async (userId) => {
 export const signUp = async (data) => {
   return await instance.post("signUp", data);
 };
+
+export const findIdByEmail = async (data) => {
+  return await instance.get("findIdByEmail", data);
+};
