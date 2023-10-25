@@ -5,14 +5,17 @@ import kkorang from '../assets/kkorang3.jpg';
 import { getPostList, getBoards, getSearch } from '../api/post';
 import { useState, useEffect } from 'react';
 import Date from '../components/Date';
+import BoardBar from '../components/BoardBar';
+import { useParams } from 'react-router-dom';
 
-const BestPost = () => {
+const PostList = () => {
     const [postList, setPostList] = useState([]);
     const [boards, setBoards] = useState([]);
     const [page, setPage] = useState(1);
     const [board, setBoard] = useState(null);
     const [userInput, setUserInput] = useState('');
 
+    const { id } = useParams();
     // const searched = posts.filter((item) => item.name.toLowerCase().includes(userInput));
 
     const boardAPI = async () => {
@@ -20,36 +23,44 @@ const BestPost = () => {
         setBoards(result.data);
     };
 
-    const PostAPI = async () => {
-        const result = await getPostList(page, board);
-        console.log(result.data);
+    // 게시물 리스트에서 useParams값이 없는건 추천수 20이상 값이 있는건 boardSEQ와 일치시켜서 나오게하는거
+    const PostListAPI = async () => {
+        let result;
+        if (useParams) {
+            result = await getPostList(page, board);
+        } else {
+            const bestPostList = postList.filter((post) => post.likeCount >= 20);
+            result = { data: bestPostList };
+        }
+        // console.log('List 호출 시작');
+        // const result = await getPostList(page, board);
         setPostList([...postList, ...result.data]);
     };
 
-    const boardFilterAPI = async () => {
-        const result = await getPostList(page, board);
-        setPostList(result.data);
-    };
+    // const boardFilterAPI = async () => {
+    //     const result = await getPostList(page, board);
+    //     setPostList(result.data);
+    // };
     useEffect(() => {
         boardAPI();
-        PostAPI();
+        PostListAPI();
     }, []);
 
     useEffect(() => {
         if (board != null) {
             console.log(board);
-            PostAPI();
+            PostListAPI();
         }
     }, [board]);
 
-    const filterBoard = (e) => {
-        e.preventDefault();
-        const href = e.target.href.split('/');
-        console.log(href[href.length - 1]);
-        setBoard(parseInt(href[href.length - 1]));
-        setPage(1);
-        setPostList([]);
-    };
+    // const filterBoard = (e) => {
+    //     e.preventDefault();
+    //     const href = e.target.href.split('/');
+    //     console.log(href[href.length - 1]);
+    //     setBoard(parseInt(href[href.length - 1]));
+    //     setPage(1);
+    //     setPostList([]);
+    // };
 
     const searchHandler = (e) => {
         e.preventDefault();
@@ -90,6 +101,9 @@ const BestPost = () => {
                     </div>
 
                     {postList.map((post) => (
+                        // if((useParams && post.board.boardSEQ === useParams) || (!useParams && post.likeCount > 20)){
+
+                        // }
                         <div className="item" key={post.postSEQ}>
                             <a href={`/viewpost/${post.postSEQ}`} className="post">
                                 <div className="best">
@@ -163,8 +177,9 @@ const BestPost = () => {
                     <div onClick={postWritehandler}>글쓰기</div>
                 </div>
             </div>
+            <BoardBar />
         </>
     );
 };
 
-export default BestPost;
+export default PostList;

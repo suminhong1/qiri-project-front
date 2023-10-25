@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import BestPost from "./pages/BestPost";
+import PostList from "./pages/BestPost";
 import ViewPost from "./pages/ViewPost";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
@@ -18,6 +18,7 @@ import ChatList from "./pages/ChatList";
 import ChatRoom from "./pages/ChatRoom";
 import EditProfile from "./pages/EditProfile";
 import SignupInfo from "./pages/SignupInfo";
+import BoardBar from "./components/BoardBar";
 
 const router = createBrowserRouter([
   {
@@ -30,8 +31,12 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "board/:id",
+        element: <PostList />,
+      },
+      {
         path: "bestPost",
-        element: <BestPost />,
+        element: <PostList />,
       },
 
       {
