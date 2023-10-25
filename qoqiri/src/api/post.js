@@ -42,3 +42,7 @@ export const getSearch = async (keyword) => {
 export const saveReview = async (data) => {
     return await instance.post('reviews', data);
 };
+
+export const addPostLike = async (data) => {
+    return await instance.post('postLike', data);
+};

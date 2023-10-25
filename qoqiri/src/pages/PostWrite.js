@@ -13,8 +13,8 @@ import { getThema } from '../api/post';
 import { toUnitless } from '@mui/material/styles/cssUtils';
 
 const PostWrite = () => {
-    const [title, setTitle] = useState(''); // Initialize as a string
-    const [content, setContent] = useState(''); // State variable to store the content of the editor
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
     // const [postView, setPostView] = useState(0);
     // const [url, setUrl] = useState('');
     const [userInfo, setUserInfo] = useState([]);
@@ -136,20 +136,20 @@ const PostWrite = () => {
         };
         console.log(localStorage.getItem('token'));
 
-        const PostDTO = {
-            token: localStorage.getItem('token'),
+        // const PostDTO = {
+        //     token: localStorage.getItem('token'),
 
-            postTitle: title,
-            postContent: content,
-            // placeSeq: place,
-            postThemaSeq: thema,
-            // boardSeq: board,
-            // categoryType1: selectlike[0],
-            // categoryType1: selectlike[1],
-            // categoryType1: selectlike[2],
-            // categoryType1: selectlike[3],
-            // categoryType1: selectlike[4],
-        };
+        //     postTitle: title,
+        //     postContent: content,
+        //     // placeSeq: place,
+        //     postThemaSeq: thema,
+        //     // boardSeq: board,
+        //     // categoryType1: selectlike[0],
+        //     // categoryType1: selectlike[1],
+        //     // categoryType1: selectlike[2],
+        //     // categoryType1: selectlike[3],
+        //     // categoryType1: selectlike[4],
+        // };
 
         console.log('PostWriteDTO:', PostWriteDTO);
 
@@ -171,10 +171,10 @@ const PostWrite = () => {
 
     return (
         <>
-            <div className="postWrite-main">
+            {/* <div className="postWrite-main">
                 <div className="postWrite">
-                    <form method="POST">
-                        {/* 관심 주제 선택 양식 */}
+                    
+                        관심 주제 선택 양식
                         <div className="interest-section">
                             <div className="form-el">
                                 <br />
@@ -200,40 +200,39 @@ const PostWrite = () => {
                                     ))}
                                 </div>
                             </div>
-                        </div>
-                        <div className="title">
-                            <input
-                                type="text"
-                                name="title"
-                                id="title"
-                                value={title}
-                                onChange={onChangeTitle}
-                                placeholder="제목"
-                                maxLength="100"
-                            />
-                        </div>
-                        <div className="post-content">
-                            <div className="textareaContainer">
-                                <textarea
-                                    name="post-content"
-                                    id="editor"
-                                    maxLength={maxCharacterCount}
-                                    onChange={handleEditorChange}
-                                    value={content}
-                                ></textarea>
-                                <div className="wordCount">
-                                    내용: {content.length} / {maxCharacterCount}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="button">
-                            <button type="submit" onClick={handleSubmit}>
-                                등록
-                            </button>
-                        </div>
-                    </form>
+                        </div> */}
+            <form method="POST">
+                <div className="title">
+                    <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        value={title}
+                        onChange={onChangeTitle}
+                        placeholder="제목"
+                        maxLength="100"
+                    />
                 </div>
-            </div>
+                <div className="post-content">
+                    <div className="textareaContainer">
+                        <textarea
+                            name="post-content"
+                            id="editor"
+                            maxLength={maxCharacterCount}
+                            onChange={handleEditorChange}
+                            value={content}
+                        ></textarea>
+                        <div className="wordCount">
+                            내용: {content.length} / {maxCharacterCount}
+                        </div>
+                    </div>
+                </div>
+                <div className="button">
+                    <button type="submit" onClick={handleSubmit}>
+                        등록
+                    </button>
+                </div>
+            </form>
         </>
     );
 };

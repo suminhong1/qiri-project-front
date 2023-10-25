@@ -101,9 +101,9 @@ const PostList = () => {
                     </div>
 
                     {postList.map((post) => (
-                        if((useParams && post.board.boardSEQ === useParams) || (!useParams && post.likeCount > 20)){
-                        
-                        }
+                        // if((useParams && post.board.boardSEQ === useParams) || (!useParams && post.likeCount > 20)){
+
+                        // }
                         <div className="item" key={post.postSEQ}>
                             <a href={`/viewpost/${post.postSEQ}`} className="post">
                                 <div className="best">
