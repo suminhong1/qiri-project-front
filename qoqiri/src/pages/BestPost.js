@@ -23,17 +23,23 @@ const PostList = () => {
         setBoards(result.data);
     };
 
-    // 게시물 리스트에서 useParams값이 없는건 추천수 20이상 값이 있는건 boardSEQ와 일치시켜서 나오게하는거
+    // 게시물 리스트에서 useParams값이 없는건 추천수 20이상 값이 있는건 boardSEQ와 일치시켜서 나오게하는거 게시물 등록이랑 좋아요 기능 끝나면 만들면됨
+    // const PostListAPI = async () => {
+    //     let result;
+    //     if (useParams) {
+    //         result = await getPostList(page, board);
+    //     } else {
+    //         const bestPostList = postList.filter((post) => post.likeCount >= 20);
+    //         result = { data: bestPostList };
+    //     }
+    //     // console.log('List 호출 시작');
+    //     // const result = await getPostList(page, board);
+    //     setPostList([...postList, ...result.data]);
+    // };
+
     const PostListAPI = async () => {
-        let result;
-        if (useParams) {
-            result = await getPostList(page, board);
-        } else {
-            const bestPostList = postList.filter((post) => post.likeCount >= 20);
-            result = { data: bestPostList };
-        }
-        // console.log('List 호출 시작');
-        // const result = await getPostList(page, board);
+        const result = await getPostList(page, board);
+        console.log(result.data);
         setPostList([...postList, ...result.data]);
     };
 
@@ -44,11 +50,13 @@ const PostList = () => {
     useEffect(() => {
         boardAPI();
         PostListAPI();
+        
     }, []);
 
     useEffect(() => {
         if (board != null) {
             console.log(board);
+            
             PostListAPI();
         }
     }, [board]);
@@ -103,7 +111,7 @@ const PostList = () => {
                     {postList.map((post) => (
                         // if((useParams && post.board.boardSEQ === useParams) || (!useParams && post.likeCount > 20)){
 
-                        // }
+                        // } 추천수 조건문
                         <div className="item" key={post.postSEQ}>
                             <a href={`/viewpost/${post.postSEQ}`} className="post">
                                 <div className="best">
