@@ -8,8 +8,17 @@ const instance = axios.create({
 });
 
 export const getPosts = async () => {
-  return await instance.get("/public/post");
+  return await instance.get("/public/post", {
+    params: {
+      board: 2,
+    },
+  });
 };
+
+export const reviewUpdate = async (data) => {
+  return await instance.put(`reviewUpdate`, data);
+};
+
 const ReviewBoard = () => {
   const [reviews, setReviews] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState("");
@@ -31,6 +40,7 @@ const ReviewBoard = () => {
     const result = await getPosts();
     setPosts(result.data);
   };
+
   const handleWriteClick = async () => {
     if (content.length === 0) {
       alert("댓글을 입력해 주세요!!");
@@ -157,7 +167,12 @@ const ReviewBoard = () => {
             >
               끼리: {po.userInfo.userNickname}
             </span>
-
+            {loggedInUser.id === po.userInfo.userId && (
+              <div>
+                <button onClick={() => po.postSEQ}>수정</button>
+                <button onClick={() => po.postSEQ}>삭제</button>
+              </div>
+            )}
             <div className="rv-stats-thums">
               <span className="rv-like-button" onClick={handleLikeClick()}>
                 👍 {po.likes}
