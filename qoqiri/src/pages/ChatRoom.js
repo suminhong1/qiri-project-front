@@ -5,16 +5,16 @@ import { useParams } from "react-router-dom";
 import { getChatRoom } from "../api/chat";
 
 const ChatRoom = () => {
-  const [room, setRoom] = useState({});
+  const [chatRoom, setChatRoom] = useState({});
   const [sender, setSender] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const { roomId } = useParams();
+  const { id } = useParams();
   const stompClient = useRef(null);
 
   const chatRoomAPI = async () => {
-    const result = await getChatRoom(roomId);
-    setRoom(result.data);
+    const result = await getChatRoom(id);
+    setChatRoom(result.data);
   };
 
   useEffect(() => {
@@ -23,10 +23,10 @@ const ChatRoom = () => {
 
   useEffect(() => {
     chatRoomAPI();
-  }, [roomId]);
+  }, [id]);
 
   useEffect(() => {
-    const socket = new SockJS("/ws");
+    const socket = new SockJS("http://localhost:8080/ws");
     stompClient.current = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {},
@@ -37,7 +37,7 @@ const ChatRoom = () => {
 
     stompClient.current.onConnect = (frame) => {
       console.log("Connected: " + frame);
-      stompClient.current.subscribe(`/sub/chat/room/${roomId}`, (message) => {
+      stompClient.current.subscribe(`/sub/chat/room/${id}`, (message) => {
         const recv = JSON.parse(message.body);
         recvMessage(recv);
       });
@@ -46,7 +46,7 @@ const ChatRoom = () => {
         destination: "/pub/chat/message",
         body: JSON.stringify({
           type: "ENTER",
-          chatRoomSEQ: roomId,
+          chatRoomSEQ: id,
           sender: sender,
           message: "",
         }),
@@ -62,14 +62,14 @@ const ChatRoom = () => {
         stompClient.current.deactivate();
       }
     };
-  }, [roomId]);
+  }, [id]);
 
   const sendMessage = () => {
     stompClient.current.publish({
       destination: "/pub/chat/message",
       body: JSON.stringify({
         type: "TALK",
-        chatRoomSEQ: roomId,
+        chatRoomSEQ: id,
         sender: sender,
         message: message,
       }),
@@ -91,7 +91,7 @@ const ChatRoom = () => {
   return (
     <div className="container" id="app">
       <div>
-        <h2>{room?.name}</h2>
+        <h2>{chatRoom?.chatRoomSEQ}</h2>
       </div>
       <div className="input-group">
         <div className="input-group-prepend">

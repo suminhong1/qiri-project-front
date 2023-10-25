@@ -1,35 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../css/Myinfo.css';
-import Paging from '../components/Paging';
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import "../css/Myinfo.css";
+import Paging from "../components/Paging";
 
 const UserInfoPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const categories = [
-    '가입 정보',
-    '회원정보 변경',
-    '내가 쓴 글',
-    '내가 쓴 댓글',
-    '좋아요 한 글',
-    '좋아요 한 댓글',
-    '스크랩 한 글',
-    '차단한 사용자',
+    "가입 정보",
+    "회원정보 변경",
+    "참여중인 채팅방",
+    "내가 쓴 글",
+    "내가 쓴 댓글",
+    "좋아요 한 글",
+    "좋아요 한 댓글",
+    "스크랩 한 글",
+    "차단한 사용자",
   ];
   const [categoryData, setCategoryData] = useState([]);
   const [userCategoryData, setUserCategoryData] = useState([]);
+  const userId = useSelector((state) => state.user.id);
   const navigate = useNavigate();
- 
+
   const handleCategoryClick = (category) => {
-    if (category === '가입 정보') {
-      navigate('/SignupInfo');
+    if (category === "가입 정보") {
+      navigate("/SignupInfo");
     }
-    if (category === '회원정보 변경') {
-      navigate('/EditProfile');
+    if (category === "회원정보 변경") {
+      navigate("/EditProfile");
       return;
     }
-    
+    if (category === "참여중인 채팅방") {
+      navigate("/chatList/" + userId);
+      return;
+    }
+
     setSelectedCategory(category);
     setCurrentPage(1);
     const filteredData = categoryData.filter((item) => item.includes(category));
@@ -38,7 +45,10 @@ const UserInfoPage = () => {
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = userCategoryData.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = userCategoryData.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   return (
     <div className="category-page">
@@ -48,7 +58,8 @@ const UserInfoPage = () => {
             key={index}
             onClick={() => handleCategoryClick(category)}
             style={{
-              backgroundColor: selectedCategory === category ? '#FF9615' : 'white',
+              backgroundColor:
+                selectedCategory === category ? "#FF9615" : "white",
             }}
           >
             {category}
