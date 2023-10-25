@@ -8,7 +8,7 @@ const instance = axios.create({
 
 export const addPost = async (data) => {
   //서버 주소와 클라이언트 주소는 다름
-  return await instance.post("post/", data);
+  return await instance.post("post"+ data);
 };
 
 export const getBoards = async () => {
@@ -17,9 +17,9 @@ export const getBoards = async () => {
 
 export const getPostList = async (page, board) => {
   let url = `public/post?page=${page}`;
-  if (board !== null) {
-    url += `&board=${board}`;
-  }
+  // if (board !== null) {
+  //   url += `&board=${board}`;
+  // }
   return await instance.get(url);
 };
 
@@ -27,9 +27,9 @@ export const getPost = async (id) => {
   return await instance.get("public/post/" + id);
 };
 
-export const getThema = async (id) => {
-  return await instance.get("public/post/" + id + "/thema");
-};
+// export const getThema = async (id) => {
+//   return await instance.get("public/post/" + id + "/thema");
+// };
 
 export const getComments = async (id) => {
   return await instance.get("public/post/" + id + "/comments");
