@@ -309,38 +309,31 @@ const SignUp = () => {
   };
 
   // 프로필 사진 파일 업로드 핸들러
-  const handleProfilePictureUpload = async (e) => {
-    const file = e.target.files[0];
-    console.log(file);
-
-    if (file) {
+const handleProfilePictureUpload = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
       const formData = new FormData();
-      formData.append("profile_img", file);
+      formData.append("profileImg", file);
 
-      try {
-        const response = await axios.post(
-          "http://localhost:8080/qiri/userinfo/signup",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data", 
-            },
-          }
-        );
-
-        if (response.data && response.data.profilePictureUrl) {
-
-          setProfilePictureUrl(response.data.profilePictureUrl);
-          alert("프로필 사진 업로드 완료");
-        } else {
-          alert("프로필 사진 업로드 실패");
+      const response = await axios.post(
+        "http://localhost:8080/qiri/uploadProfilePicture",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      } catch (error) {
-        console.error(error);
-        alert("프로필 사진 업로드 중 오류 발생");
-      }
+      );
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePictureUrl(imageUrl);
+    } catch (error) {
+      console.error(error);
+      alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
-  };
+  }
+};
+
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
@@ -410,7 +403,7 @@ const SignUp = () => {
       bloodType: selectedBloodType,
       mbti,
       statusMessage,
-     // profileImg: profilePictureUrl
+      profileImg: profilePictureUrl
     };
 
     const signUpDTO = {
