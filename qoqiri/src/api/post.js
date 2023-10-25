@@ -8,7 +8,7 @@ const instance = axios.create({
 
 export const addPost = async (data) => {
   //서버 주소와 클라이언트 주소는 다름
-  return await instance.post("postWrite", data);
+  return await instance.post("post/", data);
 };
 
 export const getBoards = async () => {
