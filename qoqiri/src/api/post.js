@@ -32,7 +32,7 @@ export const getThema = async (id) => {
 };
 
 export const getComments = async (id) => {
-  return await instance.get("public/post/" + id + "/comment");
+  return await instance.get("public/post/" + id + "/comments");
 };
 
 export const getSearch = async (keyword) => {
