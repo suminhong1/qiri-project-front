@@ -17,6 +17,9 @@ const PostWrite = () => {
     // const [boards, setBoards] = useState([]);
     const [selectedPlace, setSelectedPlace] = useState(1);
     const [selectedPlaceType, setSelectedPlaceType] = useState(1);
+    const [selectlike, setSelectlike] = useState([]);
+    const [categoryTypes, setCategoryTypes] = useState([]); // Initialize as an array
+    const [categories, setCategories] = useState([]); // Initialize as an array
 
     const maxCharacterCount = 100000; // 게시판 글자 제한
 
@@ -32,7 +35,18 @@ const PostWrite = () => {
         const newContent = event.target.value;
         setContent(newContent);
     };
+  // 관심 주제 선택 핸들러
+  const handleInterestClick = (interest) => {
+    if (selectlike.includes(interest)) {
+        setSelectlike(selectlike.filter((item) => item !== interest));
+    } else {
+        setSelectlike([...selectlike, interest]);
+    }
+};
 
+const getCategoriesByType = (ctSEQ) => {
+    return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ);
+};
     // UserInfo API
     // const UserInfoAPI = async () => {
     //     const result = await getUser();
@@ -112,6 +126,31 @@ const PostWrite = () => {
     return (
         <>
             <form method="POST">
+            <div className="interest-section">
+                            <div className="form-el">
+                                <br />
+                                <div className="selectlike-box">
+                                    {categoryTypes.map((categoryType) => (
+                                        <div key={categoryType.ctSEQ}>
+                                            <h3>{categoryType.ctName}</h3>
+                                            <div className="box-options">
+                                                {getCategoriesByType(categoryType.ctSEQ).map((category) => (
+                                                    <div
+                                                        key={category.categorySEQ}
+                                                        className={`selectlike-box-item ${
+                                                            selectlike.includes(category.categoryName) ? 'selected' : ''
+                                                        }`}
+                                                        onClick={() => handleInterestClick(category.categoryName)}
+                                                    >
+                                                        {category.categoryName}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                 <div id="postTitle">
                     <input
                         type="text"

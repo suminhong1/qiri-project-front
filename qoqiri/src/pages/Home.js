@@ -7,6 +7,9 @@ const Home = () => {
     <>
       <section className="billboard">
         <div className="content">
+          <p>웹소켓을 아세요?</p>
+          <p>웹소켓을 아세요?</p>
+          <p>웹웹웹 웹웹웹</p>
           <p>즐기자, 씨발</p>
           <p>누구든, 언제든</p>
           <p>함께, 가볍게</p>

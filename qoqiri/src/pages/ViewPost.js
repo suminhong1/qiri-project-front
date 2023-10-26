@@ -49,7 +49,7 @@ const ViewPost = () => {
         setEditPlaceType(placeTypeSeq);
     };
 
-    const handelEditPost =
+    // const handelEditPost =
 
     //댓글 관련 추가해야됨
 
