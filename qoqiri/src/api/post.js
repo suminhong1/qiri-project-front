@@ -6,9 +6,9 @@ const instance = axios.create({
 
 // 백단 서버에 요청하는거
 
-export const addPost = async (data) => {
+export const addPostAPI = async (data) => {
   //서버 주소와 클라이언트 주소는 다름
-  return await instance.post("post" + data);
+  return await instance.post("post", data);
 };
 
 export const getBoards = async () => {
@@ -27,9 +27,17 @@ export const getPost = async (id) => {
   return await instance.get("public/post/" + id);
 };
 
-// export const getThema = async (id) => {
-//   return await instance.get("public/post/" + id + "/thema");
-// };
+export const getThema = async () => {
+  return await instance.get("public/thema");
+};
+
+export const getPlace = async () => {
+  return await instance.get("public/place");
+};
+
+export const getPlaceType = async () => {
+  return await instance.get("public/placeType");
+};
 
 export const getComments = async (id) => {
   return await instance.get("public/post/" + id + "/comments");
@@ -54,6 +62,6 @@ export const deleteReview = async (postSeq) => {
   return await instance.delete(`reviewDelete/${postSeq}`);
 };
 
-export const addPostLike = async (data) => {
+export const addPostLikeAPI = async (data) => {
   return await instance.post("postLike", data);
 };
