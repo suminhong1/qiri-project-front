@@ -8,7 +8,7 @@ const instance = axios.create({
 
 export const addPost = async (data) => {
   //서버 주소와 클라이언트 주소는 다름
-  return await instance.post("post"+ data);
+  return await instance.post("post" + data);
 };
 
 export const getBoards = async () => {
@@ -39,8 +39,19 @@ export const getSearch = async (keyword) => {
   return await instance.get("public/post/search/" + keyword);
 };
 
+// 리뷰 저장하기
 export const saveReview = async (data) => {
-  return await instance.post("reviews", data);
+  return await instance.post("reviewWrite", data);
+};
+
+// 리뷰 업데이트하기
+export const updateReview = async (data) => {
+  return await instance.put("reviewUpdate", data);
+};
+
+//리뷰 삭제하기
+export const deleteReview = async (postSeq) => {
+  return await instance.delete(`reviewDelete/${postSeq}`);
 };
 
 export const addPostLike = async (data) => {

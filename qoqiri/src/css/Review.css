@@ -69,13 +69,12 @@
   position: relative;
   top: 50px;
   cursor: pointer;
+  width: 50px;
 }
 
 .rv-stats-thums {
   float: right;
   position: relative;
-  bottom: 10px;
-  margin: 5px;
 }
 .rv-like-button {
   cursor: pointer;
@@ -90,6 +89,26 @@
 
 .rv-input-area {
   position: relative;
+}
+
+.rv-persnalBtn {
+  width: 50px;
+}
+
+.rv-psUpdataBtn {
+  background: none;
+  border: none;
+  color: blue;
+  font-size: small;
+  font-weight: bold;
+}
+
+.rv-psDeleteBtn {
+  background: none;
+  border: none;
+  color: blue;
+  font-size: small;
+  font-weight: bold;
 }
 
 .rv-character-count {
@@ -112,7 +131,7 @@
   color: #ff7f38;
 }
 
-.modal {
+.rv-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -125,7 +144,7 @@
   z-index: 1000;
 }
 
-.modal-content {
+.rv-modal-content {
   position: relative;
   width: 360px;
   height: 690px;
@@ -135,7 +154,7 @@
   border-radius: 10px;
 }
 
-.close-button {
+.rv-close-button {
   position: absolute;
   top: 10px;
   right: 10px;
