@@ -12,10 +12,15 @@ export const getChatRoom = async (id) => {
   return await instance.get("chat/room/" + id);
 };
 
-export const postMessage = async () => {
-  return await instance.post("chatSave/");
-};
+export const saveChat = async (data) => {
+  return await instance.post("chat/save", data);
+}
 
-export const deleteMesaage = async (id) => {
-  return await instance.delete("chat/delete/" + id);
-};
+export const saveChatRoom = async (data) => {
+  return await instance.post("chatroom/save/", data);
+}
+
+export const leaveChatroom = async (id, code) => {
+  return await instance.put("chatroom/leave/", id, code);
+}
+

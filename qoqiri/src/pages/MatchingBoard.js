@@ -105,8 +105,8 @@ const DetailView = ({ selectedPostSEQ }) => {
         </div>
         <div className="board-foot">
           <div className="foot-place-detail">
-            <p>{post?.placeSeq?.placeName}</p>
-            <p>{post?.placeSeq?.placeType?.placeTypeName}</p>
+            <p>{post?.place?.placeName}</p>
+            <p>{post?.place?.placeType?.placeTypeName}</p>
           </div>
         </div>
         <hr />
@@ -292,8 +292,8 @@ const MatchingBoard = () => {
                 </div>
                 <div className="board-foot">
                   <div className="foot-place-detail">
-                    <p>{po.placeSeq.placeName}</p>
-                    <p>{po.placeSeq.placeType.placeTypeName}</p>
+                    <p>{po.place.placeName}</p>
+                    <p>{po.place.placeType.placeTypeName}</p>
                   </div>
                 </div>
               </div>
