@@ -14,9 +14,6 @@ const UserInfoPage = () => {
     "참여중인 채팅방",
     "내가 쓴 글",
     "내가 쓴 댓글",
-    "좋아요 한 글",
-    "좋아요 한 댓글",
-    "스크랩 한 글",
     "차단한 사용자",
   ];
   const [categoryData, setCategoryData] = useState([]);

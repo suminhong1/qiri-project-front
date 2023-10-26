@@ -3,10 +3,10 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import { useParams } from "react-router-dom";
 import { getChatRoom } from "../api/chat";
+import { useSelector } from "react-redux";
 
 const ChatRoom = () => {
   const [chatRoom, setChatRoom] = useState({});
-  const [sender, setSender] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const { id } = useParams();
@@ -17,6 +17,8 @@ const ChatRoom = () => {
     setChatRoom(result.data);
   };
 
+  const user = useSelector((state) => state.user);
+
   useEffect(() => {
     chatRoomAPI();
   }, []);
@@ -26,7 +28,7 @@ const ChatRoom = () => {
   }, [id]);
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8080/ws");
+    const socket = new SockJS("http://localhost:8080/ws/chat");
     stompClient.current = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {},
@@ -45,17 +47,14 @@ const ChatRoom = () => {
       stompClient.current.publish({
         destination: "/pub/chat/message",
         body: JSON.stringify({
-          type: "ENTER",
+          nickname: user.nickname,
           chatRoomSEQ: id,
-          sender: sender,
-          message: "",
+          message: user.nickname + "님이 채팅에 참가하였습니다.",
         }),
       });
     };
 
     stompClient.current.activate();
-
-    setSender(localStorage.getItem("wschat.sender"));
 
     return () => {
       if (stompClient.current.active) {
@@ -64,13 +63,12 @@ const ChatRoom = () => {
     };
   }, [id]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     stompClient.current.publish({
       destination: "/pub/chat/message",
       body: JSON.stringify({
-        type: "TALK",
+        nickname: user.nickname,
         chatRoomSEQ: id,
-        sender: sender,
         message: message,
       }),
     });
