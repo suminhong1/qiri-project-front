@@ -5,7 +5,6 @@ import kkorang from '../assets/kkorang3.jpg';
 import { getPostList, getBoards, getSearch } from '../api/post';
 import { useState, useEffect } from 'react';
 import Date from '../components/Date';
-import BoardBar from '../components/BoardBar';
 import { useParams } from 'react-router-dom';
 
 const PostList = () => {
@@ -16,26 +15,11 @@ const PostList = () => {
     const [userInput, setUserInput] = useState('');
 
     const { id } = useParams();
-    // const searched = posts.filter((item) => item.name.toLowerCase().includes(userInput));
 
     const boardAPI = async () => {
         const result = await getBoards();
         setBoards(result.data);
     };
-
-    // 게시물 리스트에서 useParams값이 없는건 추천수 20이상 값이 있는건 boardSEQ와 일치시켜서 나오게하는거 게시물 등록이랑 좋아요 기능 끝나면 만들면됨
-    // const PostListAPI = async () => {
-    //     let result;
-    //     if (useParams) {
-    //         result = await getPostList(page, board);
-    //     } else {
-    //         const bestPostList = postList.filter((post) => post.likeCount >= 20);
-    //         result = { data: bestPostList };
-    //     }
-    //     // console.log('List 호출 시작');
-    //     // const result = await getPostList(page, board);
-    //     setPostList([...postList, ...result.data]);
-    // };
 
     const PostListAPI = async () => {
         const result = await getPostList(page, board);
@@ -60,14 +44,14 @@ const PostList = () => {
         }
     }, [board]);
 
-    // const filterBoard = (e) => {
-    //     e.preventDefault();
-    //     const href = e.target.href.split('/');
-    //     console.log(href[href.length - 1]);
-    //     setBoard(parseInt(href[href.length - 1]));
-    //     setPage(1);
-    //     setPostList([]);
-    // };
+    const filterBoard = (e) => {
+        e.preventDefault();
+        const href = e.target.href.split('/');
+        console.log(href[href.length - 1]);
+        setBoard(parseInt(href[href.length - 1]));
+        setPage(1);
+        setPostList([]);
+    };
 
     const searchHandler = (e) => {
         e.preventDefault();
@@ -180,7 +164,6 @@ const PostList = () => {
                     <a href="/postWrite">글쓰기</a>
                 </div>
             </div>
-            <BoardBar />
         </>
     );
 };

@@ -13,16 +13,15 @@ const PostWrite = () => {
     // const [userInfo, setUserInfo] = useState([]);
     const [thema, setThema] = useState([]);
     const [place, setPlace] = useState([]);
-    const [boards, setBoards] = useState([]);
     const [placeType, setPlaceType] = useState([]);
-    const [selectedPlace, setSelectedPlace] = useState('');
-    const [selectedPlaceType, setSelectedPlaceType] = useState('');
-    const [selectedBoard, setSelectedBoard] = useState('');
-    const [selectedPostThema, setSelectedPostThema] = useState('');
+    // const [boards, setBoards] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState(1);
+    const [selectedPlaceType, setSelectedPlaceType] = useState(1);
 
-    const maxCharacterCount = 100000; // Maximum character count
+    const maxCharacterCount = 100000; // 게시판 글자 제한
 
     const navigate = useNavigate();
+
     // 제목 입력 핸들러
     const onChangeTitle = (e) => {
         const currentTitle = e.target.value;
@@ -34,39 +33,49 @@ const PostWrite = () => {
         setContent(newContent);
     };
 
-    // 유저
+    // UserInfo API
     // const UserInfoAPI = async () => {
     //     const result = await getUser();
     //     setUserInfo(result.data);
     // };
 
     // thema API
-    const themaAPI = async () => {
-        const result = await getThema();
-        setThema(result.data);
-    };
-    //place API
+    // const themaAPI = async () => {
+    //     const result = await getThema();
+    //     setThema(result.data);
+    // };
+    // place 리스트 불러오기
     const placeAPI = async () => {
         const result = await getPlace();
         setPlace(result.data);
     };
 
+    // placeType 리스트 불러오기
     const placeTypeAPI = async () => {
         const result = await getPlaceType();
+
         setPlaceType(result.data);
     };
 
-    const boardsAPI = async () => {
-        const result = await getBoards();
-        setBoards(result.data);
-    };
+    // const boardsAPI = async () => {
+    //     const result = await getBoards();
+    //     setBoards(result.data);
+    // };
     useEffect(() => {
         placeAPI();
         placeTypeAPI();
-        boardsAPI();
+        // boardsAPI();
         // themaAPI();
     }, []);
 
+    useEffect(() => {
+        console.log(selectedPlace);
+    }, [selectedPlace]);
+    useEffect(() => {
+        console.log(selectedPlaceType);
+    }, [selectedPlaceType]);
+
+    //dto 방식으로 서버에 전송
     const handleSubmit = async (e) => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
@@ -75,17 +84,18 @@ const PostWrite = () => {
             token: localStorage.getItem('token'),
             postTitle: title,
             postContent: content,
-            place: selectedPlace,
-            placeTypes: selectedPlaceType,
+            placeSeq: selectedPlace,
+            placeTypeSeq: selectedPlaceType,
+
             // postThema: thema,
-            board: selectedBoard,
+            // board: selectedBoard,
         };
         console.log(localStorage.getItem('token'));
         console.log('PostDTO:', PostDTO);
 
         try {
             console.log(PostDTO);
-            const postResponse = await addPostAPI(PostDTO); //api 사용 쓰는 명령어 기억하기
+            const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
 
             if (postResponse.data) {
                 alert('글쓰기 성공');
@@ -114,28 +124,44 @@ const PostWrite = () => {
                     />
 
                     <div id="place-types">
-                        <select value={selectedPlaceType} onChange={(e) => setSelectedPlaceType(e.target.value)}>
+                        <select
+                            onChange={(e) => {
+                                setSelectedPlaceType(e.target.value); // 사용자가 선택한 placeTypeName을 placeTypeSEQ로 setSelectedPlaceType에 저장
+                            }}
+                        >
                             {placeType?.map((placeType) => (
-                                <option key={placeType?.placeTypeSEQ}>{placeType?.placeTypeName}</option>
+                                <option key={placeType?.placeTypeSEQ} value={placeType?.placeTypeSEQ}>
+                                    {/* value에 선택한 placeType name을 placeTypeSEQ로 할당*/}
+                                    {placeType?.placeTypeName}
+                                    {/*getPlaceTypeAPI로 불러온 placeType 리스트를  select 바에서 이름으로 보여줌*/}
+                                </option>
                             ))}
                         </select>
                     </div>
 
                     <div id="place-select">
-                        <select value={selectedPlace} onChange={(e) => setSelectedPlace(e.target.value)}>
+                        <select
+                            onChange={(e) => {
+                                setSelectedPlace(e.target.value); // 사용자가 선택한 placeName을 placeSEQ로 setSelectedPlace에 저장
+                            }}
+                        >
                             {place?.map((place) => (
-                                <option key={place?.placeSEQ}>{place?.placeName}</option>
+                                <option key={place?.placeSeq} value={place?.placeSeq}>
+                                    {/* value에 선택한 place name을 placeSEQ로 할당*/}
+                                    {place?.placeName}
+                                    {/*getPlaceAPI로 불러온 place 리스트를  select 바에서 이름으로 보여줌*/}
+                                </option>
                             ))}
                         </select>
                     </div>
 
-                    <div id="board-types">
+                    {/* <div id="board-types">
                         <select value={selectedBoard} onChange={(e) => setSelectedBoard(e.target.value)}>
                             {boards?.map((board) => (
                                 <option key={boards?.boardSEQ}>{board?.boardName}</option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
 
                     {/* <div id="post-thema">
                         <select>
@@ -162,7 +188,7 @@ const PostWrite = () => {
                 </div>
                 <div className="button">
                     <button type="submit" onClick={handleSubmit}>
-                        등록
+                        등록 취소버튼도 ㄱㄱ
                     </button>
                 </div>
                 <div className="updateButton">
