@@ -46,11 +46,21 @@ const Comment = ({ comment }) => {
     );
   };
   const onDelete = () => {
-    dispatch(deleteComment(comment.commentsSEQ));
+    dispatch(
+      deleteComment({
+        commentsSEQ: comment.commentsSEQ,
+        post: comment.post,
+        commentsParentSeq: comment.commentsParentSeq,
+        userInfo: comment.userInfo,
+        commentDesc: content,
+        secretComment: "N",
+        commentDelete: "Y",
+      })
+    );
   };
   return (
     <Box>
-      <h2>@{comment.userInfo.userId}</h2>
+      <h2>@{comment.userInfo.userNickname}</h2>
       <div>
         <span
           contentEditable="true"

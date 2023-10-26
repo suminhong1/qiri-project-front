@@ -14,7 +14,6 @@ import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
-import { useParams } from "react-router-dom";
 
 import axios from "axios";
 
@@ -111,9 +110,11 @@ const DetailView = ({ selectedPostSEQ }) => {
         </div>
         <hr />
         <AddComment code={post !== null ? post.postSEQ : null} />
-        {comments.map((comment) => (
-          <Comment key={comment.commentsSeq} comment={comment} />
-        ))}
+        {comments
+          .filter((comment) => comment.commentDelete === "N") // comment.commentDelete가 "N"인 것만 필터링
+          .map((comment) => (
+            <Comment key={comment.commentsSEQ} comment={comment} />
+          ))}
         {/* <div className="comment">
           <div className="coment-profile-img">
             <img alt="프로필 이미지" />

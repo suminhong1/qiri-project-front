@@ -9,14 +9,14 @@ const instance = axios.create({
   },
 });
 
-export const postComment = async (data) => {
+export const postLike = async (data) => {
   return await instance.post("post/comments", data);
 };
 
-export const putComment = async (data) => {
+export const putLike = async (data) => {
   return await instance.put("post/comments", data);
 };
 
-export const delComment = async (data) => {
+export const delLike = async (data) => {
   return await instance.put("post/comments/delete", data);
 };

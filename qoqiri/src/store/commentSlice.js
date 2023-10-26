@@ -33,8 +33,8 @@ const updateComment = createAsyncThunk(
 // 댓글 삭제 비동기 액션 생성
 const deleteComment = createAsyncThunk(
   "commentSlice/deleteComment",
-  async (id) => {
-    const result = await delComment(id);
+  async (data) => {
+    const result = await delComment(data);
     return result.data;
   }
 );
@@ -62,7 +62,7 @@ const commentSlice = createSlice({
       } else {
         // 대댓글 : 해당 부모 댓글의 답글로 추가
         const index = state.findIndex(
-          (comment) => comment.commentsSeq === action.payload.commentsParentSeq
+          (comment) => comment.commentsSEQ === action.payload.commentsParentSeq
         );
         state[index].replies?.push(action.payload);
       }
@@ -75,22 +75,27 @@ const commentSlice = createSlice({
 
     // 댓글 삭제 액션 성공시 상태 업데이트
     builder.addCase(deleteComment.fulfilled, (state, action) => {
-      if (action.payload.commentsParentSeq === null) {
-        // 댓글 : 해당 댓글을 배열에서 삭제
-        return state.filter(
-          (item) => item.commentsSeq !== action.payload.commentsSeq
-        );
-      } else {
-        // 대댓글 : 해당 부모 댓글의 답글에서 해당 댓글 삭제
-        const index = state.findIndex(
-          (comment) => comment.commentsSeq === action.payload.commentsParentSeq
-        );
-        const replyIndex = state[index].replies.findIndex(
-          (item) => item.commentsSeq === action.payload.commentsSeq
-        );
-        state[index].replies.splice(replyIndex, 1);
-      }
+      return state;
     });
+
+    // 댓글 삭제 액션 성공시 상태 업데이트
+    // builder.addCase(deleteComment.fulfilled, (state, action) => {
+    //   if (action.payload.commentsParentSeq === null) {
+    //     // 댓글 : 해당 댓글을 배열에서 삭제
+    //     return state.filter(
+    //       (item) => item.commentsSEQ !== action.payload.commentsSEQ
+    //     );
+    //   } else {
+    //     // 대댓글 : 해당 부모 댓글의 답글에서 해당 댓글 삭제
+    //     const index = state.findIndex(
+    //       (comment) => comment.commentsSEQ === action.payload.commentsParentSeq
+    //     );
+    //     const replyIndex = state[index].replies.findIndex(
+    //       (item) => item.commentsSEQ === action.payload.commentsSEQ
+    //     );
+    //     state[index].replies.splice(replyIndex, 1);
+    //   }
+    // });
   },
 });
 
