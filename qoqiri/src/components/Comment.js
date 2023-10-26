@@ -39,14 +39,14 @@ const Comment = ({ comment }) => {
   const onUpdate = () => {
     dispatch(
       updateComment({
-        commentsSeq: comment.commentsSeq,
+        commentsSEQ: comment.commentsSEQ,
         post: comment.post,
         commentDesc: content,
       })
     );
   };
   const onDelete = () => {
-    dispatch(deleteComment(comment.commentsSeq));
+    dispatch(deleteComment(comment.commentsSEQ));
   };
   return (
     <Box>
@@ -66,11 +66,11 @@ const Comment = ({ comment }) => {
       </div>
       <AddComment
         active={isActive}
-        parent={comment.commentsSeq}
+        parent={comment.commentsSEQ}
         code={comment.post}
       />
       {comment.replies?.map((reply) => (
-        <Reply reply={reply} key={reply.commentsSeq} />
+        <Reply reply={reply} key={reply.commentsSEQ} />
       ))}
     </Box>
   );

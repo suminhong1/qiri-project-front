@@ -29,7 +29,7 @@ export const getPosts = async () => {
 const DetailView = ({ selectedPostSEQ }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [post, setPost] = useState([]);
+  const [post, setPost] = useState({});
   const [commentsCount, setCommentsCount] = useState(0);
   const dispatch = useDispatch();
 
@@ -50,13 +50,13 @@ const DetailView = ({ selectedPostSEQ }) => {
   const postAPI = async () => {
     const result = await getPost(selectedPostSEQ);
     setPost(result.data);
+    console.log(result.data);
   };
 
   useEffect(() => {
-    // console.log(selectedPostSEQ);
     postAPI();
     // setCommentsCount(comments.length);
-  }, [selectedPostSEQ]);
+  }, []);
 
   useEffect(() => {
     dispatch(viewComments(selectedPostSEQ));
@@ -187,10 +187,14 @@ const DetailView = ({ selectedPostSEQ }) => {
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedPostSEQ, setSelectedPostSEQ] = useState(null); // 선택된 게시물의 postSEQ를 저장
+  const [selectedPostSEQ, setSelectedPostSEQ] = useState(0); // 선택된 게시물의 postSEQ를 저장
   const [category, setCategory] = useState([]);
   const [categoryType, setCategoryType] = useState([]);
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null); // 초기값을 null로 설정
+
+  useEffect(() => {
+    console.log(selectedPostSEQ);
+  }, [selectedPostSEQ]);
 
   const postsAPI = async () => {
     const result = await getPosts();
@@ -208,7 +212,7 @@ const MatchingBoard = () => {
   };
 
   const toggleModal = (postSEQ) => {
-    setSelectedPostSEQ(postSEQ); // 선택된 게시물의 postSEQ를 설정
+    // setSelectedPostSEQ(postSEQ); // 선택된 게시물의 postSEQ를 설정
     setIsOpen(!isOpen);
   };
 
@@ -250,7 +254,11 @@ const MatchingBoard = () => {
           <section className="section">
             {posts.map((po) => (
               <div
-                onClick={() => toggleModal(po.postSEQ)}
+                onClick={() => {
+                  setSelectedPostSEQ(po.postSEQ);
+                  // toggleModal(po.postSEQ);
+                  setIsOpen(!isOpen);
+                }}
                 className="board"
                 key={po.postSEQ}
               >
