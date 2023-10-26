@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import '../css/PostWrite.css';
-import axios from 'axios'; 
+import axios from 'axios';
 import { navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUser } from '../api/user';
-import { addPost, getThema } from '../api/post';
+import { addPostAPI, getBoards, getPlace, getPlaceType, getThema } from '../api/post';
 
 const PostWrite = () => {
     const [title, setTitle] = useState('');
@@ -12,20 +12,17 @@ const PostWrite = () => {
     // const [url, setUrl] = useState('');
     // const [userInfo, setUserInfo] = useState([]);
     const [thema, setThema] = useState([]);
+    const [place, setPlace] = useState([]);
+    const [boards, setBoards] = useState([]);
+    const [placeType, setPlaceType] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState('');
+    const [selectedPlaceType, setSelectedPlaceType] = useState('');
+    const [selectedBoard, setSelectedBoard] = useState('');
+    const [selectedPostThema, setSelectedPostThema] = useState('');
+
     const maxCharacterCount = 100000; // Maximum character count
 
-    // const handleSubmit = ()=>{
-    //     console.log(title);
-    //     console.log(content);
-
-    //     const postDTO = new FormData();
-    //     postDTO.append("title",title)
-    //     postDTO.append("content",content)
-
-    //     addPost(postDTO);
-
-    // }
-
+    const navigate = useNavigate();
     // 제목 입력 핸들러
     const onChangeTitle = (e) => {
         const currentTitle = e.target.value;
@@ -42,50 +39,57 @@ const PostWrite = () => {
     //     const result = await getUser();
     //     setUserInfo(result.data);
     // };
- 
-    // 테마 API
-    // const themaAPI = async () => {
-    //     const result = await getThema();
-    //     setThema(result.data);
-    // };
 
-    // useEffect(() => {
-        
-    //     themaAPI();
-       
-    // }, []);
+    // thema API
+    const themaAPI = async () => {
+        const result = await getThema();
+        setThema(result.data);
+    };
+    //place API
+    const placeAPI = async () => {
+        const result = await getPlace();
+        setPlace(result.data);
+    };
 
-    
+    const placeTypeAPI = async () => {
+        const result = await getPlaceType();
+        setPlaceType(result.data);
+    };
+
+    const boardsAPI = async () => {
+        const result = await getBoards();
+        setBoards(result.data);
+    };
+    useEffect(() => {
+        placeAPI();
+        placeTypeAPI();
+        boardsAPI();
+        // themaAPI();
+    }, []);
+
     const handleSubmit = async (e) => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
-        }
-
-        // const PostWriteDTO = {
-        //     title,
-        //     content,
-        //     // postThemaSeq,
-           
-        // };
-       
-
+        } // 첨부파일도 올릴수있게해야함 + URL
         const PostDTO = {
             token: localStorage.getItem('token'),
             postTitle: title,
-            postContent: content,        
-        //     postThemaSeq: thema,
-        
+            postContent: content,
+            place: selectedPlace,
+            placeTypes: selectedPlaceType,
+            // postThema: thema,
+            board: selectedBoard,
         };
         console.log(localStorage.getItem('token'));
         console.log('PostDTO:', PostDTO);
 
         try {
             console.log(PostDTO);
-            const postResponse = await axios.post('http://localhost:8080/qiri/post', PostDTO);
+            const postResponse = await addPostAPI(PostDTO); //api 사용 쓰는 명령어 기억하기
 
             if (postResponse.data) {
                 alert('글쓰기 성공');
-                // navigate('/');
+                navigate('/');
             } else {
                 alert('글쓰기 실패');
             }
@@ -108,7 +112,40 @@ const PostWrite = () => {
                         placeholder="제목"
                         maxLength="100"
                     />
+
+                    <div id="place-types">
+                        <select value={selectedPlaceType} onChange={(e) => setSelectedPlaceType(e.target.value)}>
+                            {placeType?.map((placeType) => (
+                                <option key={placeType?.placeTypeSEQ}>{placeType?.placeTypeName}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div id="place-select">
+                        <select value={selectedPlace} onChange={(e) => selectedPlace(e.target.value)}>
+                            {place?.map((place) => (
+                                <option key={place?.placeSEQ}>{place?.placeName}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div id="board-types">
+                        <select value={selectedBoard} onChange={(e) => selectedBoard(e.target.value)}>
+                            {boards?.map((board) => (
+                                <option key={boards?.boardSEQ}>{board?.boardName}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* <div id="post-thema">
+                        <select>
+                            {thema?.map((postThema) => (
+                                <option>{postThema?.PtName}</option>
+                            ))}
+                        </select>
+                    </div> */}
                 </div>
+
                 <div className="post-content">
                     <div className="textareaContainer">
                         <textarea
@@ -126,6 +163,16 @@ const PostWrite = () => {
                 <div className="button">
                     <button type="submit" onClick={handleSubmit}>
                         등록
+                    </button>
+                </div>
+                <div className="updateButton">
+                    <button type="submit" onClick={handleSubmit}>
+                        수정
+                    </button>
+                </div>
+                <div className="deleteButton">
+                    <button type="submit" onClick={handleSubmit}>
+                        삭제
                     </button>
                 </div>
             </form>

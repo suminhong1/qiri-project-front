@@ -13,7 +13,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getPost, getSearch } from '../api/post';
 import { getBoards, getPostList, addPostLike } from '../api/post';
 import kkorang from '../assets/kkorang3.jpg';
-import axios from 'axios';
 
 const ViewPost = () => {
     const [bookMark, setBookMark] = useState(false);

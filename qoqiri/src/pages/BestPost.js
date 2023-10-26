@@ -50,13 +50,12 @@ const PostList = () => {
     useEffect(() => {
         boardAPI();
         PostListAPI();
-        
     }, []);
 
     useEffect(() => {
         if (board != null) {
             console.log(board);
-            
+
             PostListAPI();
         }
     }, [board]);
@@ -76,10 +75,6 @@ const PostList = () => {
         formData.append('keyword', e.target.keyword.value);
 
         getSearch(formData.get('keyword'));
-    };
-
-    const postWritehandler = (e) => {
-        window.location.href = '/postWrite';
     };
 
     return (
@@ -182,7 +177,7 @@ const PostList = () => {
                     </form>
                 </div>
                 <div className="write">
-                    <div onClick={postWritehandler}>글쓰기</div>
+                    <a href="/postWrite">글쓰기</a>
                 </div>
             </div>
             <BoardBar />
