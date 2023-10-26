@@ -34,7 +34,7 @@ const ChatList = () => {
       <ul className="list-group">
         {chatRoomList?.map((chatRoomList) => (
           <li
-            key={chatRoomList?.chatRoom.chatRoomSEQ}
+            key={chatRoomList?.userChatRoomInfoSeq}
             className="list-group-item list-group-item-action"
             onClick={() => enterRoom(chatRoomList?.chatRoom.chatRoomSEQ)}
           >

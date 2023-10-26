@@ -6,8 +6,27 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
+import { getChatRoomList } from "../api/chat";
 
 function OffCanvasExample({ show, handleClose, ...props }) {
+
+    const [chatRoomList, setChatRoomList] = useState([]);
+    const user = useSelector((state) => state.user);
+
+    const chatRoomListAPI = async () => {
+      const result = await getChatRoomList(user.id);
+      setChatRoomList(result.data);
+    };
+  
+    useEffect(() => {
+      chatRoomListAPI();
+    }, []);
+
+    useEffect(() => {
+      chatRoomListAPI();
+    }, [user]);
+
+
   return (
     <Offcanvas show={show} onHide={handleClose} {...props}>
       <Offcanvas.Header closeButton>
@@ -17,7 +36,18 @@ function OffCanvasExample({ show, handleClose, ...props }) {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div className="notice">
-          <Link className="notice-link">
+        {chatRoomList?.map((chatRoomList) => (
+          <Link className="notice-link" key={chatRoomList?.userChatRoomInfoSeq}>
+            <div className="notice-top">
+              <span className="notice-exp">댓글이 달렸습니다!</span>
+              <span className="notice-time">몇분전</span>
+            </div>
+            <div span className="notice-addr">
+            {chatRoomList?.chatRoom.post.postTitle}
+            </div>
+          </Link>
+        ))}
+          {/* <Link className="notice-link">
             <div className="notice-top">
               <span className="notice-exp">댓글이 달렸습니다!</span>
               <span className="notice-time">몇분전</span>
@@ -86,17 +116,7 @@ function OffCanvasExample({ show, handleClose, ...props }) {
               홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
               홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
             </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
+          </Link> */}
         </div>
       </Offcanvas.Body>
     </Offcanvas>
@@ -112,6 +132,8 @@ const Navbar = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  
+
   useEffect(() => {}, [bell]);
 
   if (location.pathname === "/Login" || location.pathname === "/signup") {
@@ -123,7 +145,7 @@ const Navbar = () => {
       <div className="navbar2">
         <div className="navbar-home">
           <a href="/" className="homeButton">
-            <GrHomeRounded />
+            <GrHomeRounded/>
           </a>
         </div>
         <div className="navbar-menu">
@@ -143,9 +165,9 @@ const Navbar = () => {
         <div
           className="navbar-alarm"
           onClick={handleShow}
-          /*style={{
+          style={{
             visibility: Object.keys(user).length === 0 ? "hidden" : "visible",
-          }}*/ // 회원가입 완성되면 풀어야됨
+          }}
         >
           <img
             src={alarm}
