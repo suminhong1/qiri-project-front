@@ -122,7 +122,7 @@ const PostWrite = () => {
                     </div>
 
                     <div id="place-select">
-                        <select value={selectedPlace} onChange={(e) => selectedPlace(e.target.value)}>
+                        <select value={selectedPlace} onChange={(e) => setSelectedPlace(e.target.value)}>
                             {place?.map((place) => (
                                 <option key={place?.placeSEQ}>{place?.placeName}</option>
                             ))}
@@ -130,7 +130,7 @@ const PostWrite = () => {
                     </div>
 
                     <div id="board-types">
-                        <select value={selectedBoard} onChange={(e) => selectedBoard(e.target.value)}>
+                        <select value={selectedBoard} onChange={(e) => setSelectedBoard(e.target.value)}>
                             {boards?.map((board) => (
                                 <option key={boards?.boardSEQ}>{board?.boardName}</option>
                             ))}
