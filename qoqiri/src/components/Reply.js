@@ -34,7 +34,7 @@ const Reply = ({ reply }) => {
   const onUpdate = () => {
     dispatch(
       updateComment({
-        commentsSeq: reply.commentsSeq,
+        commentsSEQ: reply.commentsSEQ,
         post: reply.post,
         commentDesc: content,
         commentParentSeq: reply.commentsParentSeq,

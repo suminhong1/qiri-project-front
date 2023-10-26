@@ -23,7 +23,7 @@ const SignUp = () => {
   const [birth, setBirth] = useState("");
   const [age, setAge] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
-  const [hasPartner, setHasPartner] = useState("없음");
+  const [hasPartner, setHasPartner] = useState("");
   const [selectedBloodType, setSelectedBloodType] = useState("");
   const [placeType, setPlaceType] = useState("");
   const [mbti, setMbti] = useState("");
@@ -418,6 +418,14 @@ const handleProfilePictureUpload = async (e) => {
           },
         }
       );
+
+      const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo",signUpDTO, {
+        headers: {
+          "Content-Type":"application/json"
+        }
+      });
+
+      console.log(categoryResponse);
 
       if (userResponse.data) {
         alert("회원가입 성공. 로그인 해주세요");

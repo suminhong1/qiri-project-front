@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/Review.css";
-import { saveReview } from "../api/post";
+import { saveReview, updateReview, deleteReview } from "../api/post";
 import axios from "axios";
 
 const instance = axios.create({
@@ -27,6 +27,8 @@ const ReviewBoard = () => {
   const [showModal, setShowModal] = useState(false);
   const [modalContentURL, setModalContentURL] = useState("");
   const [posts, setPosts] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPostId, setEditingPostId] = useState(null);
 
   useEffect(() => {
     postsAPI();
@@ -35,6 +37,51 @@ const ReviewBoard = () => {
       setLoggedInUser(user);
     }
   }, []);
+
+  // 리뷰 수정버튼 활성화함수
+  const handleEditClick = (postId, content) => {
+    setIsEditing(true);
+    setEditingPostId(postId);
+    setContent(content); // 기존 내용을 수정 상태로 설정
+  };
+
+  // 리뷰 업데이트 확인함수
+  const handleUpdateSubmit = async () => {
+    // 수정 로직
+    const updateData = {
+      token: loggedInUser.token,
+      postTitle: content,
+      postContent: content,
+      boardSeq: 2,
+      postSeq: editingPostId,
+    };
+
+    try {
+      await updateReview(updateData);
+      alert("게시글이 수정되었습니다.");
+      setIsEditing(false);
+      setEditingPostId(null);
+      setContent(""); // 혹은 업데이트된 내용으로 설정
+      // 페이지를 새로고침하거나, 수정된 내용으로 UI 업데이트 필요
+    } catch (error) {
+      alert("게시글 수정에 실패하였습니다. 다시 시도해주세요.");
+    }
+  };
+
+  // 리뷰 삭제 확인함수
+  const handleDeleteClick = async (postSEQ, userId) => {
+    if (loggedInUser.id === userId) {
+      try {
+        await deleteReview(postSEQ);
+        alert("리뷰가 삭제되었습니다.");
+        // UI에서 해당 리뷰 제거 or 페이지 새로고침
+      } catch (error) {
+        alert("리뷰 삭제에 실패하였습니다. 다시 시도해주세요.");
+      }
+    } else {
+      alert("본인의 리뷰만 삭제할 수 있습니다.");
+    }
+  };
 
   const postsAPI = async () => {
     const result = await getPosts();
@@ -62,7 +109,7 @@ const ReviewBoard = () => {
     if (content.length <= 50) {
       // PostDTO 형식에 맞게 reviewData 객체를 수정
       const reviewData = {
-        token: loggedInUser.token, // 이는 로그인한 사용자의 토큰을 가정합니다.
+        token: loggedInUser.token, //로그인한 사용자의 토큰
         postTitle: content,
         postContent: content,
         boardSeq: 2,
@@ -160,18 +207,44 @@ const ReviewBoard = () => {
       <div className="rv-review-board">
         {posts.map((po) => (
           <div key={po.postSEQ} className="rv-review-item">
-            <p>{po.postContent}</p>
-            <span
-              className="rv-writer"
-              onClick={() => handleWriterClick(po.userInfo.userId)}
-            >
-              끼리: {po.userInfo.userNickname}
-            </span>
-            {loggedInUser.id === po.userInfo.userId && (
-              <div>
-                <button onClick={() => po.postSEQ}>수정</button>
-                <button onClick={() => po.postSEQ}>삭제</button>
-              </div>
+            {isEditing && editingPostId === po.postSEQ ? (
+              <>
+                <textarea
+                  value={content}
+                  onChange={handleContentChange}
+                ></textarea>
+                <button onClick={handleUpdateSubmit}>수정 완료</button>
+              </>
+            ) : (
+              <>
+                <p>{po.postContent}</p>
+                <span
+                  className="rv-writer"
+                  onClick={() => handleWriterClick(po.userInfo.userId)}
+                >
+                  끼리: {po.userInfo.userNickname}
+                </span>
+                {loggedInUser.id === po.userInfo.userId && (
+                  <div className="rv-persnalBtn">
+                    <button
+                      className="rv-psUpdataBtn"
+                      onClick={() =>
+                        handleEditClick(po.postSEQ, po.postContent)
+                      }
+                    >
+                      수정
+                    </button>
+                    <button
+                      className="rv-psDeleteBtn"
+                      onClick={() =>
+                        handleDeleteClick(po.postSEQ, po.userInfo.userId)
+                      }
+                    >
+                      삭제
+                    </button>
+                  </div>
+                )}
+              </>
             )}
             <div className="rv-stats-thums">
               <span className="rv-like-button" onClick={handleLikeClick()}>
@@ -182,9 +255,12 @@ const ReviewBoard = () => {
         ))}
       </div>
       {showModal && (
-        <div className="modal" onClick={handleCloseModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-button" onClick={handleCloseModal}>
+        <div className="rv-modal" onClick={handleCloseModal}>
+          <div
+            className="rv-modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="rv-close-button" onClick={handleCloseModal}>
               &times;
             </span>
             <iframe src={modalContentURL} width="100%" height="100%"></iframe>
