@@ -133,11 +133,9 @@ export default function Login() {
           </div>
 
           <div className="linksWrap">
-            <a href="/find-password">비밀번호 찾기</a>
-            <span> ㅣ </span>
-            <a href="#" onClick={openFindIdModal}>아이디 찾기</a>
-            <span> ㅣ </span>
-            <a href="/signup">회원가입</a>
+          <h4 style={{ fontSize: "14px" }}>아이디가 없으신가요?</h4>
+            <span> → </span>
+            <a href="/signup" style={{ fontSize: "13px" }}>회원가입</a>
           </div>
           <br />
           <div>
@@ -148,30 +146,7 @@ export default function Login() {
         </form>
       </div>
 
-      {/* 아이디 찾기 모달 */}
-      {showFindIdModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeFindIdModal}>&times;</span>
-            <form onSubmit={handleFindIdSubmit}>
-              <div className="form-group">
-                <label htmlFor="findIdEmail">이메일 주소</label>
-                <input
-                  type="email"
-                  id="findIdEmail"
-                  placeholder="이메일 주소 입력"
-                  value={findIdEmail}
-                  onChange={handleFindIdEmailChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <button type="submit">아이디 찾기</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 }

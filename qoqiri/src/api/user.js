@@ -20,3 +20,7 @@ export const signUp = async (data) => {
 export const findIdByEmail = async (data) => {
   return await instance.get("findIdByEmail", data);
 };
+
+export const editProfile = async (data) => {
+  return await instance.put("editProfile", data);
+}

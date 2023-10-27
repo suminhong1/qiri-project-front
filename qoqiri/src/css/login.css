@@ -112,38 +112,3 @@ height: 48px;
 }
 
 
-.modal-content {
-  background-color: #fefefe;
-  margin: 10% auto;
-  padding: 10px;
-  border: 1px solid #888;
-  border-radius: 10px;
-  
-  
-  width: 80%;
-  max-width: 400px;
-}
-
-label[for="userEmail"] {
-  margin-left: 20px; /* 원하는 간격만큼 조절하세요. */
-}
-
-.form-group {
-  margin-top: 30px; 
-}
-
-
-/* 모달 창 닫기 버튼 */
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 30px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: #f00; /* 마우스 위치시 색상 변경 */
-}
-
