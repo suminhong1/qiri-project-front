@@ -1,22 +1,17 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-
 const instance = axios.create({
   baseURL: "http://localhost:8080/qiri/",
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
 });
 
+export const getLike = async (id) => {
+  return await instance.get("commentLike/" + id);
+};
+
 export const postLike = async (data) => {
-  return await instance.post("post/comments", data);
+  return await instance.post("commentLike", data);
 };
 
-export const putLike = async (data) => {
-  return await instance.put("post/comments", data);
-};
-
-export const delLike = async (data) => {
-  return await instance.put("post/comments/delete", data);
+export const delLike = async (id) => {
+  return await instance.put("commentLike/" + id);
 };
