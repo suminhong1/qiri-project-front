@@ -2,121 +2,59 @@ import alarm from "../assets/alarm.gif";
 import { useState, useEffect } from "react";
 import "../css/Navbar.css";
 import { GrHomeRounded } from "react-icons/gr";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
 import { getChatRoomList } from "../api/chat";
 
 function OffCanvasExample({ show, handleClose, ...props }) {
+  const [chatRoomList, setChatRoomList] = useState([]);
+  const user = useSelector((state) => state.user);
+  const { id } = useParams();
+  const chatRoomListAPI = async () => {
+    const result = await getChatRoomList(user.id);
+    setChatRoomList(result.data);
+  };
 
-    const [chatRoomList, setChatRoomList] = useState([]);
-    const user = useSelector((state) => state.user);
+  useEffect(() => {
+    chatRoomListAPI();
+  }, [show]);
 
-    const chatRoomListAPI = async () => {
-      const result = await getChatRoomList(user.id);
-      setChatRoomList(result.data);
-    };
-  
-    useEffect(() => {
-      chatRoomListAPI();
-    }, []);
+  useEffect(() => {
+    chatRoomListAPI();
+  }, [id]);
 
-    useEffect(() => {
-      chatRoomListAPI();
-    }, [user]);
-
+  useEffect(() => {
+    chatRoomListAPI();
+  }, [user]);
 
   return (
     <Offcanvas show={show} onHide={handleClose} {...props}>
       <Offcanvas.Header closeButton>
         <Offcanvas.Title style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-          내 소식
+          내 채팅방
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div className="notice">
-        {chatRoomList?.map((chatRoomList) => (
-          <Link className="notice-link" key={chatRoomList?.userChatRoomInfoSeq}>
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-            {chatRoomList?.chatRoom.post.postTitle}
-            </div>
-          </Link>
-        ))}
-          {/* <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link>
-          <Link className="notice-link">
-            <div className="notice-top">
-              <span className="notice-exp">댓글이 달렸습니다!</span>
-              <span className="notice-time">몇분전</span>
-            </div>
-            <div span className="notice-addr">
-              홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요
-              홍홍홍홍박사님을 아세요 홍홍홍홍박사님을 아세요 홍홍홍
-            </div>
-          </Link> */}
+          {chatRoomList?.map((chatRoomList) => (
+            <a
+              href={`/chatRoom/${chatRoomList?.chatRoom.chatRoomSEQ}`}
+              className="notice-link"
+              key={chatRoomList?.userChatRoomInfoSeq}
+            >
+              <div className="notice-top">
+                <span className="notice-exp">
+                  {chatRoomList?.chatRoom.post.postTitle}
+                </span>
+                <span className="notice-time">몇분전</span>
+              </div>
+              <div span className="notice-addr">
+                의 채팅방
+              </div>
+            </a>
+          ))}
         </div>
       </Offcanvas.Body>
     </Offcanvas>
@@ -132,8 +70,6 @@ const Navbar = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  
-
   useEffect(() => {}, [bell]);
 
   if (location.pathname === "/Login" || location.pathname === "/signup") {
@@ -145,7 +81,7 @@ const Navbar = () => {
       <div className="navbar2">
         <div className="navbar-home">
           <a href="/" className="homeButton">
-            <GrHomeRounded/>
+            <GrHomeRounded />
           </a>
         </div>
         <div className="navbar-menu">
@@ -155,11 +91,11 @@ const Navbar = () => {
           <a href="/matchingBoard" className="matchingSearch">
             끼리찾기
           </a>
+          <a href="/myMatching" className="myMatching">
+            나의끼리
+          </a>
           <a href="/review" className="review">
             끼리후기
-          </a>
-          <a href="/bestPost" className="community">
-            커뮤니티
           </a>
         </div>
         <div

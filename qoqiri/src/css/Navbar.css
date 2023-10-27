@@ -24,14 +24,14 @@
 .matchingPost,
 .matchingSearch,
 .review,
-.community {
+.myMatching {
   color: #4e4e4e;
 }
 
 .matchingPost:hover,
 .matchingSearch:hover,
 .review:hover,
-.community:hover {
+.myMatching:hover {
   border-radius: 5px;
   color: #ff7f38;
 }

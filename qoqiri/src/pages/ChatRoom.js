@@ -1,105 +1,186 @@
 import React, { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { useParams } from "react-router-dom";
-import { getChatMessage, getChatRoom, getChatRoomInfo } from "../api/chat";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  getChatMessage,
+  getChatRoomInfo,
+  getUserChatRoomInfo,
+  leaveChatroom,
+} from "../api/chat";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
 
 const StyledChatRoom = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-min-height: 100vh; /* 화면 전체 높이를 차지하도록 설정 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 700px; /* 화면 전체 높이를 차지하도록 설정 */
 
   * {
     white-space: normal;
   }
 
-  .container {    
-    height: 600px;
+  .chatroom {
+    overflow: hidden;
+  }
+
+  .container {
+    margin-bottom: -1px;
+    height: 500px;
     width: 800px;
-    overflow-y: scroll;   
-    margin-top: 20px;
+    min-width: 800px;
+    overflow-y: scroll;
     display: flex;
     justify-content: center;
     flex-direction: column;
+    border: 1px solid #e5e5e5;
   }
 
   .list-group {
     margin-top: auto;
     width: 100%;
+    max-height: -webkit-fill-available;
   }
 
-  .input-group {
+  .list-loadChat,
+  .list-group-item {
+    margin-left: -12px;
+    margin-right: -12px;
+    border-radius: 0px;
+    .chat {
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+  }
+
+  .form-control {
+    border-right: 0px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .inputgroup {
     width: 800px;
-    margin-top: 10px;
+    min-width: 800px;
+    margin-bottom: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #e5e5e5;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  .input-group-append {
+    width: 60px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .sendMessageBtn {
-    width: 100px;
-    height: 100px;
-  }
-  .container::-webkit-scrollbar {
-    width: 8px; /* 스크롤바 너비 조절 */
-  }
-  
-  .container::-webkit-scrollbar-thumb {
-    background-color: rgb(199, 199, 199); /* 스크롤바 색상 조절 */
-    border-radius: 10px; /* 스크롤바 둥글게 만들기 */
-  }
-  
-  .container::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(156, 156, 156); /* 스크롤바 호버 시 색상 변경 */
+    margin-top: auto;
+    width: 50px;
+    height: 100%;
+    background-color: white;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  
- `
+  .form-control {
+    height: 50px;
+    border: none;
+  }
+
+  .roomHeader {
+    width: 800px;
+    height: 50px;
+    margin-top: 50px;
+    background-color: #ff7f38;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 25px;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+  }
+
+  .leave {
+    width: 65px;
+    height: 30px;
+    background-color: white;
+    border-radius: 15px;
+  }
+
+  .leaveBtn {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+  }
+
+  .form-control:focus {
+    outline: none !important;
+    border: none; /* 추가로 border를 제거하려면 */
+    box-shadow: none; /* 추가로 box-shadow를 제거하려면 */
+  }
+
+  .container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+`;
 
 const ChatRoom = () => {
-  const [chatRoom, setChatRoom] = useState({});
+  const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [chatRoomInfo, setChatRoomInfo] = useState([]);
+  const [userChatRoomInfo, setUserChatRoomInfo] = useState([]);
   const [loadMessage, setLoadMessage] = useState([]);
   const { id } = useParams();
   const stompClient = useRef(null);
+  const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
-  const chatRoomAPI = async () => {
-    const result = await getChatRoom(id);
-    setChatRoom(result.data);
+  const chatRoomInfoAPI = async () => {
+    const result = await getChatRoomInfo(id);
+    setChatRoomInfo(result.data);
   };
 
   const chatMessageAPI = async () => {
     const result = await getChatMessage(id);
     setLoadMessage(result.data);
-  }
+  };
 
-  const chatRoomInfoAPI = async () => {
-    const result = await getChatRoomInfo(id, user.id);
-    setChatRoomInfo(result.data);
-  }
-
-  const user = useSelector((state) => state.user);
+  const userChatRoomInfoAPI = async () => {
+    const result = await getUserChatRoomInfo(id, user.id);
+    setUserChatRoomInfo(result.data);
+  };
 
   const scrollToBottom = () => {
-    const chatContainer = document.getElementById('app');
+    const chatContainer = document.getElementById("app");
     chatContainer.scrollTop = chatContainer.scrollHeight;
   };
 
-
   useEffect(() => {
-    chatRoomAPI();
-    chatMessageAPI();
     chatRoomInfoAPI();
-  }, []);
-
-
-  useEffect(() => {
-    chatRoomAPI();
     chatMessageAPI();
-    chatRoomInfoAPI();
+    userChatRoomInfoAPI();
   }, [id]);
 
   useEffect(() => {
@@ -107,6 +188,10 @@ const ChatRoom = () => {
   }, [messages]);
 
   useEffect(() => {
+    chatRoomInfoAPI();
+    chatMessageAPI();
+    userChatRoomInfoAPI();
+    const currentTime = new Date();
     const socket = new SockJS("http://localhost:8080/ws/chat");
     stompClient.current = new Client({
       webSocketFactory: () => socket,
@@ -128,7 +213,8 @@ const ChatRoom = () => {
         body: JSON.stringify({
           nickname: user.nickname,
           chatRoomSEQ: id,
-          message: user.nickname + "님이 채팅에 참가하였습니다.",
+          message: user.nickname + "님이 채팅에 참여하였습니다.",
+          sendTime: currentTime.toISOString(),
         }),
       });
     };
@@ -140,16 +226,25 @@ const ChatRoom = () => {
         stompClient.current.deactivate();
       }
     };
-  }, [id]);
+  }, [user, id]);
 
   //메세지 발송 부분
   const sendMessage = async () => {
+    const trimmedMessage = message.trim(); // 입력한 메시지의 양 끝 공백을 제거
+
+    // 메세지가 비어 있으면 동작하지 않음
+    if (!trimmedMessage) {
+      return;
+    }
+
+    const currentTime = new Date();
     stompClient.current.publish({
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
         chatRoomSEQ: id,
         message: message,
+        sendTime: currentTime.toISOString(),
       }),
     });
     setMessage("");
@@ -160,53 +255,84 @@ const ChatRoom = () => {
     setMessages((prevMessages) => [
       ...prevMessages,
       {
-        type: recv.type,
-        sender: recv.type === "ENTER" ? "[알림]" : recv.sender,
+        nickname: recv.nickname,
         message: recv.message,
+        sendTime: recv.sendTime,
       },
     ]);
   };
 
+  const exit = async () => {
+    const chatDTO = {
+      nickname: user.nickname,
+      chatRoomSEQ: id,
+    };
+    leaveChatroom(chatDTO);
+    navigate("/");
+  };
+
   return (
     <StyledChatRoom>
-      <div>
-        <h2></h2>
-      </div>
-    <div className="container" id="app">
-      <ul className="list-group">  
-        {loadMessage
-  ?.filter((msg) => new Date(msg.sendTime) > new Date(chatRoomInfo.joinDate))
-  .map((msg, index) => (
-    <li className="list-loadChat" key={index}>
-      {msg?.userInfo?.userNickname} - {msg?.message} - {msg?.sendTime}
-    </li>
-  ))}
-  {messages.map((msg, index) => (
-          <li className="list-group-item" key={index}>
-            {msg.sender} - {msg.message}
-          </li>
-        ))}
-      </ul>
-     
-    </div>
-    <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") sendMessage();
-          }}
-        />
-        <div className="input-group-append">
-          <button
-            className="sendMessageBtn"
-            type="button"
-            onClick={sendMessage}
-          >
-          <FontAwesomeIcon icon="fas fa-location-arrow" style={{color: "#005eff",}} />        
+      <div className="chatroom">
+        <div>
+          <div className="roomHeader">
+            <div className="roomName">
+              {chatRoomInfo?.post?.postTitle}의 채팅방
+            </div>
+            <div className="leave">
+              <button className="leaveBtn" onClick={exit}>
+                나가기
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="container" id="app">
+          <ul className="list-group">
+            {loadMessage
+              ?.filter(
+                (msg) =>
+                  new Date(msg.sendTime) > new Date(userChatRoomInfo.joinDate)
+              )
+              .map((msg, index) => (
+                <li className="list-loadChat" key={index}>
+                  <div className="chat">{msg?.userInfo?.userNickname}</div>
+                  {msg?.message} - {msg?.sendTime}
+                </li>
+              ))}
+            {messages.map((msg, index) => (
+              <li className="list-group-item" key={index}>
+                <div className="chat">{msg?.nickname}</div>
+                {msg.message}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="inputgroup">
+          <input
+            type="text"
+            className="form-control"
+            value={message}
+            placeholder="메세지를 입력해주세요"
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") sendMessage();
+            }}
+          />
+          <div className="input-group-append">
+            <button
+              className="sendMessageBtn"
+              type="button"
+              onClick={sendMessage}
+            >
+              <FontAwesomeIcon
+                icon={faCircleUp}
+                rotation={90}
+                style={{ color: "#ff7f38" }}
+                size="2xl"
+              />
             </button>
+          </div>
         </div>
       </div>
     </StyledChatRoom>
