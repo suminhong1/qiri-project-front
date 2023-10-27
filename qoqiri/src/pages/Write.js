@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { getBoard } from '../api/board';
 import { getUser } from '../api/user';
 import { getPlaceTypes } from '../api/placeType';
+import ReactQuill from 'react-quill';
 
 const PostWrite = () => {
     const [content, setContent] = useState(''); // State variable to store the content of the editor
@@ -159,7 +160,7 @@ const PostWrite = () => {
                 <div className="postWrite">
                     <form method="POST">
                         {/* 관심 주제 선택 양식 */}
-                        <div className="interest-section">
+                        <div id="interest-section">
                             <div className="form-el">
                                 <br />
                                 <div className="selectlike-box">

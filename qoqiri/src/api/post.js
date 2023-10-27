@@ -6,11 +6,13 @@ const instance = axios.create({
 
 // 백단 서버에 요청하는거
 
+// 게시물 추가
 export const addPostAPI = async (data) => {
     //서버 주소와 클라이언트 주소는 다름
     return await instance.post('post', data);
 };
 
+// 게시물 수정
 export const editPostAPI = async (data) => {
     return await instance.put('post', data);
 };
@@ -29,10 +31,6 @@ export const getPostList = async (page, board) => {
 
 export const getPost = async (id) => {
     return await instance.get('public/post/' + id);
-};
-
-export const getThema = async () => {
-    return await instance.get('public/thema');
 };
 
 export const getPlace = async () => {
