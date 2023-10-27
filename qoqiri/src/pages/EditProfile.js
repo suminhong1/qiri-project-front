@@ -14,7 +14,7 @@ const EditMyInfo = () => {
   // 상태 변수들
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
 
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -407,10 +407,10 @@ const EditMyInfo = () => {
         });
       }
 
-      axios.get(`/api/userCategories/${parsedUserInfo.id}`)
+      axios.get("http://localhost:8080/qiri/userCategoryInfo")
         .then(response => {
           const userCategories = response.data;
-          setSelectlike(userCategories.map(category => category.categoryName));
+          setSelectlike(userCategories.map(category => category.categorySEQ));
         })
         .catch(error => console.error(error));
     }
@@ -421,7 +421,6 @@ const EditMyInfo = () => {
     if (e) {
       e.preventDefault(); // 폼 기본 제출 방지
     }
-
 
     const updatedInfo = {
       id,
@@ -441,7 +440,6 @@ const EditMyInfo = () => {
       profileImg: profilePictureUrl,
       // userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
-
 
     try {
       const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updatedInfo, {
@@ -748,19 +746,26 @@ const EditMyInfo = () => {
               <label>관심 주제를 선택해주세요</label>
               <br />
               <div className="selectlike-box">
-                {categoryTypes.map(categoryType => (
+                {categoryTypes.map((categoryType) => (
                   <div key={categoryType.ctSEQ}>
                     <h3>{categoryType.ctName}</h3>
                     <div className="box-options">
-                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
-                        <div
-                          key={category.categorySEQ}
-                          className={`selectlike-box-item ${selectlike.includes(category.categoryName) ? 'selected' : ''}`}
-                          onClick={() => handleInterestClick(category.categoryName)}
-                        >
-                          {category.categoryName}
-                        </div>
-                      ))}
+                      {getCategoriesByType(categoryType.ctSEQ).map(
+                        (category) => (
+                          <div
+                            key={category.categorySEQ}
+                            className={`selectlike-box-item ${selectlike.includes(category.categoryName)
+                              ? "selected"
+                              : ""
+                              }`}
+                            onClick={() =>
+                              handleInterestClick(category.categoryName, category.categorySEQ)
+                            }
+                          >
+                            {category.categoryName}
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 ))}

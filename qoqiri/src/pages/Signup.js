@@ -114,7 +114,7 @@ const SignUp = () => {
 
     if (!idRegExp.test(currentId)) {
       setIsId(false);
-      setIdMessage("4-12사이 대소문자 또는 숫자만 입력해 주세요.");
+      setIdMessage("4-12자 사이 대소문자 또는 숫자만 입력해 주세요.");
     } else {
       setIsId(true);
       setIdMessage("");
@@ -407,11 +407,9 @@ const SignUp = () => {
       profileImg: profilePictureUrl
     };
 
-    console.log(selectSeq);
-
     const signUpDTO = {
       userInfoDTO,
-      userCategories: selectSeq.map((userCategorySeq) =>({userCategorySeq}) ),
+      userCategories: selectSeq.map((userCategorySeq) => ({ userCategorySeq })),
     };
 
     try {
@@ -430,7 +428,6 @@ const SignUp = () => {
           "Content-Type": "application/json"
         }
       });
-
       console.log(categoryResponse);
 
       if (userResponse.data) {
