@@ -1,5 +1,5 @@
 .ApplyMain {
-  min-width: 1900px;
+  min-width: 1400px;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -11,13 +11,15 @@
 .AC {
   justify-content: center;
   border: 1px;
-  min-width: 2000px;
+  min-width: 1400px;
   max-width: 1400px;
   height: 100%;
   display: flex;
   flex-wrap: wrap;
   margin: 10px;
+  position: relative; /* 추가 */
 }
+
 .Applytag {
   font-weight: bold;
   font-size: 50px;
@@ -26,6 +28,20 @@
   left: 125px;
   color: coral;
 }
+
 .ApplySelect {
   margin: 30px;
+}
+
+/* 뒤로가기 버튼 스타일 추가 */
+.backButton {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-color: coral;
+  border: none;
+  padding: 5px 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
 }

@@ -2,20 +2,24 @@ import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ApplyForm from "../components/ApplyForm";
 import "../css/Apply.css";
+import { useNavigate } from "react-router-dom"; // 추가
 
 const Apply = () => {
   const [sectionCount, setSectionCount] = useState(1);
+  const navigate = useNavigate(); // 추가
 
-  const addSection = () => {
-    // 섹션을 추가하는 함수
-    setSectionCount(sectionCount + 1);
+  const handleBack = () => {
+    navigate("/Myactive");
   };
 
   return (
     <div className="ApplyMain">
       <div className="AC">
-        <legend className="Applytag">신청 목록!!!</legend>
-        <button onClick={addSection}>신청하기</button>
+        <legend className="Applytag">궁금해요</legend>
+        <button className="backButton" onClick={handleBack}>
+          뒤로가기
+        </button>{" "}
+        {/* 버튼 추가 */}
         {Array.from({ length: sectionCount }).map((_, index) => (
           <section key={index} className="ApplySelect">
             <ApplyForm />

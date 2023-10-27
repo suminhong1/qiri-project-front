@@ -4,7 +4,7 @@ import Imgmodal from "./imgmodal";
 import defaultimg from "../assets/defaultimg.png";
 import { getUser, login } from "../api/user";
 
-const ApplyForm = () => {
+const ApplyForm = (userInfo) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -12,7 +12,7 @@ const ApplyForm = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await getUser("user3"); // 해당 주인계정만 나오도록 하기
+      const response = await getUser("userid"); // 해당 주인계정만 나오도록 하기
       setUserData(response.data);
     };
 
@@ -48,7 +48,9 @@ const ApplyForm = () => {
 
   return (
     <div className="ap-container">
-      <div className="ap-header-sign">#category# 카테고리 신청하였습니다</div>
+      <div className="ap-header-sign">
+        {userInfo.nickname}님이 카테고리 신청하였습니다
+      </div>
 
       <div className={`ap-custom-card ${isFlipped ? "flipped" : ""}`}>
         <div className="ap-card-front">
@@ -101,7 +103,7 @@ const ApplyForm = () => {
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">지역:</div>
-              <div className="ap-info-value">{userData?.addr}</div>
+              <div className="ap-info-value">{userData?.placeTypeName}</div>
             </div>
             <hr />
             <div className="ap-info-row">

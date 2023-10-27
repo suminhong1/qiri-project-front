@@ -23,7 +23,7 @@ const ReviewBoard = () => {
   const [reviews, setReviews] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState("");
   const [content, setContent] = useState("");
-  const [sortByLikes, setSortByLikes] = useState(false);
+  const [editingContent, setEditingContent] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalContentURL, setModalContentURL] = useState("");
   const [posts, setPosts] = useState([]);
@@ -42,7 +42,7 @@ const ReviewBoard = () => {
   const handleEditClick = (postId, content) => {
     setIsEditing(true);
     setEditingPostId(postId);
-    setContent(content); // 기존 내용을 수정 상태로 설정
+    setEditingContent(content); // 기존 내용을 수정 상태로 설정
   };
 
   // 리뷰 업데이트 확인함수
@@ -50,8 +50,8 @@ const ReviewBoard = () => {
     // 수정 로직
     const updateData = {
       token: loggedInUser.token,
-      postTitle: content,
-      postContent: content,
+      postTitle: editingContent,
+      postContent: editingContent,
       boardSeq: 2,
       postSeq: editingPostId,
     };
@@ -61,8 +61,7 @@ const ReviewBoard = () => {
       alert("게시글이 수정되었습니다.");
       setIsEditing(false);
       setEditingPostId(null);
-      setContent(""); // 혹은 업데이트된 내용으로 설정
-      // 페이지를 새로고침하거나, 수정된 내용으로 UI 업데이트 필요
+      setContent("");
     } catch (error) {
       alert("게시글 수정에 실패하였습니다. 다시 시도해주세요.");
     }
@@ -140,34 +139,17 @@ const ReviewBoard = () => {
     }
   };
 
-  const handleContentChange = (e) => {
+  const handleContentChange = (e, isEditingMode = false) => {
     const value = e.target.value;
     if (value.length <= 50) {
-      setContent(value);
+      if (isEditingMode) {
+        setEditingContent(value); // 수정 모드에서는 editingContent를 업데이트
+      } else {
+        setContent(value);
+      }
     } else {
       alert("댓글은 50자를 초과할 수 없습니다.");
     }
-  };
-
-  const handleLikeClick = (index) => (event) => {
-    event.stopPropagation();
-    const updatedReviews = [...reviews];
-    updatedReviews[index].likes += 1;
-    setReviews(updatedReviews);
-    alert("추천하였습니다.");
-  };
-
-  const handleSortByLikesClick = () => {
-    if (sortByLikes) {
-      // 원래 순서로 되돌리기 (예: 가장 최근 작성된 리뷰부터)
-      const originalReviews = [...reviews].reverse(); // 혹은 원하는 정렬 방식 사용
-      setReviews(originalReviews);
-    } else {
-      // 추천순으로 정렬
-      const sortedReviews = [...reviews].sort((a, b) => b.likes - a.likes);
-      setReviews(sortedReviews);
-    }
-    setSortByLikes(!sortByLikes); // sortByLikes 값을 반전시킴
   };
 
   const handleWriterClick = (userId) => {
@@ -196,63 +178,58 @@ const ReviewBoard = () => {
         <button className="rv-write-button" onClick={handleWriteClick}>
           글쓰기
         </button>
-        <div
-          type="button"
-          className="rv-like-array"
-          onClick={handleSortByLikesClick}
-        >
-          추천순
-        </div>
       </div>
       <div className="rv-review-board">
-        {posts.map((po) => (
-          <div key={po.postSEQ} className="rv-review-item">
-            {isEditing && editingPostId === po.postSEQ ? (
-              <>
-                <textarea
-                  value={content}
-                  onChange={handleContentChange}
-                ></textarea>
-                <button onClick={handleUpdateSubmit}>수정 완료</button>
-              </>
-            ) : (
-              <>
-                <p>{po.postContent}</p>
-                <span
-                  className="rv-writer"
-                  onClick={() => handleWriterClick(po.userInfo.userId)}
-                >
-                  끼리: {po.userInfo.userNickname}
-                </span>
-                {loggedInUser.id === po.userInfo.userId && (
-                  <div className="rv-persnalBtn">
-                    <button
-                      className="rv-psUpdataBtn"
-                      onClick={() =>
-                        handleEditClick(po.postSEQ, po.postContent)
-                      }
-                    >
-                      수정
-                    </button>
-                    <button
-                      className="rv-psDeleteBtn"
-                      onClick={() =>
-                        handleDeleteClick(po.postSEQ, po.userInfo.userId)
-                      }
-                    >
-                      삭제
-                    </button>
-                  </div>
-                )}
-              </>
-            )}
-            <div className="rv-stats-thums">
-              <span className="rv-like-button" onClick={handleLikeClick()}>
-                👍 {po.likes}
-              </span>
+        {posts
+          .filter((po) => po.postDelete !== "Y") // postDelete가 "Y"인 게시물을 필터링
+          .map((po) => (
+            <div key={po.postSEQ} className="rv-review-item">
+              {isEditing && editingPostId === po.postSEQ ? (
+                <>
+                  <textarea
+                    value={editingContent}
+                    onChange={(e) => handleContentChange(e, true)}
+                  ></textarea>
+                  <button
+                    className="rv-psUpdataOKBtn"
+                    onClick={handleUpdateSubmit}
+                  >
+                    수정 완료
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>{po.postContent}</p>
+                  <span
+                    className="rv-writer"
+                    onClick={() => handleWriterClick(po.userInfo.userId)}
+                  >
+                    끼리: {po.userInfo.userNickname}
+                  </span>
+                  {loggedInUser.id === po.userInfo.userId && (
+                    <div className="rv-persnalBtn">
+                      <button
+                        className="rv-psUpdataBtn"
+                        onClick={() =>
+                          handleEditClick(po.postSEQ, po.postContent)
+                        }
+                      >
+                        수정
+                      </button>
+                      <button
+                        className="rv-psDeleteBtn"
+                        onClick={() =>
+                          handleDeleteClick(po.postSEQ, po.userInfo.userId)
+                        }
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
-          </div>
-        ))}
+          ))}
       </div>
       {showModal && (
         <div className="rv-modal" onClick={handleCloseModal}>
