@@ -1,71 +1,194 @@
- #postTitle {
-  display: flex;
-  width: 100%;
-  margin-bottom: 30px;
-  margin-top: 30px;
+#postTitle {
+    display: flex;
+    width: 100%;
+    margin-bottom: 30px;
+    margin-top: 30px;
 }
 
-.postWrite input[type="text"],
-.postWrite input[type="password"] {
-  box-sizing: border-box;
-  width: 100%;
-  height: 40px;
-  font-size: 1em;
-  border: 1px solid #dbdbdb;
-  border-radius: 8px;
+.postWrite input[type='text'],
+.postWrite input[type='password'] {
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    font-size: 1em;
+    border: 1px solid #dbdbdb;
+    border-radius: 8px;
 }
 
-.content {
-  width: 100%;
-  word-break: break-word;
+.post-content {
+    width: 100%;
+    word-break: break-word;
 }
 
-.content .textareaContainer {
-  width: 100%;
+.post-content .textareaContainer {
+    width: 100%;
 }
 
 .wordCount {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin: 10px 0;
 }
 
- .button {
-  flex: 1;
+.button {
+    flex: 1;
 }
 
- .button {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50px;
-  padding: 10px;
-  font-size: 1em;
-  border: 0;
-  border-radius: 8px;
-  word-break: keep-all;
-  cursor: pointer;
+.button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    font-size: 1em;
+    border: 0;
+    border-radius: 8px;
+    word-break: keep-all;
+    cursor: pointer;
+}
+.updateButton {
+}
+
+.deleteButton {
 }
 
 .textareaContainer textarea {
-  width: 100%;
-  resize: none;
-  min-height: 300px;
-  overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
-  white-space: pre-line;
-  min-width: 900px;
+    width: 100%;
+    resize: none;
+    min-height: 300px;
+    overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
+    white-space: pre-line;
+    min-width: 900px;
 }
 
 .ck-editor__editable {
-  min-height: 300px;
-  word-wrap: break-word;
-  max-width: 900px;
-  white-space: pre-line;
-  overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
+    min-height: 300px;
+    word-wrap: break-word;
+    max-width: 900px;
+    white-space: pre-line;
+    overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
 }
 .ck-editor__editable p {
-  line-height: 24px;
+    line-height: 24px;
+}
+
+.form {
+    max-width: 35vw;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.form h3 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #262626;
+    margin-bottom: 20px;
+}
+
+.form-el {
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-el label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #262626;
+}
+
+.form-el input {
+    width: 75%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
+}
+
+.form-el input:focus {
+    border: 1px solid #ff7f38;
+}
+
+.message {
+    font-size: 15px;
+    color: #ef0000;
+    margin-top: 4px;
+}
+
+.form img {
+    width: 5%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+/* 지역 선택창 조정 */
+.form-el select#place {
+    width: 30%;
+}
+
+.form-el select#mbti {
+    width: 30%;
+}
+
+/* 관심사 선택 부분 */
+#interest-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 16px;
+}
+
+#interest-section .form-el label {
+    font-size: 25px; /* 원하는 크기로 조정하세요 */
+}
+
+.selectlike-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 8px;
+}
+
+.box-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 16px;
+}
+
+.selectlike-box-item {
+    font-style: inherit;
+    margin: 5px;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.selectlike-box-item.selected {
+    background-color: #ff9615;
+    color: white;
+    border: 1px solid #ff9615;
+}
+
+.selectlike-box h3 {
+    font-size: 17px;
+    color: #ff9615;
 }

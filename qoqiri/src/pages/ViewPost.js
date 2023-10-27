@@ -1,6 +1,5 @@
 import '../css/ViewPost.css';
 import logo from '../assets/logo.png';
-import Counter from '../components/Counter';
 import RightModal from '../components/RightModal';
 import NavBtn from '../components/NavBtn';
 import Paging from '../components/Paging';
@@ -11,7 +10,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getPost, getSearch } from '../api/post';
-import { getBoards, getPostList, addPostLike } from '../api/post';
+import { getBoards, getPostList } from '../api/post';
 import kkorang from '../assets/kkorang3.jpg';
 
 const ViewPost = () => {
@@ -23,17 +22,34 @@ const ViewPost = () => {
     const [boards, setBoards] = useState([]);
     const [page, setPage] = useState(1);
 
-    const handleBookMark = () => {
-        setBookMark(!bookMark);
-        if (bookMark) {
-            alert('게시물이 저장됐습니다.');
-        } else {
-            alert('게시물 저장이 해제됐습니다.');
-        }
-    };
+    const [isEditing, setIsEditing] = useState(false);
+
+    const [editTitle, setEditTitle] = useState('');
+    const [editContent, setEditContent] = useState('');
+    const [editPlace, setEditPlace] = useState();
+    const [editPlaceType, setEditPlaceType] = useState();
+    // const handleBookMark = () => {
+    //     setBookMark(!bookMark);
+    //     if (bookMark) {
+    //         alert('게시물이 저장됐습니다.');
+    //     } else {
+    //         alert('게시물 저장이 해제됐습니다.');
+    //     }
+    // };
 
     const { id } = useParams(); // 백단에 있는 SEQ값이랑 도메인 주소를 일치시켜 불러오는것
     const dispatch = useDispatch();
+
+    //글 수정
+    const handleEditPostClick = (postSeq, content, title, placeSeq, placeTypeSeq) => {
+        setIsEditing(true);
+        setEditTitle(title);
+        setEditContent(content);
+        setEditPlace(placeSeq);
+        setEditPlaceType(placeTypeSeq);
+    };
+
+    // const handelEditPost =
 
     //댓글 관련 추가해야됨
 
@@ -45,32 +61,10 @@ const ViewPost = () => {
         setSelectedPostSEQ(id);
     };
 
-    // 글쓰기 버튼 핸들러
+    // 글쓰기 페이지로 이동 버튼 핸들러
     const postWritehandler = (e) => {
         window.location.href = '/postWrite';
     };
-
-    // const likeBtnHandler = async () => {
-    //     //
-
-    //     const postDTO = {
-    //         post: post,
-
-    //     };
-    //     try {
-    //         const likeResponese = await axios.post('http://localhost:8080/qiri/public/postlike', postDTO);
-    //         if (userEvent.token) {
-    //             if (likeResponese.data) {
-    //                 setPostLike(postLike + 1);
-    //             } else {
-    //                 alert('로그인이 필요합니다.');
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //         alert('오류가 발생했습니다. 다시 시도해주세요.');
-    //     }
-    // };
 
     // Post 안에 내용들을 전부 불러옴
     const getPostAPI = async () => {
@@ -199,9 +193,7 @@ const ViewPost = () => {
                                             {post?.postView}
                                         </div>
                                         <div className="dot"></div>
-                                        <div className="likeCount">
-                                            👍{/*여기도 카운팅 올라가는건 나중에 생각하자*/}
-                                        </div>
+                                        <div className="likeCount"></div>
                                     </div>
                                     <div className="right">
                                         <RightModal />
@@ -209,23 +201,25 @@ const ViewPost = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="customField">
-          출처 :<a href="#" target="_blank"></a>
-        </div> */}
+
+                        <div id="postUpdate">
+                            <button type="submit" onClick={handleEditPostClick}>
+                                수정
+                            </button>
+                        </div>
+
+                        {/* <div id="postDelete"></div> */}
+
                         <div className="customHtml"></div>
                         <div className="bestContent">
-                            <p>{post?.postContent} 이게 지금 업로드한 컨텐츠 내용임</p>
+                            <p>{post?.postContent} </p>
                         </div>
                         <div className="html"></div>
                         <div className="customHtml"></div>
 
                         <div className="likeContainer">
-                            <div id="like" className="like">
-                                {/* <button type="submit" onClick={likeBtnHandler}>
-                                    코하하👍
-                                </button> */}
-                            </div>
-                            <div
+                            <div id="like" className="like"></div>
+                            {/* <div
                                 onClick={() => {
                                     handleBookMark();
                                 }}
@@ -248,7 +242,7 @@ const ViewPost = () => {
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="listAndEdit">
                             <div className="left">
@@ -275,7 +269,7 @@ const ViewPost = () => {
                             <div className="contentContainer">
                                 <div className="commentInput">
                                     <div className="commentContent">
-                                        <textarea disabled name="content" placeholder="로그인 해주세요"></textarea>
+                                        <textarea disabled name="content" placeholder="로그인 해라 십새야"></textarea>
                                     </div>
                                     <div className="submit">
                                         <button type="button">
