@@ -20,6 +20,8 @@ import EditProfile from "./pages/EditProfile";
 import SignupInfo from "./pages/SignupInfo";
 import BoardBar from "./components/BoardBar";
 
+import Myactive from "./pages/Myactive";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -91,6 +93,14 @@ const router = createBrowserRouter([
         path: "/SignupInfo",
         element: <SignupInfo />,
       },
+      {
+        path: "/Myactive",
+        element: <Myactive />,
+      },
+      {
+        path: "apply/:userId",
+        element: <Apply />,
+      },
     ],
   },
   {
@@ -100,10 +110,6 @@ const router = createBrowserRouter([
   {
     path: "/mini/:userId",
     element: <Mini />,
-  },
-  {
-    path: "apply",
-    element: <Apply />,
   },
 ]);
 export default router;

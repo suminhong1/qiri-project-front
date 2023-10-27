@@ -15,14 +15,6 @@ export const getBoards = async () => {
   return await instance.get("public/board");
 };
 
-export const getPostList = async (page, board) => {
-  let url = `public/post?page=${page}`;
-  // if (board !== null) {
-  //   url += `&board=${board}`;
-  // }
-  return await instance.get(url);
-};
-
 export const getPost = async (id) => {
   return await instance.get("public/post/" + id);
 };
@@ -59,7 +51,16 @@ export const updateReview = async (data) => {
 
 //리뷰 삭제하기
 export const deleteReview = async (postSeq) => {
-  return await instance.delete(`reviewDelete/${postSeq}`);
+  return await instance.put(`reviewDelete/${postSeq}`);
+};
+
+// 내활동 목록창 보기
+export const getPostList = async (boardSeq) => {
+  let url = `public/post`;
+  if (boardSeq) {
+    url += `?board=${boardSeq}`;
+  }
+  return await instance.get(url);
 };
 
 export const addPostLikeAPI = async (data) => {

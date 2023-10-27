@@ -95,6 +95,24 @@
   width: 50px;
 }
 
+.rv-review-item textarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  resize: none;
+  height: 60px;
+  width: 700px;
+}
+
+.rv-psUpdataOKBtn {
+  background: none;
+  border: none;
+  color: blue;
+  font-size: small;
+  font-weight: bold;
+}
+
 .rv-psUpdataBtn {
   background: none;
   border: none;
