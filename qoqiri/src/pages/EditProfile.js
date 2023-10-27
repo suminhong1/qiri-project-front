@@ -6,10 +6,13 @@ import { getCategories } from '../api/category';
 import { getPlaceTypes } from '../api/placeType';
 import { useNavigate } from 'react-router-dom';
 import { EditProfile } from '../api/user';
-import { useContext } from 'react'; 
+import { useContext } from 'react';
+import { useDispatch } from "react-redux";
+import { asyncEditProfile } from "../store/userSlice";
 
 const EditMyInfo = () => {
   // 상태 변수들
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
 
@@ -300,31 +303,31 @@ const EditMyInfo = () => {
     }
   };
 
-   // 프로필 사진 파일 업로드 핸들러
-const handleProfilePictureUpload = async (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    try {
-      const formData = new FormData();
-      formData.append("profileImg", file);
+  // 프로필 사진 파일 업로드 핸들러
+  const handleProfilePictureUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("profileImg", file);
 
-      const response = await axios.post(
-        "http://localhost:8080/qiri/uploadProfilePicture",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      const imageUrl = URL.createObjectURL(file);
-      setProfilePictureUrl(imageUrl);
-    } catch (error) {
-      console.error(error);
-      alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+        const response = await axios.post(
+          "http://localhost:8080/qiri/uploadProfilePicture",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        const imageUrl = URL.createObjectURL(file);
+        setProfilePictureUrl(imageUrl);
+      } catch (error) {
+        console.error(error);
+        alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
-  }
-};
+  };
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest) => {
@@ -385,7 +388,9 @@ const handleProfilePictureUpload = async (e) => {
       setPassword('');
       setEmail(parsedUserInfo.email);
       setPhone(parsedUserInfo.phone);
-      setBirth(parsedUserInfo.birthday.substring(0, 10)); // YYYY-MM-DD 형식으로 자르기
+      if (parsedUserInfo.birthday) {
+        setBirth(parsedUserInfo.birthday.substring(0, 10)); // YYYY-MM-DD 형식으로 자르기
+      }
       setAge(parsedUserInfo.age);
       setSelectedGender(parsedUserInfo.gender);
       setHasPartner(parsedUserInfo.hasPartner);
@@ -401,15 +406,15 @@ const handleProfilePictureUpload = async (e) => {
           placeTypeName: userPlaceType.placeTypeName
         });
       }
-    
+
       axios.get(`/api/userCategories/${parsedUserInfo.id}`)
-      .then(response => {
-        const userCategories = response.data;
-        setSelectlike(userCategories.map(category => category.categoryName));
-      })
-      .catch(error => console.error(error));
-  }
-}, []);
+        .then(response => {
+          const userCategories = response.data;
+          setSelectlike(userCategories.map(category => category.categoryName));
+        })
+        .catch(error => console.error(error));
+    }
+  }, []);
 
 
   const handleSubmit = async (e) => {
@@ -434,7 +439,7 @@ const handleProfilePictureUpload = async (e) => {
       mbti,
       statusMessage,
       profileImg: profilePictureUrl,
-      userCategories: selectlike.map((categoryName) => ({ categoryName })),
+      // userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
 
 
@@ -446,6 +451,9 @@ const handleProfilePictureUpload = async (e) => {
       });
 
       if (updateResponse.status === 200) {
+
+        dispatch(asyncEditProfile(updatedInfo));
+
         alert('회원정보 수정 완료.');
         navigate('/');
       } else {
@@ -576,30 +584,33 @@ const handleProfilePictureUpload = async (e) => {
             <label>성별</label> <br />
             <div className="gender-options">
               <div className="gender-option">
-                <input
-                  type="radio"
-                  id="남"
-                  name="gender"
-                  value="남"
-                  checked={selectedGender === '남'}
-                  onChange={handleGenderChange}
-                />
-                <label htmlFor="male">남</label>
+                <label htmlFor="남">
+                  <input
+                    type="radio"
+                    id="남"
+                    name="gender"
+                    value="남"
+                    checked={selectedGender === "남"}
+                    onChange={handleGenderChange}
+                  />
+                  남
+                </label>
               </div>
+              <br></br>
               <div className="gender-option">
-                <input
-                  type="radio"
-                  id="여"
-                  name="gender"
-                  value="여"
-                  checked={selectedGender === '여'}
-                  onChange={handleGenderChange}
-                />
-                <label htmlFor="female">여</label>
+                <label htmlFor="여">
+                  <input
+                    type="radio"
+                    id="여"
+                    name="gender"
+                    value="여"
+                    checked={selectedGender === "여"}
+                    onChange={handleGenderChange}
+                  />여
+                </label>
               </div>
             </div>
             <br></br>
-
             {/* 애인 여부 입력 양식 */}
             <div className="form-el">
               <label>애인 여부</label> <br />
@@ -615,6 +626,7 @@ const handleProfilePictureUpload = async (e) => {
                   />
                   <label htmlFor="hasPartnerYes">있음</label>
                 </div>
+                <br></br>
                 <div className="gender-option">
                   <input
                     type="radio"
@@ -719,16 +731,16 @@ const handleProfilePictureUpload = async (e) => {
               name="profilePicture"
               accept="image/*"
               onChange={handleProfilePictureUpload}
+            />
+            <br />
+            {profilePictureUrl && (
+              <img
+                src={profilePictureUrl}
+                alt="프로필 사진 미리보기"
+                className="profile-picture-preview"
               />
-              <br />
-              {profilePictureUrl && (
-                <img
-                  src={profilePictureUrl}
-                  alt="프로필 사진 미리보기"
-                  className="profile-picture-preview"
-                />
-              )}
-            </div>
+            )}
+          </div>
 
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">

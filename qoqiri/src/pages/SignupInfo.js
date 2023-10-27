@@ -11,7 +11,7 @@ const SignupInfo = () => {
         setUserInfo(parsedUserInfo);
       }
     }, []);
-  
+
   return (
     <div className="selected-category">
       {userInfo ? (
@@ -29,7 +29,7 @@ const SignupInfo = () => {
             </tr>
             <tr>
               <td>비밀번호</td>
-              <td>표시되지 않습니다.</td>
+              <td>비공개 (표시되지 않음)</td>
             </tr>
             <tr>
               <td>이름</td>
@@ -45,11 +45,11 @@ const SignupInfo = () => {
             </tr>
             <tr>
               <td>나이</td>
-              <td>{userInfo.age}</td>
+              <td>{userInfo.age || '비공개'}</td>
             </tr>
             <tr>
               <td>성별</td>
-              <td>{userInfo.gender}</td>
+              <td>{userInfo.gender || '비공개'}</td>
             </tr>
             <tr>
               <td>휴대전화번호</td>
@@ -61,23 +61,23 @@ const SignupInfo = () => {
             </tr>
             <tr>
               <td>상태메시지</td>
-              <td>{userInfo.statusMessage}</td>
+              <td>{userInfo.statusMessage || '비공개'}</td>
             </tr>
             <tr>
               <td>애인여부</td>
-              <td>{userInfo.hasPartner}</td>
+              <td>{userInfo.hasPartner || '비공개'}</td>
             </tr>
             <tr>
               <td>혈액형</td>
-              <td>{userInfo.bloodType}</td>
+              <td>{userInfo.bloodType || '비공개'}</td>
             </tr>
             <tr>
               <td>MBTI</td>
-              <td>{userInfo.mbti}</td>
+              <td>{userInfo.mbti || '비공개'}</td>
             </tr>
             <tr>
               <td>생일</td>
-              <td>{userInfo.birthday.split("T")[0]}</td>
+              <td>{userInfo.birthday ? userInfo.birthday.split("T")[0] : '비공개'}</td>
             </tr>
           </tbody>
         </table>

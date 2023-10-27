@@ -31,7 +31,8 @@ const SignUp = () => {
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
   const [selectlike, setSelectlike] = useState([]);
- 
+  const [selectSeq, setSelectSeq] = useState([]);
+
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -136,8 +137,8 @@ const SignUp = () => {
     }
   };
 
-  
-   // 닉네임 입력 핸들러
+
+  // 닉네임 입력 핸들러
   const onChangeNickname = (e) => {
     const currentNickname = e.target.value;
     setNickname(currentNickname);
@@ -306,38 +307,41 @@ const SignUp = () => {
   };
 
   // 프로필 사진 파일 업로드 핸들러
-const handleProfilePictureUpload = async (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    try {
-      const formData = new FormData();
-      formData.append("profileImg", file);
+  const handleProfilePictureUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append("profileImg", file);
 
-      const response = await axios.post(
-        "http://localhost:8080/qiri/uploadProfilePicture",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      const imageUrl = URL.createObjectURL(file);
-      setProfilePictureUrl(imageUrl);
-    } catch (error) {
-      console.error(error);
-      alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+        const response = await axios.post(
+          "http://localhost:8080/qiri/uploadProfilePicture",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        const imageUrl = URL.createObjectURL(file);
+        setProfilePictureUrl(imageUrl);
+      } catch (error) {
+        console.error(error);
+        alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+      }
     }
-  }
-};
+  };
 
 
   // 관심 주제 선택 핸들러
-  const handleInterestClick = (interest) => {
+  const handleInterestClick = (interest, seq) => {
+    console.log(seq);
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
+      setSelectSeq(selectSeq.filter((item) => item !== seq));
     } else {
       setSelectlike([...selectlike, interest]);
+      setSelectSeq([...selectSeq, seq]);
     }
   };
 
@@ -403,9 +407,11 @@ const handleProfilePictureUpload = async (e) => {
       profileImg: profilePictureUrl
     };
 
+    console.log(selectSeq);
+
     const signUpDTO = {
       userInfoDTO,
-      userCategories: selectlike.map((categoryName) => ({ categoryName })),
+      userCategories: selectSeq.map((userCategorySeq) =>({userCategorySeq}) ),
     };
 
     try {
@@ -419,9 +425,9 @@ const handleProfilePictureUpload = async (e) => {
         }
       );
 
-      const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo",signUpDTO, {
+      const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo", signUpDTO, {
         headers: {
-          "Content-Type":"application/json"
+          "Content-Type": "application/json"
         }
       });
 
@@ -566,26 +572,30 @@ const handleProfilePictureUpload = async (e) => {
             <label>성별</label> <br />
             <div className="gender-options">
               <div className="gender-option">
-                <input
-                  type="radio"
-                  id="남"
-                  name="gender"
-                  value="남"
-                  checked={selectedGender === "남"}
-                  onChange={handleGenderChange}
-                />
-                <label htmlFor="male">남</label>
+                <label htmlFor="남">
+                  <input
+                    type="radio"
+                    id="남"
+                    name="gender"
+                    value="남"
+                    checked={selectedGender === "남"}
+                    onChange={handleGenderChange}
+                  />
+                  남
+                </label>
               </div>
+              <br></br>
               <div className="gender-option">
-                <input
-                  type="radio"
-                  id="여"
-                  name="gender"
-                  value="여"
-                  checked={selectedGender === "여"}
-                  onChange={handleGenderChange}
-                />
-                <label htmlFor="female">여</label>
+                <label htmlFor="여">
+                  <input
+                    type="radio"
+                    id="여"
+                    name="gender"
+                    value="여"
+                    checked={selectedGender === "여"}
+                    onChange={handleGenderChange}
+                  />여
+                </label>
               </div>
             </div>
             <br></br>
@@ -604,6 +614,7 @@ const handleProfilePictureUpload = async (e) => {
                   />
                   <label htmlFor="hasPartnerYes">있음</label>
                 </div>
+                <br></br>
                 <div className="gender-option">
                   <input
                     type="radio"
@@ -712,16 +723,16 @@ const handleProfilePictureUpload = async (e) => {
               name="profilePicture"
               accept="image/*"
               onChange={handleProfilePictureUpload}
+            />
+            <br />
+            {profilePictureUrl && (
+              <img
+                src={profilePictureUrl}
+                alt="프로필 사진 미리보기"
+                className="profile-picture-preview"
               />
-              <br />
-              {profilePictureUrl && (
-                <img
-                  src={profilePictureUrl}
-                  alt="프로필 사진 미리보기"
-                  className="profile-picture-preview"
-                />
-              )}
-            </div>
+            )}
+          </div>
 
           {/* 관심 주제 선택 양식 */}
           <div className="interest-section">
@@ -742,7 +753,7 @@ const handleProfilePictureUpload = async (e) => {
                               : ""
                               }`}
                             onClick={() =>
-                              handleInterestClick(category.categoryName)
+                              handleInterestClick(category.categoryName, category.categorySEQ)
                             }
                           >
                             {category.categoryName}

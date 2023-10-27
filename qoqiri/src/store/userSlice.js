@@ -1,10 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login } from "../api/user";
+import { editProfile } from "../api/user";
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
   const result = await login(data);
   return result.data;
 });
+
+const asyncEditProfile = createAsyncThunk("userSlice/asyncEditProfile", async (data) => {
+  const result = await editProfile(data);
+  return result.data;
+})
 
 const userSlice = createSlice({
   name: "loginSlice",
@@ -23,9 +29,14 @@ const userSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(action.payload));
       return action.payload;
     });
+
+    builder.addCase(asyncEditProfile.fulfilled, (state, action) => {
+      localStorage.setItem("user", JSON.stringify(action.payload));
+      return action.payload;
+    });
   },
 });
 
 export default userSlice;
-export { asyncLogin };
+export { asyncLogin, asyncEditProfile };
 export const { userSave, userLogout } = userSlice.actions;
