@@ -17,6 +17,6 @@ export const putComment = async (data) => {
   return await instance.put("post/comments", data);
 };
 
-export const delComment = async (id) => {
-  return await instance.delete("post/comments/" + id);
+export const delComment = async (data) => {
+  return await instance.put("post/comments/delete", data);
 };

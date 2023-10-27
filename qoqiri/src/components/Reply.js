@@ -26,7 +26,17 @@ const Reply = ({ reply }) => {
   const contentRef = useRef(null);
   const dispatch = useDispatch();
   const onDelete = () => {
-    dispatch(deleteComment(reply.commentsSeq));
+    dispatch(
+      deleteComment({
+        commentsSEQ: reply.commentsSEQ,
+        post: reply.post,
+        commentsParentSeq: reply.commentsParentSeq,
+        userInfo: reply.userInfo,
+        commentDesc: content,
+        secretComment: "N",
+        commentDelete: "Y",
+      })
+    );
   };
   const handleBlur = () => {
     setContent(contentRef.current.innerText);
@@ -43,7 +53,7 @@ const Reply = ({ reply }) => {
   };
   return (
     <Box>
-      <h2>@{reply.userInfo.userId}</h2>
+      <h2>@{reply.userInfo.userNickname}</h2>
       <div>
         <span
           contentEditable="true"

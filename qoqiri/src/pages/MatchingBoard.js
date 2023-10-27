@@ -49,7 +49,7 @@ const DetailView = ({ selectedPostSEQ }) => {
   const postAPI = async () => {
     const result = await getPost(selectedPostSEQ);
     setPost(result.data);
-    console.log(result.data);
+    // console.log(result.data);
   };
 
   useEffect(() => {
@@ -59,7 +59,7 @@ const DetailView = ({ selectedPostSEQ }) => {
 
   useEffect(() => {
     dispatch(viewComments(selectedPostSEQ));
-    console.log(selectedPostSEQ);
+    // console.log(selectedPostSEQ);
   }, [dispatch]);
 
   const images = ["", "", ""];
@@ -194,7 +194,7 @@ const MatchingBoard = () => {
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null); // 초기값을 null로 설정
 
   useEffect(() => {
-    console.log(selectedPostSEQ);
+    // console.log(selectedPostSEQ);
   }, [selectedPostSEQ]);
 
   const postsAPI = async () => {
