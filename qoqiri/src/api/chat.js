@@ -13,8 +13,8 @@ export const getChatRoomInfo = async (id) => {
 };
 
 //참여중인 채팅방의 내 참여정보 가져오기
-export const getUserChatRoomInfo = async (code, userId) => {
-  return await instance.get(`public/chatRoomInfo/${code}/${userId}`);
+export const getUserChatRoomInfo = async (userId, code) => {
+  return await instance.get(`/public/chatRoomInfo/${userId}/${code}`);
 };
 
 // 채팅방의 채팅보기

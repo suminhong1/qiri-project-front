@@ -29,6 +29,7 @@ const StyledChatRoom = styled.div`
 
   .container {
     margin-bottom: -1px;
+    padding-left: 20px;
     height: 500px;
     width: 800px;
     min-width: 800px;
@@ -36,7 +37,18 @@ const StyledChatRoom = styled.div`
     display: flex;
     justify-content: center;
     flex-direction: column;
-    border: 1px solid #e5e5e5;
+    border-left: 3px solid #e5e5e5;
+    border-right: 3px solid #e5e5e5;
+  }
+  .msgHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .sendTime {
+    font-size: 0.8rem;
+    color: #808080;
   }
 
   .list-group {
@@ -45,14 +57,16 @@ const StyledChatRoom = styled.div`
     max-height: -webkit-fill-available;
   }
 
-  .list-loadChat,
   .list-group-item {
     margin-left: -12px;
     margin-right: -12px;
     border-radius: 0px;
+    border-left: none;
+    border-right: none;
     .chat {
       font-weight: bold;
       margin-bottom: 7px;
+      font-size: 1.1rem;
     }
   }
 
@@ -141,8 +155,16 @@ const StyledChatRoom = styled.div`
   }
 
   .container::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    width: 8px; /* 스크롤바 너비 조절 */
+  }
+
+  .container::-webkit-scrollbar-thumb {
+    background-color: #ff7f38; /* 스크롤바 색상 조절 */
+    border-radius: 10px; /* 스크롤바 둥글게 만들기 */
+  }
+
+  .container::-webkit-scrollbar-thumb:hover {
+    background-color: #ff7f38; /* 스크롤바 호버 시 색상 변경 */
   }
 `;
 
@@ -153,22 +175,23 @@ const ChatRoom = () => {
   const [userChatRoomInfo, setUserChatRoomInfo] = useState([]);
   const [loadMessage, setLoadMessage] = useState([]);
   const { id } = useParams();
+  const roomSEQ = Number(id);
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const chatRoomInfoAPI = async () => {
-    const result = await getChatRoomInfo(id);
+    const result = await getChatRoomInfo(roomSEQ);
     setChatRoomInfo(result.data);
   };
 
   const chatMessageAPI = async () => {
-    const result = await getChatMessage(id);
+    const result = await getChatMessage(roomSEQ);
     setLoadMessage(result.data);
   };
 
   const userChatRoomInfoAPI = async () => {
-    const result = await getUserChatRoomInfo(id, user.id);
+    const result = await getUserChatRoomInfo(user.id, roomSEQ);
     setUserChatRoomInfo(result.data);
   };
 
@@ -176,6 +199,12 @@ const ChatRoom = () => {
     const chatContainer = document.getElementById("app");
     chatContainer.scrollTop = chatContainer.scrollHeight;
   };
+
+  useEffect(() => {
+    chatRoomInfoAPI();
+    chatMessageAPI();
+    userChatRoomInfoAPI();
+  }, []);
 
   useEffect(() => {
     chatRoomInfoAPI();
@@ -191,6 +220,7 @@ const ChatRoom = () => {
     chatRoomInfoAPI();
     chatMessageAPI();
     userChatRoomInfoAPI();
+
     const currentTime = new Date();
     const socket = new SockJS("http://localhost:8080/ws/chat");
     stompClient.current = new Client({
@@ -203,7 +233,7 @@ const ChatRoom = () => {
 
     stompClient.current.onConnect = (frame) => {
       console.log("Connected: " + frame);
-      stompClient.current.subscribe(`/sub/chat/room/${id}`, (message) => {
+      stompClient.current.subscribe(`/sub/chat/room/${roomSEQ}`, (message) => {
         const recv = JSON.parse(message.body);
         recvMessage(recv);
       });
@@ -238,13 +268,19 @@ const ChatRoom = () => {
     }
 
     const currentTime = new Date();
+
+    console.log(currentTime);
+
+    // console.log(loadMessage[2]?.sendTime);
+    // console.log(userChatRoomInfo[0]?.joinDate);
+
     stompClient.current.publish({
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
         chatRoomSEQ: id,
         message: message,
-        sendTime: currentTime.toISOString(),
+        sendTime: currentTime,
       }),
     });
     setMessage("");
@@ -256,6 +292,7 @@ const ChatRoom = () => {
       ...prevMessages,
       {
         nickname: recv.nickname,
+        chatRoomSEQ: recv.chatRoomSEQ,
         message: recv.message,
         sendTime: recv.sendTime,
       },
@@ -290,19 +327,26 @@ const ChatRoom = () => {
         <div className="container" id="app">
           <ul className="list-group">
             {loadMessage
-              ?.filter(
+              ?.sort((a, b) => a.chatMessageSeq - b.chatMessageSeq)
+              .filter(
                 (msg) =>
-                  new Date(msg.sendTime) > new Date(userChatRoomInfo.joinDate)
+                  new Date(msg?.sendTime) > new Date(userChatRoomInfo?.joinDate)
               )
-              .map((msg, index) => (
-                <li className="list-loadChat" key={index}>
-                  <div className="chat">{msg?.userInfo?.userNickname}</div>
-                  {msg?.message} - {msg?.sendTime}
+              .map((msg) => (
+                <li className="list-group-item" key={msg?.chatMessageSeq}>
+                  <div className="msgHeader">
+                    <div className="chat">{msg?.userInfo?.userNickname}</div>
+                    <div className="sendTime">{msg?.sendTime}</div>
+                  </div>
+                  {msg?.message}
                 </li>
               ))}
             {messages.map((msg, index) => (
               <li className="list-group-item" key={index}>
-                <div className="chat">{msg?.nickname}</div>
+                <div>
+                  <div className="chat">{msg?.nickname}</div>
+                  <div className="sendTime">{msg?.sendTime}</div>
+                </div>
                 {msg.message}
               </li>
             ))}
