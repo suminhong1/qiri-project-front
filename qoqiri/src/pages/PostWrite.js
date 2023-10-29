@@ -154,7 +154,14 @@ const PostWrite = () => {
 
             if (postResponse.data) {
                 alert('글쓰기 성공');
-                navigate('/');
+                // addPostAPI 호출 이후에 addMatchingAPI를 호출
+                // const matchingResponse = await addMatchingAPI({postSeq: postResponse.data.postSeq, selectlike});
+                // if(matchingResponse.data){
+                //     navigate("/")
+                // }else{
+                //     alert('매칭정보 저장 실패')
+                // } 아 왜 자꾸 이거만 안돼
+                // navigate('/');
             } else {
                 alert('글쓰기 실패');
             }
