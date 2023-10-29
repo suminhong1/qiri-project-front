@@ -12,6 +12,10 @@ export const addPostAPI = async (data) => {
   return await instance.post("post", data);
 };
 
+export const addMatchingAPI = async (data) =>{
+  return await instance.post("matchingCategoryInfo", data)
+};
+
 // 게시물 수정
 export const editPostAPI = async (data) => {
   return await instance.put("post", data);

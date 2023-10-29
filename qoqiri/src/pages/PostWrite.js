@@ -4,7 +4,7 @@ import axios from 'axios';
 import { navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUser } from '../api/user';
-import { addPostAPI, getBoards, getPlace, getPlaceType } from '../api/post';
+import { addPostAPI, addMatchingAPI, getBoards, getPlace, getPlaceType } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 
@@ -47,8 +47,8 @@ const PostWrite = () => {
     // 카테고리 선택 핸들러
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
         // console.log(seq);
-        selectlike([]);
-        selectSeq([]);
+        setSelectlike([]);
+        setSelectSeq([]);
 
         if (selectlike.includes(categorySEQ)) {
             setSelectlike(selectlike.filter((item) => item !== categorySEQ)); // selectLike(선택할 주제들) 배열임 그 안에 interest(관심사)가 포함돼있으면 interest를 제거함
@@ -143,7 +143,7 @@ const PostWrite = () => {
             boardSeq: selectedBoard,
             categoryList: selectlike,
             categoryTypeList: selectSeq,
-            // matchingCategoies: selectSeq.map((matchingCategorySEQ) => ({ matchingCategorySEQ })),
+            
         };
         console.log(localStorage.getItem('token'));
         console.log('PostDTO:', PostDTO);
