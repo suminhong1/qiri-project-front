@@ -5,17 +5,37 @@ import { GrHomeRounded } from "react-icons/gr";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { Link } from "react-router-dom";
 import { getChatRoomList } from "../api/chat";
+import { Modal } from "react-bootstrap";
+import ChatRoom from "./ChatRoom";
+import styled from "styled-components";
+
+const CustomModal = styled.Modal``;
 
 function OffCanvasExample({ show, handleClose, ...props }) {
   const [chatRoomList, setChatRoomList] = useState([]);
   const user = useSelector((state) => state.user);
   const { id } = useParams();
+  const [chatRoomId, setChatRoomId] = useState(null);
   const chatRoomListAPI = async () => {
-    const result = await getChatRoomList(user.id);
-    setChatRoomList(result.data);
+    if (user) {
+      const result = await getChatRoomList(user.id);
+      setChatRoomList(result.data);
+    }
   };
+
+  // ChatRoom 모달을 열기 위한 함수
+  const handleShowChatRoom = (chatRoomId) => {
+    setChatRoomId(chatRoomId);
+  };
+
+  // ChatRoom 모달을 닫기 위한 함수
+  const handleCloseChatRoom = () => {
+    setChatRoomId(null);
+  };
+
+  // ChatRoom 모달이 열려 있는지 확인
+  const isChatRoomModalOpen = chatRoomId !== null;
 
   useEffect(() => {
     chatRoomListAPI();
@@ -38,28 +58,64 @@ function OffCanvasExample({ show, handleClose, ...props }) {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div className="notice">
-          {chatRoomList?.map((chatRoomList) => (
-            <a
-              href={`/chatRoom/${chatRoomList?.chatRoom.chatRoomSEQ}`}
-              className="notice-link"
-              key={chatRoomList?.userChatRoomInfoSeq}
-            >
-              <div className="notice-top">
-                <span className="notice-exp">
-                  {chatRoomList?.chatRoom.post.postTitle}
-                </span>
-                <span className="notice-time">몇분전</span>
+          {user &&
+            Array.isArray(chatRoomList) &&
+            chatRoomList.map((chatRoomList) => (
+              <div
+                className="notice-link"
+                key={chatRoomList?.userChatRoomInfoSeq}
+                onClick={() =>
+                  handleShowChatRoom(chatRoomList?.chatRoom.chatRoomSEQ)
+                }
+              >
+                <div className="notice-top">
+                  <span className="notice-exp">
+                    {chatRoomList?.chatRoom.post.postTitle}
+                  </span>
+                  <span className="notice-time">몇 분 전</span>
+                </div>
+                <div span className="notice-addr">
+                  의 채팅방
+                </div>
               </div>
-              <div span className="notice-addr">
-                의 채팅방
-              </div>
-            </a>
-          ))}
+            ))}
+
+          {/* ChatRoom 모달 */}
+          <ChatRoomModal
+            show={isChatRoomModalOpen}
+            handleClose={handleCloseChatRoom}
+            chatRoomId={chatRoomId}
+          />
         </div>
       </Offcanvas.Body>
     </Offcanvas>
   );
 }
+
+const ChatRoomModal = ({ show, handleClose, chatRoomId }) => {
+  if (show && chatRoomId !== null) {
+    return (
+      <CustomModal
+        show={show}
+        onHide={handleClose}
+        dialogClassName="chat-room-modal" // 모달 창의 클래스를 지정합니다
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {/* 채팅방 이름 또는 제목을 여기에 넣어주세요 */}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <ChatRoom chatRoomId={chatRoomId} />
+        </Modal.Body>
+        <Modal.Footer></Modal.Footer>
+      </CustomModal>
+    );
+  }
+
+  // chatRoomId가 null이거나 show가 false인 경우 모달을 렌더링하지 않음
+  return null;
+};
 
 const Navbar = () => {
   const location = useLocation();

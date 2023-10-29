@@ -168,30 +168,28 @@ const StyledChatRoom = styled.div`
   }
 `;
 
-const ChatRoom = () => {
+const ChatRoom = ({ chatRoomId }) => {
   const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [userChatRoomInfo, setUserChatRoomInfo] = useState([]);
   const [loadMessage, setLoadMessage] = useState([]);
-  const { id } = useParams();
-  const roomSEQ = Number(id);
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const chatRoomInfoAPI = async () => {
-    const result = await getChatRoomInfo(roomSEQ);
+    const result = await getChatRoomInfo(chatRoomId);
     setChatRoomInfo(result.data);
   };
 
   const chatMessageAPI = async () => {
-    const result = await getChatMessage(roomSEQ);
+    const result = await getChatMessage(chatRoomId);
     setLoadMessage(result.data);
   };
 
   const userChatRoomInfoAPI = async () => {
-    const result = await getUserChatRoomInfo(user.id, roomSEQ);
+    const result = await getUserChatRoomInfo(user.id, chatRoomId);
     setUserChatRoomInfo(result.data);
   };
 
@@ -210,7 +208,7 @@ const ChatRoom = () => {
     chatRoomInfoAPI();
     chatMessageAPI();
     userChatRoomInfoAPI();
-  }, [id]);
+  }, [chatRoomId]);
 
   useEffect(() => {
     scrollToBottom();
@@ -234,16 +232,19 @@ const ChatRoom = () => {
 
     stompClient.current.onConnect = (frame) => {
       console.log("Connected: " + frame);
-      stompClient.current.subscribe(`/sub/chat/room/${roomSEQ}`, (message) => {
-        const recv = JSON.parse(message.body);
-        recvMessage(recv);
-      });
+      stompClient.current.subscribe(
+        `/sub/chat/room/${chatRoomId}`,
+        (message) => {
+          const recv = JSON.parse(message.body);
+          recvMessage(recv);
+        }
+      );
 
       stompClient.current.publish({
         destination: "/pub/chat/message",
         body: JSON.stringify({
           nickname: user.nickname,
-          chatRoomSEQ: id,
+          chatRoomSEQ: chatRoomId,
           message: user.nickname + "님이 채팅에 참여하였습니다.",
           sendTime: currentTime.toISOString(),
         }),
@@ -257,7 +258,7 @@ const ChatRoom = () => {
         stompClient.current.deactivate();
       }
     };
-  }, [user, id]);
+  }, [user, chatRoomId]);
 
   //메세지 발송 부분
   const sendMessage = async () => {
@@ -274,7 +275,7 @@ const ChatRoom = () => {
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
-        chatRoomSEQ: id,
+        chatRoomSEQ: chatRoomId,
         message: message,
       }),
     });
@@ -300,7 +301,7 @@ const ChatRoom = () => {
   const exit = async () => {
     const chatDTO = {
       nickname: user.nickname,
-      chatRoomSEQ: id,
+      chatRoomSEQ: chatRoomId,
     };
     leaveChatroom(chatDTO);
     navigate("/");
