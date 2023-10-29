@@ -5,15 +5,27 @@ import { GrHomeRounded } from "react-icons/gr";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { getChatRoomList } from "../api/chat";
+import { getChatRoomList, getChatRoomUserList } from "../api/chat";
 import { Modal } from "react-bootstrap";
 import ChatRoom from "./ChatRoom";
 import styled from "styled-components";
 
-const CustomModal = styled.Modal``;
+const CustomModal = styled(Modal)`
+  & .modal-dialog {
+    min-width: 900px;
+    min-height: 900px;
+  }
 
-function OffCanvasExample({ show, handleClose, ...props }) {
+  & .modal-content {
+    height: 900px;
+  }
+  & .modal-body {
+  }
+`;
+
+const OffCanvas = ({ show, handleClose, ...props }) => {
   const [chatRoomList, setChatRoomList] = useState([]);
+  const [chatRoomUserList, setChatRoomUserList] = useState([]);
   const user = useSelector((state) => state.user);
   const { id } = useParams();
   const [chatRoomId, setChatRoomId] = useState(null);
@@ -24,9 +36,18 @@ function OffCanvasExample({ show, handleClose, ...props }) {
     }
   };
 
+  const chatRoomUserListAPI = async (chatRoomSEQ) => {
+    if (user) {
+      const result = await getChatRoomUserList(chatRoomSEQ);
+      setChatRoomUserList(result.data);
+    }
+  };
+
   // ChatRoom 모달을 열기 위한 함수
   const handleShowChatRoom = (chatRoomId) => {
     setChatRoomId(chatRoomId);
+    chatRoomListAPI(chatRoomId);
+    console.log(chatRoomUserList);
   };
 
   // ChatRoom 모달을 닫기 위한 함수
@@ -65,18 +86,16 @@ function OffCanvasExample({ show, handleClose, ...props }) {
                 className="notice-link"
                 key={chatRoomList?.userChatRoomInfoSeq}
                 onClick={() =>
-                  handleShowChatRoom(chatRoomList?.chatRoom.chatRoomSEQ)
+                  handleShowChatRoom(chatRoomList?.chatRoom?.chatRoomSEQ)
                 }
               >
                 <div className="notice-top">
-                  <span className="notice-exp">
-                    {chatRoomList?.chatRoom.post.postTitle}
-                  </span>
-                  <span className="notice-time">몇 분 전</span>
+                  <div className="notice-exp">
+                    {chatRoomList?.chatRoom?.post?.postTitle}
+                  </div>
+                  <div className="notice-time">몇 분 전</div>
                 </div>
-                <div span className="notice-addr">
-                  의 채팅방
-                </div>
+                <div className="notice-addr">의 채팅방</div>
               </div>
             ))}
 
@@ -90,25 +109,16 @@ function OffCanvasExample({ show, handleClose, ...props }) {
       </Offcanvas.Body>
     </Offcanvas>
   );
-}
+};
 
 const ChatRoomModal = ({ show, handleClose, chatRoomId }) => {
   if (show && chatRoomId !== null) {
     return (
-      <CustomModal
-        show={show}
-        onHide={handleClose}
-        dialogClassName="chat-room-modal" // 모달 창의 클래스를 지정합니다
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {/* 채팅방 이름 또는 제목을 여기에 넣어주세요 */}
-          </Modal.Title>
-        </Modal.Header>
+      <CustomModal show={show} onHide={handleClose}>
+        <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
           <ChatRoom chatRoomId={chatRoomId} />
         </Modal.Body>
-        <Modal.Footer></Modal.Footer>
       </CustomModal>
     );
   }
@@ -119,14 +129,11 @@ const ChatRoomModal = ({ show, handleClose, chatRoomId }) => {
 
 const Navbar = () => {
   const location = useLocation();
-  const [bell, setBell] = useState([false]);
   const user = useSelector((state) => state.user);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  useEffect(() => {}, [bell]);
 
   if (location.pathname === "/Login" || location.pathname === "/signup") {
     return null;
@@ -168,7 +175,7 @@ const Navbar = () => {
           />
         </div>
       </div>
-      <OffCanvasExample show={show} handleClose={handleClose} placement="end" />
+      <OffCanvas show={show} handleClose={handleClose} placement="end" />
     </>
   );
 };

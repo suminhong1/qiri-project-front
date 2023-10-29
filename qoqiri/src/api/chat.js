@@ -36,3 +36,8 @@ export const leaveChatroom = async (data) => {
 export const requestMatching = async (postSEQ, id) => {
   return await instance.post("/matching/" + postSEQ, id);
 };
+
+//채팅방의 참여유저목록 가져오기
+export const getChatRoomUserList = async (code) => {
+  return await instance.post("/chatroom/userlist", code);
+};

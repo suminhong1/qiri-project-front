@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   getChatMessage,
   getChatRoomInfo,
@@ -17,7 +17,8 @@ const StyledChatRoom = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 700px; /* 화면 전체 높이를 차지하도록 설정 */
+  height: 100%;
+  width: 100%;
 
   * {
     white-space: normal;
@@ -30,9 +31,9 @@ const StyledChatRoom = styled.div`
   .container {
     margin-bottom: -1px;
     padding-left: 20px;
-    height: 500px;
-    width: 800px;
-    min-width: 800px;
+    height: 700px;
+    width: 850px;
+    min-width: 850px;
     overflow-y: scroll;
     display: flex;
     justify-content: center;
@@ -77,9 +78,8 @@ const StyledChatRoom = styled.div`
   }
 
   .inputgroup {
-    width: 800px;
-    min-width: 800px;
-    margin-bottom: 150px;
+    width: 850px;
+    min-width: 850px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -113,9 +113,9 @@ const StyledChatRoom = styled.div`
   }
 
   .roomHeader {
-    width: 800px;
+    width: 850px;
+    min-width: 850px;
     height: 50px;
-    margin-top: 50px;
     background-color: #ff7f38;
     color: white;
     display: flex;
@@ -323,16 +323,14 @@ const ChatRoom = ({ chatRoomId }) => {
   return (
     <StyledChatRoom>
       <div className="chatroom">
-        <div>
-          <div className="roomHeader">
-            <div className="roomName">
-              {chatRoomInfo?.post?.postTitle}의 채팅방
-            </div>
-            <div className="leave">
-              <button className="leaveBtn" onClick={exit}>
-                나가기
-              </button>
-            </div>
+        <div className="roomHeader">
+          <div className="roomName">
+            {chatRoomInfo?.post?.postTitle}의 채팅방
+          </div>
+          <div className="leave">
+            <button className="leaveBtn" onClick={exit}>
+              나가기
+            </button>
           </div>
         </div>
 
