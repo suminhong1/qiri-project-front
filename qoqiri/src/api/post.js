@@ -19,16 +19,18 @@ export const addMatchingAPI = async (data) => {
 
 // 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
 export const addAttachmentsAPI = async (postId, file) => {
-    const formData = new FormData();
+    const formData = new FormData(); // FormData와 append에 대해 더 알아보기
+    // postSEQ가 생성 후 postSEQ와 파일의 저장 경로 주소인 String이 db에 들어가야되는데 순서가 어떻게 되는지
+    // SEQ 생성 후 저장이 되는건지
     formData.append('postId', postId); // 정수형 데이터 추가
     formData.append('file', file); // 파일 데이터 추가
-
+    // 근데 db에 저장되는건 postAttachments 테이블에 postSEQ인 postId와 올린 이미지 파일의 저장 경로 주소인 String이 저장돼야하는데 
     const response = await axios.post('postAttachments', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
-    return response.data; // 서버에서의 응답을 반환
+    return response.data; // 서버에서의 응답을 반환?
 };
 
 // export const addUploadImage = async (data) => {
