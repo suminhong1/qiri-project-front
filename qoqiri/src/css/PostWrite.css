@@ -192,3 +192,37 @@
     font-size: 17px;
     color: #ff9615;
 }
+
+#file-upload {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #262626;
+}
+#file-upload input {
+    background-color: antiquewhite;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    direction: ltr;
+    z-index: 2;
+}
+#file-upload input:focus {
+    border: 1px solid #ff7f38;
+}
+#file-upload span {
+    background-color: #ff7f38;
+    color: #fff;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
