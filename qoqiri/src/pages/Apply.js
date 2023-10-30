@@ -7,19 +7,16 @@ import { useNavigate } from "react-router-dom"; // 추가
 const Apply = () => {
   const [sectionCount, setSectionCount] = useState(1);
   const navigate = useNavigate(); // 추가
-
   const handleBack = () => {
-    navigate("/Myactive");
+    navigate("/myMatching");
   };
-
   return (
     <div className="ApplyMain">
       <div className="AC">
         <legend className="Applytag">궁금해요</legend>
         <button className="backButton" onClick={handleBack}>
           뒤로가기
-        </button>{" "}
-        {/* 버튼 추가 */}
+        </button>
         {Array.from({ length: sectionCount }).map((_, index) => (
           <section key={index} className="ApplySelect">
             <ApplyForm />

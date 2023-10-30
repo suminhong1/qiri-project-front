@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getUser } from "../api/user";
-import { getPostList } from "../api/post";
+import { getmyList } from "../api/post";
 import "../css/Myactive.css";
 import { useNavigate } from "react-router-dom"; // useNavigate 훅을 가져옵니다.
 
@@ -21,7 +21,7 @@ const Myactive = () => {
         const userResponse = await getUser(user.id);
         setLoggedInUser(userResponse.data);
 
-        const postsResponse = await getPostList();
+        const postsResponse = await getmyList(2);
         const userPosts = postsResponse.data.filter(
           (post) => post.userInfo.userId === userResponse.data.userId
         );
@@ -29,11 +29,11 @@ const Myactive = () => {
       } catch (error) {}
     };
 
-    fetchUserInfoAndPosts();
+    fetchUserInfoAndPosts(2);
   }, []);
 
-  const handleOpenApplyPage = (userId) => {
-    navigate(`/apply/${userId}`);
+  const handleOpenApplyPage = (postId) => {
+    navigate(`/apply/${postId}`);
   };
 
   if (!loggedInUser) {

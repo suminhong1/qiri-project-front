@@ -155,7 +155,7 @@ const ReviewBoard = () => {
   const handleWriterClick = (userId) => {
     let modalUrl =
       loggedInUser && userId === loggedInUser.id
-        ? `/miniup/${userId}`
+        ? `/mini/${userId}`
         : `/mini/${userId}`;
 
     setModalContentURL(modalUrl);
