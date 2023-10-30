@@ -75,7 +75,6 @@ const ViewPost = () => {
         // setPost(result.data);
     };
 
-    //게시판 목록들을 불러오는거였나
     const boardAPI = async () => {
         console.log('getBoardAPI 호출 시작');
         const result = await getBoards();
@@ -140,8 +139,6 @@ const ViewPost = () => {
     useEffect(() => {
         handlePostClick(id);
     }, [post]);
-
-    //댓글관련 유즈이펙트 추가해야됨
 
     return (
         <>
