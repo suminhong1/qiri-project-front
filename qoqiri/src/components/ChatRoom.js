@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { useNavigate } from "react-router-dom";
 import {
   getChatMessage,
   getChatRoomInfo,
@@ -176,7 +175,6 @@ const ChatRoom = ({ chatRoomId }) => {
   const [loadMessage, setLoadMessage] = useState([]);
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const chatRoomInfoAPI = async () => {
     const result = await getChatRoomInfo(chatRoomId);
@@ -269,8 +267,6 @@ const ChatRoom = ({ chatRoomId }) => {
       return;
     }
 
-    const currentTime = new Date();
-
     stompClient.current.publish({
       destination: "/pub/chat/message",
       body: JSON.stringify({
@@ -304,10 +300,10 @@ const ChatRoom = ({ chatRoomId }) => {
       chatRoomSEQ: chatRoomId,
     };
     leaveChatroom(chatDTO);
-    navigate("/");
+    window.location.reload();
   };
 
-  // 시간 형식 설정
+  // 시간 포멧 설정
   const formatSendTime = (sendTime) => {
     const date = new Date(sendTime);
     const options = {

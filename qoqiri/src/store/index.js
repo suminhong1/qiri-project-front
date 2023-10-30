@@ -9,7 +9,7 @@ const store = configureStore({
     // 스토어의 각 슬라이스를 해당 리듀서 함수로 연결
     user: userSlice.reducer,
     comment: commentSlice.reducer,
-    // chatRoom: chatRoomSlice.reducer,
+    chatRoom: chatRoomSlice.reducer,
   },
 });
 

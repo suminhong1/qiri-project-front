@@ -3,7 +3,7 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: "http://localhost:8080/qiri/",
 });
-// 내가 참여중인 채팅방 리스트 가져오기
+// 내가 참여중인 채팅방 리스트
 export const getChatRoomList = async (id) => {
   return await instance.get("public/chatRooms/" + id);
 };
@@ -39,5 +39,5 @@ export const requestMatching = async (postSEQ, id) => {
 
 //채팅방의 참여유저목록 가져오기
 export const getChatRoomUserList = async (code) => {
-  return await instance.post("/chatroom/userlist", code);
+  return await instance.get("chatroom/userlist/" + code);
 };

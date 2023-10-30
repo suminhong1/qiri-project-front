@@ -11,7 +11,6 @@ const UserInfoPage = () => {
   const categories = [
     "가입 정보",
     "회원정보 변경",
-    "참여중인 채팅방",
     "내가 쓴 글",
     "내가 쓴 댓글",
     "차단한 사용자",
@@ -27,10 +26,6 @@ const UserInfoPage = () => {
     }
     if (category === "회원정보 변경") {
       navigate("/EditProfile");
-      return;
-    }
-    if (category === "참여중인 채팅방") {
-      navigate("/chatList/" + userId);
       return;
     }
 

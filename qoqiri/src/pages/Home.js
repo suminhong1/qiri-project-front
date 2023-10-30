@@ -1,6 +1,6 @@
 import "../css/Home.css";
 import CategoryType from "../components/CategoryType";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Home = () => {
   return (
