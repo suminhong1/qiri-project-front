@@ -14,6 +14,8 @@ import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
+import { userSave } from "../store/userSlice"; // 신청버튼테스트용
+import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 
 import axios from "axios";
 
@@ -49,17 +51,14 @@ const DetailView = ({ selectedPostSEQ }) => {
   const postAPI = async () => {
     const result = await getPost(selectedPostSEQ);
     setPost(result.data);
-    // console.log(result.data);
   };
 
   useEffect(() => {
     postAPI();
-    // setCommentsCount(comments.length);
   }, []);
 
   useEffect(() => {
     dispatch(viewComments(selectedPostSEQ));
-    // console.log(selectedPostSEQ);
   }, [dispatch]);
 
   const images = ["", "", ""];
@@ -94,13 +93,7 @@ const DetailView = ({ selectedPostSEQ }) => {
           </div>
         </div>
         <div className="Detail-write-board">
-          <div className="Detail-write">
-            {post?.postContent}
-            {/* <a href="#" className="comment-count">
-              <FontAwesomeIcon icon={faMessage} />
-              <div className="count">{commentsCount}</div>
-            </a> */}
-          </div>
+          <div className="Detail-write">{post?.postContent}</div>
         </div>
         <div className="board-foot">
           <div className="foot-place-detail">
@@ -111,37 +104,14 @@ const DetailView = ({ selectedPostSEQ }) => {
         <hr />
         <AddComment code={post !== null ? post.postSEQ : null} />
         {comments
-          .filter((comment) => comment.commentDelete === "N") // comment.commentDelete가 "N"인 것만 필터링
+          .filter((comment) => comment.commentDelete === "N")
           .map((comment) => (
             <Comment key={comment.commentsSEQ} comment={comment} />
           ))}
-        {/* <div className="comment">
-          <div className="coment-profile-img">
-            <img alt="프로필 이미지" />
-          </div>
-          <textarea placeholder="댓글달기"></textarea>
-          <button>
-            <FontAwesomeIcon icon={faArrowTurnDown} rotation={90} />
-          </button>
-        </div> */}
-        <hr />
-        {/* {comments.map((co) => (
-          <div className="commentList-main" key={co.commentsSeq}>
-            <div className="commentList">
-              <div className="comment-profile">
-                <img alt="프로필 이미지" />
-                <div comment-profile-nickname>{co.userInfo.userNickname}</div>
-              </div>
-              <div className="comment-content">{co.commentDesc}</div>
-            </div>
-            <hr />
-          </div>
-        ))} */}
       </div>
       {isModalOpen && (
         <div className="Matching-modal-overlay">
           <div className="Matching-modal">
-            {/* 왼쪽 화살표 */}
             <div
               onClick={() => {
                 if (selectedImageIndex > 0) {
@@ -153,7 +123,7 @@ const DetailView = ({ selectedPostSEQ }) => {
               &lt;
             </div>
             <Carousel
-              showArrows={false} // 이미지 클릭으로 넘기기 기능을 비활성화
+              showArrows={false}
               selectedItem={selectedImageIndex}
               dynamicHeight={true}
               showThumbs={false}
@@ -164,7 +134,7 @@ const DetailView = ({ selectedPostSEQ }) => {
                 </div>
               ))}
             </Carousel>
-            {/* 오른쪽 화살표 */}
+
             <div
               onClick={() => {
                 if (selectedImageIndex < images.length - 1) {
@@ -188,14 +158,57 @@ const DetailView = ({ selectedPostSEQ }) => {
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedPostSEQ, setSelectedPostSEQ] = useState(0); // 선택된 게시물의 postSEQ를 저장
+  const [selectedPostSEQ, setSelectedPostSEQ] = useState(0);
   const [category, setCategory] = useState([]);
   const [categoryType, setCategoryType] = useState([]);
-  const [selectedCatSEQ, setSelectedCatSEQ] = useState(null); // 초기값을 null로 설정
+  const [selectedCatSEQ, setSelectedCatSEQ] = useState(null);
+  const dispatch = useDispatch(); // 신청버튼테스트용
+  const [loggedInUser, setLoggedInUser] = useState(""); // 현재 로그인된 사용자 정보를 가져옴(신청버튼테스트용)
 
   useEffect(() => {
-    // console.log(selectedPostSEQ);
-  }, [selectedPostSEQ]);
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setLoggedInUser(user);
+    }
+  }, []); // 신청버튼테스트용
+
+  const handleApplyClick = async () => {
+    try {
+      const response = await saveData(loggedInUser, selectedPostSEQ);
+
+      if (response) {
+        console.log("신청 성공");
+        // 성공시 다른 동작이나 메시지 표시 등을 여기에 추가
+      }
+    } catch (error) {
+      console.error("신청 중 오류 발생:", error);
+    }
+  };
+
+  const saveData = async () => {
+    // 토큰 가져오기
+    const dataToSend = {
+      token: loggedInUser.token, // 토큰 추가
+      postSEQ: selectedPostSEQ,
+    };
+    console.log(dataToSend);
+
+    try {
+      const response = await ApplyUserInfo(dataToSend);
+
+      if (response.status === 200) {
+        console.log("데이터 저장 성공");
+        alert("신청 완료!!");
+        return response.data;
+      } else {
+        console.error("데이터 저장 실패");
+      }
+    } catch (error) {
+      alert("이미 신청한 게시물입니다.", error);
+    }
+  }; // 신청버튼테스트용
+
+  useEffect(() => {}, [selectedPostSEQ]);
 
   const postsAPI = async () => {
     const result = await getPosts();
@@ -213,7 +226,6 @@ const MatchingBoard = () => {
   };
 
   const toggleModal = (postSEQ) => {
-    // setSelectedPostSEQ(postSEQ); // 선택된 게시물의 postSEQ를 설정
     setIsOpen(!isOpen);
   };
 
@@ -239,17 +251,12 @@ const MatchingBoard = () => {
                   className="active"
                   key={cat.ctSEQ}
                   onClick={() => {
-                    setSelectedCatSEQ(cat.ctSEQ); // 클릭한 cat.ctSEQ를 선택된 상태 변수에 저장
+                    setSelectedCatSEQ(cat.ctSEQ);
                   }}
                 >
                   {cat.ctName}
                 </a>
               ))}
-              {/* {category.map((ca) => (
-                <a href="#" className="active" key={ca.categorySEQ}>
-                  {ca.categoryName}
-                </a>
-              ))} */}
             </div>
           </div>
           <section className="section">
@@ -257,13 +264,12 @@ const MatchingBoard = () => {
               <div
                 onClick={() => {
                   setSelectedPostSEQ(po.postSEQ);
-                  // toggleModal(po.postSEQ);
+
                   setIsOpen(!isOpen);
                 }}
                 className="board"
                 key={po.postSEQ}
               >
-                {/* 이 부분에서 게시물 클릭 시 toggleModal 함수 호출, postSEQ를 전달 */}
                 <div className="board-header">
                   <div className="board-header-time">
                     <Date postDate={po.postDate} />
@@ -315,6 +321,7 @@ const MatchingBoard = () => {
                       &times;
                     </div>
                     <DetailView selectedPostSEQ={selectedPostSEQ} />
+                    <button onClick={handleApplyClick}>리뷰버튼테스트용</button>
                   </div>
                 </div>
               </div>

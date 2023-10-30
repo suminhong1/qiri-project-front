@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
-import "../css/ApplyForm.css";
 import Imgmodal from "./imgmodal";
+import "../css/ApplyForm.css";
+import { getUser } from "../api/user";
 import defaultimg from "../assets/defaultimg.png";
-import { getUser, login } from "../api/user";
 
-const ApplyForm = (userInfo) => {
+const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [userData, setUserData] = useState();
+
+  const [userData, setUserData] = useState({ introduction: "" });
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await getUser("userid"); // 해당 주인계정만 나오도록 하기
+      const response = await getUser(userId);
       setUserData(response.data);
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]);
 
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
@@ -39,8 +40,8 @@ const ApplyForm = (userInfo) => {
     borderRadius: "4px",
   };
 
-  const customBackButtonStyle = {
-    display: isFlipped ? "block" : "none",
+  const customBackBtn = {
+    display: isFlipped ? "block" : "none", // 아이디가 같지않으면 안보임
     transform: "scale(-1, 1)",
     cursor: "pointer",
     borderRadius: "4px",
@@ -48,9 +49,7 @@ const ApplyForm = (userInfo) => {
 
   return (
     <div className="ap-container">
-      <div className="ap-header-sign">
-        {userInfo.nickname}님이 카테고리 신청하였습니다
-      </div>
+      <div className="ap-header-sign"></div>
 
       <div className={`ap-custom-card ${isFlipped ? "flipped" : ""}`}>
         <div className="ap-card-front">
@@ -64,18 +63,12 @@ const ApplyForm = (userInfo) => {
           </div>
           <div className="ap-card-body">
             <h1>{userData?.userNickname}</h1>
+
             <p className="ap-text">{userData?.statusMessage}</p>
           </div>
         </div>
 
         <div className="ap-front-Btn">
-          <button
-            className="ap-front-applyBtn"
-            style={customButtonStyle}
-            onClick={"/"}
-          >
-            승낙
-          </button>
           <button
             className="ap-front-infoBtn"
             style={customButtonStyle}
@@ -88,6 +81,7 @@ const ApplyForm = (userInfo) => {
           <div className="ap-card-body">
             <div className="ap-info-row">
               <div className="ap-info-label">닉네임:</div>
+
               <div className="ap-info-value">{userData?.userNickname}</div>
             </div>
             <hr />
@@ -103,7 +97,7 @@ const ApplyForm = (userInfo) => {
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">지역:</div>
-              <div className="ap-info-value">{userData?.placeTypeName}</div>
+              <div className="ap-info-value">{userData?.addr}</div>
             </div>
             <hr />
             <div className="ap-info-row">
@@ -126,10 +120,10 @@ const ApplyForm = (userInfo) => {
         <div>
           <button
             className="ap-back-infoBtn"
-            style={customBackButtonStyle}
+            style={customBackBtn}
             onClick={handleCardClick}
           >
-            사진보기
+            앞!
           </button>
         </div>
       </div>

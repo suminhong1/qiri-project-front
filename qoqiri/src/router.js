@@ -83,7 +83,7 @@ const router = createBrowserRouter([
         element: <SignupInfo />,
       },
       {
-        path: "/Myactive",
+        path: "/myMatching",
         element: <Myactive />,
       },
       {
