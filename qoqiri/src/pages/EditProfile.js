@@ -351,7 +351,6 @@ const EditMyInfo = () => {
 
     const fetchCategories = async () => {
       const result = await getCategories();
-      console.log(result.data);
       setCategories(result.data);
     };
 
@@ -414,17 +413,20 @@ const EditMyInfo = () => {
         });
       }
 
-      axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`)
-        .then(response => {
-          const userCategories = response.data;
-          const categorySeqList = userCategories.map(userCategory => userCategory.userCategorySeq);
-          setSelectlike(categorySeqList);
-        })
-        .catch(error => console.error(error));
-        
-
+       const getUserCategoryInfo = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
+        const selectSeq = response.data;
+        const categorySeqList = selectSeq.map(userCategory => userCategory.userCategorySeq);
+        setSelectlike(categorySeqList);
+        setSelectSeq(categorySeqList);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, []);
+    getUserCategoryInfo();
+  }
+}, []);
 
 
   const handleSubmit = async (e) => {
@@ -432,7 +434,7 @@ const EditMyInfo = () => {
       e.preventDefault(); // 폼 기본 제출 방지
     }
 
-    const updatedInfo = {
+    const updateMyInfo = {
       id,
       pwd: password,
       name,
@@ -448,11 +450,10 @@ const EditMyInfo = () => {
       mbti,
       statusMessage,
       profileImg: profilePictureUrl,
-      // userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
 
     try {
-      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updatedInfo, {
+      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updateMyInfo, {
         headers: {
           Authorization: `Bearer ${user.token}`
         },
@@ -460,7 +461,7 @@ const EditMyInfo = () => {
 
       if (updateResponse.status === 200) {
 
-        dispatch(asyncEditProfile(updatedInfo));
+        dispatch(asyncEditProfile(updateMyInfo));
 
         alert('회원정보 수정 완료.');
         navigate('/');

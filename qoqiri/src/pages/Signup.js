@@ -447,7 +447,10 @@ const SignUp = () => {
       <div className="form-container">
         <div className="form">
           <div className="form-el">
-            <label htmlFor="id">아이디</label> <br />
+            <h4>* 는 필수 입력 항목입니다</h4>
+            <br></br>
+            <br></br>
+            <label htmlFor="id"> * 아이디 </label> <br />
             <input id="id" name="id" value={id} onChange={onChangeId} />
             <br></br>
             {!isNameAvailable && <p>이미 사용 중인 아이디입니다.</p>}
@@ -456,7 +459,7 @@ const SignUp = () => {
 
           {/* 이름 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="name">이름</label> <br />
+            <label htmlFor="name"> * 이름</label> <br />
             <input id="name" name="name" value={name} onChange={onChangeName} />
             <br />
             {!isNameAvailable && <p>이미 사용 중인 이름입니다.</p>}
@@ -465,7 +468,7 @@ const SignUp = () => {
 
           {/* 닉네임 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="nickname">닉네임</label> <br />
+            <label htmlFor="nickname"> * 닉네임</label> <br />
             <input
               id="nickname"
               name="nickname"
@@ -479,7 +482,7 @@ const SignUp = () => {
 
           {/* 비밀번호 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="password">비밀번호</label> <br />
+            <label htmlFor="password"> * 비밀번호</label> <br />
             <input
               id="password"
               name="password"
@@ -500,7 +503,7 @@ const SignUp = () => {
 
           {/* 비밀번호 확인 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="passwordConfirm">비밀번호 확인</label> <br />
+            <label htmlFor="passwordConfirm"> * 비밀번호 확인</label> <br />
             <input
               id="passwordConfirm"
               name="passwordConfirm"
@@ -521,7 +524,7 @@ const SignUp = () => {
 
           {/* 이메일 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="email">이메일</label> <br />
+            <label htmlFor="email"> * 이메일</label> <br />
             <input
               id="email"
               name="name"
@@ -533,7 +536,7 @@ const SignUp = () => {
 
           {/* 휴대전화번호 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="phone">휴대전화번호</label> <br />
+            <label htmlFor="phone">* 휴대전화번호</label> <br />
             <input id="phone" name="phone" value={phone} onChange={addHyphen} />
             <p className="message">{phoneMessage}</p>
           </div>
@@ -647,7 +650,7 @@ const SignUp = () => {
 
           {/* 지역 입력 양식 */}
           <div className="form-el select-for-place">
-            <label htmlFor="place">지역</label> <br />
+            <label htmlFor="place"> * 지역</label> <br />
             <select
               id="place"
               name="place"
