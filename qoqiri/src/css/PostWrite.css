@@ -1,9 +1,4 @@
-#postTitle {
-    display: flex;
-    width: 100%;
-    margin-bottom: 30px;
-    margin-top: 30px;
-}
+
 
 .postWrite input[type='text'],
 .postWrite input[type='password'] {
@@ -35,26 +30,6 @@
     flex: 1;
 }
 
-.button {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 50px;
-    padding: 10px;
-    font-size: 1em;
-    border: 0;
-    border-radius: 8px;
-    word-break: keep-all;
-    cursor: pointer;
-}
-.updateButton {
-}
-
-.deleteButton {
-}
-
 .textareaContainer textarea {
     width: 100%;
     resize: none;
@@ -62,17 +37,6 @@
     overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
     white-space: pre-line;
     min-width: 900px;
-}
-
-.ck-editor__editable {
-    min-height: 300px;
-    word-wrap: break-word;
-    max-width: 900px;
-    white-space: pre-line;
-    overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
-}
-.ck-editor__editable p {
-    line-height: 24px;
 }
 
 .form {
@@ -89,61 +53,10 @@
     position: relative;
 }
 
-.form h3 {
-    font-size: 26px;
-    font-weight: bold;
-    color: #262626;
-    margin-bottom: 20px;
-}
-
-.form-el {
-    margin-top: 16px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.form-el label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #262626;
-}
-
-.form-el input {
-    width: 75%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #e2e0e0;
-    font-size: 18px;
-    font-weight: 400;
-    margin-top: 4px;
-    outline: none;
-}
-
-.form-el input:focus {
-    border: 1px solid #ff7f38;
-}
-
-.message {
-    font-size: 15px;
-    color: #ef0000;
-    margin-top: 4px;
-}
-
 .form img {
     width: 5%;
     height: auto;
     margin-bottom: 20px;
-}
-
-/* 지역 선택창 조정 */
-.form-el select#place {
-    width: 30%;
-}
-
-.form-el select#mbti {
-    width: 30%;
 }
 
 /* 관심사 선택 부분 */
@@ -197,8 +110,8 @@
     position: relative;
     overflow: hidden;
     display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 1em;
+    margin-left: 10px;
     color: #262626;
 }
 #file-upload input {
@@ -215,14 +128,102 @@
     direction: ltr;
     z-index: 2;
 }
+
 #file-upload input:focus {
-    border: 1px solid #ff7f38;
+    border: 1px solid #ff9615;
 }
+
 #file-upload span {
-    background-color: #ff7f38;
-    color: #fff;
+    background-color: antiquewhite;
+    color: #ff9615;
     display: inline-block;
     padding: 6px 12px;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 10px;
+    padding: 8px 14px;
+    font-weight: bold;
+}
+
+.post-button{
+    margin-bottom: 20px
+}
+
+#postTitle {
+    display: flex;
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-left: 10px;
+}
+
+#postTitle input{
+    background: antiquewhite;
+    color: #ff9615;
+    font-weight: bold;
+    border: 1px #f88e0d;
+}
+
+#postTitle input::placeholder{
+    color: #ff9615;
+}
+
+.place-types select{
+    border-radius: 8px;
+    margin-left: 10px;
+    background: antiquewhite;
+    color: #ff9615;
+    font-weight: bold;
+    border: 1px #f88e0d;
+
+}
+
+.cancelButton{
+    position: relative;
+    overflow: hidden;
+    font-size: 1em;
+    font-weight: 600;
+    color: #262626; 
+    margin-bottom: 0px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content:start;
+    margin-left: 50px;
+     
+}
+
+.cancelButton button{
+    background-color: antiquewhite;
+    border: 1px solid #ff9615;
+    color: #ff9615;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 5px;
+/* display: inline-block; */
+
+}
+
+.submitButton{
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    font-size: 1em;
+    border: 0;
+    border-radius: 8px;
+    word-break: keep-all;
+    
+}
+.submitButton button{
+    background-color: antiquewhite;
+    border: 1px solid #ff9615;
+    color: #ff9615;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
 }

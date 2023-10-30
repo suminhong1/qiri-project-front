@@ -121,7 +121,7 @@ const PostWrite = () => {
     // const UserInfoAPI = async () => {
     //     const result = await getUser();
     //     setUserInfo(result.data);
-    // };
+    // }; 토큰으로 넘기는중
 
     // place 리스트 불러오기
     const placeAPI = async () => {
@@ -286,7 +286,7 @@ const PostWrite = () => {
                                 maxLength="100"
                             />
 
-                            <div id="place-types">
+                            <div className="place-types">
                                 <select
                                     onChange={(e) => {
                                         setSelectedPlaceType(e.target.value); // 사용자가 선택한 placeTypeName을 placeTypeSEQ로 setSelectedPlaceType에 저장
@@ -302,7 +302,7 @@ const PostWrite = () => {
                                 </select>
                             </div>
 
-                            <div id="place-types">
+                            <div className="place-types">
                                 <select
                                     onChange={(e) => {
                                         setSelectedPlace(e.target.value); // 사용자가 선택한 placeName을 placeSEQ로 setSelectedPlace에 저장
@@ -318,7 +318,7 @@ const PostWrite = () => {
                                 </select>
                             </div>
 
-                            <div id="board-types">
+                            {/* <div id="board-types">
                                 <select
                                     onChange={(e) => {
                                         setSelectedBoard(e.target.value);
@@ -327,12 +327,12 @@ const PostWrite = () => {
                                     {boards?.map((board) => (
                                         <option key={board?.boardSEQ} value={board?.boardSEQ}>
                                             {/*사용자가 선택한 board를 boardName으로 불러온 후 boardSeq값을 할당*/}
-                                            {board?.boardName}
-                                            {/* getBoardsAPI로 불러온 board 리스트를 select 바에서 이름으로 보여줌*/}
+                                            {/* {board?.boardName} */}
+                                            {/* getBoardsAPI로 불러온 board 리스트를 select 바에서 이름으로 보여줌
                                         </option>
                                     ))}
                                 </select>
-                            </div>
+                            </div> */}
                         </div>
                         <div id="file-upload">
                             <label htmlFor="image-upload">
@@ -363,24 +363,27 @@ const PostWrite = () => {
                             </div>
                         </div>
 
-                        <div className="button">
+                        <div className='post-button'>
+                        <div className="submitButton">
                             <button type="submit" onClick={handleSubmit}>
                                 등록
                             </button>
+                            <div className="cancelButton">
+                            <button onClick={handleCancel}><span>취소</span></button>
+                        </div>    
                         </div>
-                        <div className="updateButton">
+                        </div>
+                        {/* <div className="updateButton">
                             <button type="submit" onClick={handleSubmit}>
                                 수정
                             </button>
-                        </div>
-                        <div className="deleteButton">
+                        </div> */}
+                        {/* <div className="deleteButton">
                             <button type="submit" onClick={handleSubmit}>
                                 삭제
-                            </button>
-                            <div className="cancelButton">
-                                <button onClick={handleCancel}>취소 </button>
-                            </div>
-                        </div>
+                            </button>                        
+                        </div> */}           
+                                        
                     </form>
                 </div>
             </div>
