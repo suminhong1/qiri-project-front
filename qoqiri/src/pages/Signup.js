@@ -30,6 +30,9 @@ const SignUp = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
+  // 관심사 관련
+  const [categories, setCategories] = useState([]);
+  const [categoryTypes, setCategoryTypes] = useState([]);
   const [selectlike, setSelectlike] = useState([]);
   const [selectSeq, setSelectSeq] = useState([]);
 
@@ -54,9 +57,6 @@ const SignUp = () => {
   const [isPhone, setIsPhone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // 관심사 관련
-  const [categories, setCategories] = useState([]);
-  const [categoryTypes, setCategoryTypes] = useState([]);
 
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {

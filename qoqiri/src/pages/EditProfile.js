@@ -38,6 +38,7 @@ const EditMyInfo = () => {
   const [profilePictureUrl, setProfilePictureUrl] = useState(""); // 현재 프사 URL
   const [selectedProfilePicture, setSelectedProfilePicture] = useState(null); // 새로 선택한 프사
   const [selectlike, setSelectlike] = useState([]);
+  const [selectSeq, setSelectSeq] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryTypes, setCategoryTypes] = useState([]);
 
@@ -321,6 +322,7 @@ const EditMyInfo = () => {
           }
         );
         const imageUrl = URL.createObjectURL(file);
+        console.log(imageUrl);
         setProfilePictureUrl(imageUrl);
       } catch (error) {
         console.error(error);
@@ -330,11 +332,14 @@ const EditMyInfo = () => {
   };
 
   // 관심 주제 선택 핸들러
-  const handleInterestClick = (interest) => {
+  const handleInterestClick = (interest, seq) => {
+    console.log(seq);
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
+      setSelectSeq(selectSeq.filter((item) => item !== seq));
     } else {
       setSelectlike([...selectlike, interest]);
+      setSelectSeq([...selectSeq, seq]);
     }
   };
 
@@ -355,7 +360,9 @@ const EditMyInfo = () => {
   }, []);
 
   const getCategoriesByType = (ctSEQ) => {
-    return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ
+    return categories.filter(
+      (category) =>
+        category.categoryType && category.categoryType.ctSEQ === ctSEQ
     );
   };
 
@@ -407,12 +414,15 @@ const EditMyInfo = () => {
         });
       }
 
-      axios.get("http://localhost:8080/qiri/userCategoryInfo")
+      axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`)
         .then(response => {
           const userCategories = response.data;
-          setSelectlike(userCategories.map(category => category.categorySEQ));
+          const categorySeqList = userCategories.map(userCategory => userCategory.userCategorySeq);
+          setSelectlike(categorySeqList);
         })
         .catch(error => console.error(error));
+        
+
     }
   }, []);
 
@@ -733,7 +743,7 @@ const EditMyInfo = () => {
             <br />
             {profilePictureUrl && (
               <img
-                src={profilePictureUrl}
+                src={'/upload/' + profilePictureUrl}
                 alt="프로필 사진 미리보기"
                 className="profile-picture-preview"
               />
