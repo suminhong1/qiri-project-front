@@ -38,6 +38,7 @@ const EditMyInfo = () => {
   const [profilePictureUrl, setProfilePictureUrl] = useState(""); // 현재 프사 URL
   const [selectedProfilePicture, setSelectedProfilePicture] = useState(null); // 새로 선택한 프사
   const [selectlike, setSelectlike] = useState([]);
+  const [selectSeq, setSelectSeq] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryTypes, setCategoryTypes] = useState([]);
 
@@ -321,6 +322,7 @@ const EditMyInfo = () => {
           }
         );
         const imageUrl = URL.createObjectURL(file);
+        console.log(imageUrl);
         setProfilePictureUrl(imageUrl);
       } catch (error) {
         console.error(error);
@@ -330,11 +332,14 @@ const EditMyInfo = () => {
   };
 
   // 관심 주제 선택 핸들러
-  const handleInterestClick = (interest) => {
+  const handleInterestClick = (interest, seq) => {
+    console.log(seq);
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
+      setSelectSeq(selectSeq.filter((item) => item !== seq));
     } else {
       setSelectlike([...selectlike, interest]);
+      setSelectSeq([...selectSeq, seq]);
     }
   };
 
@@ -346,7 +351,6 @@ const EditMyInfo = () => {
 
     const fetchCategories = async () => {
       const result = await getCategories();
-      console.log(result.data);
       setCategories(result.data);
     };
 
@@ -355,7 +359,9 @@ const EditMyInfo = () => {
   }, []);
 
   const getCategoriesByType = (ctSEQ) => {
-    return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ
+    return categories.filter(
+      (category) =>
+        category.categoryType && category.categoryType.ctSEQ === ctSEQ
     );
   };
 
@@ -407,14 +413,20 @@ const EditMyInfo = () => {
         });
       }
 
-      axios.get("http://localhost:8080/qiri/userCategoryInfo")
-        .then(response => {
-          const userCategories = response.data;
-          setSelectlike(userCategories.map(category => category.categorySEQ));
-        })
-        .catch(error => console.error(error));
+       const getUserCategoryInfo = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
+        const selectSeq = response.data;
+        const categorySeqList = selectSeq.map(userCategory => userCategory.userCategorySeq);
+        setSelectlike(categorySeqList);
+        setSelectSeq(categorySeqList);
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }, []);
+    getUserCategoryInfo();
+  }
+}, []);
 
 
   const handleSubmit = async (e) => {
@@ -422,7 +434,7 @@ const EditMyInfo = () => {
       e.preventDefault(); // 폼 기본 제출 방지
     }
 
-    const updatedInfo = {
+    const updateMyInfo = {
       id,
       pwd: password,
       name,
@@ -438,11 +450,10 @@ const EditMyInfo = () => {
       mbti,
       statusMessage,
       profileImg: profilePictureUrl,
-      // userCategories: selectlike.map((categoryName) => ({ categoryName })),
     };
 
     try {
-      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updatedInfo, {
+      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updateMyInfo, {
         headers: {
           Authorization: `Bearer ${user.token}`
         },
@@ -450,7 +461,7 @@ const EditMyInfo = () => {
 
       if (updateResponse.status === 200) {
 
-        dispatch(asyncEditProfile(updatedInfo));
+        dispatch(asyncEditProfile(updateMyInfo));
 
         alert('회원정보 수정 완료.');
         navigate('/');
@@ -733,7 +744,7 @@ const EditMyInfo = () => {
             <br />
             {profilePictureUrl && (
               <img
-                src={profilePictureUrl}
+                src={'/upload/' + profilePictureUrl}
                 alt="프로필 사진 미리보기"
                 className="profile-picture-preview"
               />
