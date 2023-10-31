@@ -333,7 +333,6 @@ const EditMyInfo = () => {
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest, seq) => {
-    console.log(seq);
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
       setSelectSeq(selectSeq.filter((item) => item !== seq));
@@ -413,21 +412,22 @@ const EditMyInfo = () => {
         });
       }
 
-       const getUserCategoryInfo = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
-        const selectSeq = response.data;
-        const categorySeqList = selectSeq.map(userCategory => userCategory.userCategorySeq);
-        setSelectlike(categorySeqList);
-        setSelectSeq(categorySeqList);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    getUserCategoryInfo();
-  }
-}, []);
+      const getUserCategoryInfo = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
+          const selectSeq = response.data.map(item => item.category.categorySEQ);
+          setSelectSeq(selectSeq);
 
+          const selectedCategories = categories.filter(category => selectSeq.includes(category.categorySEQ));
+          const selectedCategoryNames = selectedCategories.map(category => category.categoryName);
+          setSelectlike(selectedCategoryNames);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      getUserCategoryInfo();
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     if (e) {
@@ -761,29 +761,27 @@ const EditMyInfo = () => {
                   <div key={categoryType.ctSEQ}>
                     <h3>{categoryType.ctName}</h3>
                     <div className="box-options">
-                      {getCategoriesByType(categoryType.ctSEQ).map(
-                        (category) => (
-                          <div
-                            key={category.categorySEQ}
-                            className={`selectlike-box-item ${selectlike.includes(category.categoryName)
-                              ? "selected"
-                              : ""
-                              }`}
-                            onClick={() =>
-                              handleInterestClick(category.categoryName, category.categorySEQ)
-                            }
-                          >
-                            {category.categoryName}
-                          </div>
-                        )
-                      )}
+                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
+                        <div
+                          key={category.categorySEQ}
+                          className={`selectlike-box-item ${selectSeq.includes(category.categorySEQ) ? "selected" : ""
+                            }`}
+                          onClick={() =>
+                            handleInterestClick(
+                              category.categoryName,
+                              category.categorySEQ
+                            )
+                          }
+                        >
+                          {category.categoryName}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-
           <br />
           <br />
           <form onSubmit={handleSubmit} className="signup-form">
