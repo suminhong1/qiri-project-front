@@ -429,6 +429,7 @@ const EditMyInfo = () => {
     }
   }, []);
 
+  
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault(); // 폼 기본 제출 방지
@@ -462,7 +463,6 @@ const EditMyInfo = () => {
       if (updateResponse.status === 200) {
 
         dispatch(asyncEditProfile(updateMyInfo));
-
         alert('회원정보 수정 완료.');
         navigate('/');
       } else {
