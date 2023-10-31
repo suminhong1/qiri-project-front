@@ -5,6 +5,7 @@ import {
   getChatMessage,
   getChatRoomInfo,
   getUserChatRoomInfo,
+  joinMessage,
   leaveChatroom,
 } from "../api/chat";
 import { useSelector } from "react-redux";
@@ -171,7 +172,7 @@ const ChatRoom = ({ chatRoomId }) => {
   const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [userChatRoomInfo, setUserChatRoomInfo] = useState([]);
+  const [userChatRoomInfo, setUserChatRoomInfo] = useState("");
   const [loadMessage, setLoadMessage] = useState([]);
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
@@ -189,11 +190,17 @@ const ChatRoom = ({ chatRoomId }) => {
   const userChatRoomInfoAPI = async () => {
     const result = await getUserChatRoomInfo(user.id, chatRoomId);
     setUserChatRoomInfo(result.data);
+    return result.data;
   };
 
   const scrollToBottom = () => {
     const chatContainer = document.getElementById("app");
     chatContainer.scrollTop = chatContainer.scrollHeight;
+  };
+
+  const chatDTO = {
+    id: user.id,
+    chatRoomSEQ: chatRoomId,
   };
 
   useEffect(() => {
@@ -237,15 +244,23 @@ const ChatRoom = ({ chatRoomId }) => {
           recvMessage(recv);
         }
       );
-
-      stompClient.current.publish({
-        destination: "/pub/chat/message",
-        body: JSON.stringify({
-          nickname: user.nickname,
-          chatRoomSEQ: chatRoomId,
-          message: user.nickname + "님이 채팅에 참여하였습니다.",
-          sendTime: currentTime.toISOString(),
-        }),
+      // userChatRoomInfo가 로드된 후에 처리하도록 수정
+      userChatRoomInfoAPI().then((userChatRoomInfoData) => {
+        if (userChatRoomInfo.joinMessageSent === "N") {
+          console.log(userChatRoomInfo.joinMessageSent);
+          stompClient.current.publish({
+            destination: "/pub/chat/message",
+            body: JSON.stringify({
+              nickname: user.nickname,
+              chatRoomSEQ: chatRoomId,
+              message: user.nickname + "님이 채팅에 참여하였습니다.",
+              sendTime: currentTime.toISOString(),
+            }),
+          });
+          joinMessage(chatDTO);
+        } else {
+          console.log(userChatRoomInfo.joinMessageSent);
+        }
       });
     };
 
@@ -279,7 +294,7 @@ const ChatRoom = ({ chatRoomId }) => {
     setMessage("");
   };
 
-  // 현재 채팅방에 발송된 메세지 프론트에서 저장
+  // 현재 채팅방에 메세지 발송시 프론트에 표시
   const recvMessage = (recv) => {
     const currentTime = new Date();
     setMessages((prevMessages) => [
@@ -295,6 +310,17 @@ const ChatRoom = ({ chatRoomId }) => {
 
   //채팅방 나가기
   const exit = async () => {
+    const currentTime = new Date();
+    stompClient.current.publish({
+      destination: "/pub/chat/message",
+      body: JSON.stringify({
+        nickname: user.nickname,
+        chatRoomSEQ: chatRoomId,
+        message: user.nickname + "님이 채팅방에서 퇴장하였습니다.",
+        sendTime: currentTime.toISOString(),
+      }),
+    });
+
     const chatDTO = {
       nickname: user.nickname,
       chatRoomSEQ: chatRoomId,
