@@ -97,7 +97,11 @@ const ProfileForm = ({ userId }) => {
             <hr />
             <div className="pf-info-row">
               <div className="pf-info-label">지역:</div>
-              <div className="pf-info-value">{userData?.addr}</div>
+              <div className="pf-info-value">
+                {" "}
+                {userData?.placeType?.placeTypeName || "기본값"}
+                {}
+              </div>
             </div>
             <hr />
             <div className="pf-info-row">
@@ -110,10 +114,6 @@ const ProfileForm = ({ userId }) => {
               <div className="pf-info-value">{userData?.birthday}</div>
             </div>
             <hr />
-            <div className="pf-info-row">
-              <div className="pf-info-label">관심사:</div>
-              <div className="pf-info-value">{userData?.categorys}</div>
-            </div>
           </div>
         </div>
 

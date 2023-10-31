@@ -14,7 +14,6 @@ import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
-import { userSave } from "../store/userSlice"; // 신청버튼테스트용
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 
 import axios from "axios";
@@ -162,23 +161,31 @@ const MatchingBoard = () => {
   const [category, setCategory] = useState([]);
   const [categoryType, setCategoryType] = useState([]);
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null);
-  const dispatch = useDispatch(); // 신청버튼테스트용
   const [loggedInUser, setLoggedInUser] = useState(""); // 현재 로그인된 사용자 정보를 가져옴(신청버튼테스트용)
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
+
     if (user) {
       setLoggedInUser(user);
     }
   }, []); // 신청버튼테스트용
 
   const handleApplyClick = async () => {
+    // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
+    const currentPost = posts.find((po) => po.postSEQ === selectedPostSEQ);
+    console.log("아이디 가져오기", loggedInUser?.id);
+    // 작성자의 ID와 로그인한 사용자의 ID가 동일한지 확인
+    if (currentPost?.userInfo?.userId === loggedInUser?.id) {
+      alert("본인이 작성한 게시물에는 신청할 수 없습니다.");
+      return;
+    }
+
     try {
       const response = await saveData(loggedInUser, selectedPostSEQ);
 
       if (response) {
         console.log("신청 성공");
-        // 성공시 다른 동작이나 메시지 표시 등을 여기에 추가
       }
     } catch (error) {
       console.error("신청 중 오류 발생:", error);
