@@ -1,4 +1,4 @@
-fimport React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -165,6 +165,42 @@ const MatchingBoard = () => {
   const dispatch = useDispatch(); // 신청버튼테스트용
   const [loggedInUser, setLoggedInUser] = useState(""); // 현재 로그인된 사용자 정보를 가져옴(신청버튼테스트용)
 
+  const [searchKeyword, setSearchKeyword] = useState(""); // 키워드 검색
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearchChange = (e) => {
+    setSearchKeyword(e.target.value);
+  };
+
+  const handleSearchClick = async () => {
+    try {
+      // 검색어를 백엔드로 전달하고 검색 결과를 요청
+      const response = await instance.get(
+        `/public/post?keyword=${searchKeyword}`
+      );
+
+      // 검색 결과를 setSearchResults로 업데이트
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("검색 중 오류 발생:", error);
+    }
+  };
+
+  useEffect(() => {
+    // 페이지가 로드될 때 전체 게시물 목록을 불러오는 API 호출
+    const fetchAllPosts = async () => {
+      try {
+        const response = await instance.get("/public/post");
+        // 전체 게시물을 setSearchResults로 업데이트
+        setSearchResults(response.data);
+      } catch (error) {
+        console.error("게시물 불러오기 중 오류 발생:", error);
+      }
+    };
+
+    fetchAllPosts();
+  }, []);
+
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
@@ -260,7 +296,7 @@ const MatchingBoard = () => {
             </div>
           </div>
           <section className="section">
-            {posts.map((po) => (
+            {searchResults.map((po) => (
               <div
                 onClick={() => {
                   setSelectedPostSEQ(po.postSEQ);
@@ -313,6 +349,14 @@ const MatchingBoard = () => {
                 </div>
               </div>
             ))}
+
+            <input
+              type="text"
+              placeholder="검색어를 입력하세요"
+              value={searchKeyword}
+              onChange={handleSearchChange}
+            />
+            <button onClick={handleSearchClick}>검색</button>
             {isOpen && (
               <div className="Matching-modal-main">
                 <div className="Matching-modal-overlay">

@@ -15,10 +15,15 @@ const Form = styled.form`
     width: 90%;
     border: none;
     border-bottom: 1px solid #ddd;
+    height: 7vh;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 5px;
   }
 
   input[type="submit"] {
-    background: black;
+    background: orange;
+    border-style: none;
     color: white;
     border-radius: 5px;
     margin: 10px;
