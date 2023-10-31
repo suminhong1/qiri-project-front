@@ -2,9 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const StyleFooter = styled.div`
-  background-color: #efefefef;
   border-top: 1px solid #e5e5e5;
-  margin-top: 30px;
   width: 100%;
   height: 120px;
   display: flex;
