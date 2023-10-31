@@ -4,15 +4,7 @@ import axios from 'axios';
 import { navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getUser } from '../api/user';
-import {
-    addPostAPI,
-    addMatchingAPI,
-    getBoards,
-    getPlace,
-    getPlaceType,
-    addAttachmentsAPI,
-    addUploadImage,
-} from '../api/post';
+import { addPostAPI, addMatchingAPI, getBoards, getPlace, getPlaceType, addAttachmentsAPI } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 
@@ -54,7 +46,7 @@ const PostWrite = () => {
         setContent(newContent);
     };
 
-    // 첨부파일 핸들러
+    // 첨부파일 핸들러 여기서부터 마저 작업
     const handleUploadImage = async (e) => {
         const files = e.target.files;
         const maxFileSize = 10 * 1024 * 1024;
@@ -68,6 +60,7 @@ const PostWrite = () => {
                 if (newAttachmentImg.length < maxFileCount) {
                     const formData = new FormData();
                     formData.append('file', file);
+
                     newAttachmentImg.push(formData); // 첨부 파일 배열에 추가
                 } else {
                     alert('사진은 3장까지만 업로드 할 수 있습니다.');
@@ -121,7 +114,7 @@ const PostWrite = () => {
     // const UserInfoAPI = async () => {
     //     const result = await getUser();
     //     setUserInfo(result.data);
-    // }; 토큰으로 넘기는중
+    // };
 
     // place 리스트 불러오기
     const placeAPI = async () => {
@@ -176,7 +169,7 @@ const PostWrite = () => {
             postTitle: title, // 제목
             postContent: content, // 내용
             placeSeq: selectedPlace, // 선택한 세부 지역
-            placeTypeSeq: selectedPlaceType, // 선택한 지역
+            placeTypeSeq: selectedPlaceType, // 선택한 지역 앞에가 사용한 dto나 domain의 필드명 이름 뒤에가 사용한 useState이름
             boardSeq: selectedBoard, // 선택한 게시판
         };
         console.log(localStorage.getItem('token'));
@@ -190,17 +183,19 @@ const PostWrite = () => {
         console.log('MatchingDTO: ', MatchingDTO);
 
         // 첨부한 사진 저장 경로와 등록한 게시물 Seq를 PostAttachments 테이블로 보냄
-        // const Attachments = {
-        //     postSeq: postResponse.data.postSEQ,
-        //     attachmentURL: attachmentImg,
-        // };
-        // console.log('Attachments', Attachments);
 
         // try {
         console.log(PostDTO);
 
         const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
+
         console.log(postResponse);
+
+        const Attachments = {
+            postSeq: postResponse.data.postSEQ,
+            attachmentURL: attachmentImg,
+        };
+        console.log('Attachments', Attachments);
 
         console.log(MatchingDTO.categoryList);
         console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
@@ -214,7 +209,10 @@ const PostWrite = () => {
 
         // 여기 마저 작성해라
 
-        const attachmentResponse = await addAttachmentsAPI(postResponse.data.postSEQ, attachmentImg);
+        const attachmentResponse = await addAttachmentsAPI({
+            postSeq: postResponse.data.postSEQ,
+            attachmentURL: Attachments,
+        });
         console.log(attachmentResponse);
         console.log(postResponse.data.postSEQ);
 
@@ -239,10 +237,10 @@ const PostWrite = () => {
                 <div id="form">
                     <form method="POST">
                         <div id="interest-section">
-                            <label>관심 주제를 선택하세요</label>
+                            {/* <label>관심 주제를 선택하세요</label> */}
                             <div className="form-el">
                                 <br />
-                                <div className="selectlike-box">
+                                <div className="categoryLike-box">
                                     {categoryTypes.map((categoryType) => (
                                         <div key={categoryType.ctSEQ}>
                                             <h3>{categoryType.ctName}</h3>
@@ -251,7 +249,7 @@ const PostWrite = () => {
                                                 {getCategoriesByType(categoryType.ctSEQ).map((category) => (
                                                     <div
                                                         key={category.categorySEQ}
-                                                        className={`selectlike-box-item ${
+                                                        className={`categoryLike-box-item ${
                                                             selectlike.includes(category.categoryName) ? 'selected' : ''
                                                             // 선택한 카테고리 배경색 나오게함
                                                         }`}
@@ -326,13 +324,13 @@ const PostWrite = () => {
                                 >
                                     {boards?.map((board) => (
                                         <option key={board?.boardSEQ} value={board?.boardSEQ}>
-                                            {/*사용자가 선택한 board를 boardName으로 불러온 후 boardSeq값을 할당*/}
-                                            {/* {board?.boardName} */}
-                                            {/* getBoardsAPI로 불러온 board 리스트를 select 바에서 이름으로 보여줌
+                                            사용자가 선택한 board를 boardName으로 불러온 후 boardSeq값을 할당*/}
+                            {/* {board?.boardName} */}
+                            {/* getBoardsAPI로 불러온 board 리스트를 select 바에서 이름으로 보여줌
                                         </option>
                                     ))}
                                 </select>
-                            </div> */}
+                            </div>*/}
                         </div>
                         <div id="file-upload">
                             <label htmlFor="image-upload">
@@ -363,27 +361,24 @@ const PostWrite = () => {
                             </div>
                         </div>
 
-                        <div className='post-button'>
                         <div className="submitButton">
                             <button type="submit" onClick={handleSubmit}>
                                 등록
                             </button>
-                            <div className="cancelButton">
-                            <button onClick={handleCancel}><span>취소</span></button>
-                        </div>    
                         </div>
+                        <div className="cancelButton">
+                            <button onClick={handleCancel}>취소 </button>
                         </div>
                         {/* <div className="updateButton">
-                            <button type="submit" onClick={handleSubmit}>
-                                수정
-                            </button>
-                        </div> */}
-                        {/* <div className="deleteButton">
-                            <button type="submit" onClick={handleSubmit}>
-                                삭제
-                            </button>                        
-                        </div> */}           
-                                        
+                                <button type="submit" onClick={handleSubmit}>
+                                    수정
+                                </button>
+                            </div>
+                            <div className="deleteButton">
+                                <button type="submit" onClick={handleSubmit}>
+                                    삭제
+                                </button>
+                            </div> */}
                     </form>
                 </div>
             </div>

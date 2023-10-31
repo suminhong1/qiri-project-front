@@ -17,24 +17,22 @@ export const addMatchingAPI = async (data) => {
     return await instance.post('matchingCategoryInfo', data);
 };
 
-// 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
+// // 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
 export const addAttachmentsAPI = async (postId, file) => {
-    const formData = new FormData(); // FormData와 append에 대해 더 알아보기
-    // postSEQ가 생성 후 postSEQ와 파일의 저장 경로 주소인 String이 db에 들어가야되는데 순서가 어떻게 되는지
-    // SEQ 생성 후 저장이 되는건지
+    const formData = new FormData();
     formData.append('postId', postId); // 정수형 데이터 추가
     formData.append('file', file); // 파일 데이터 추가
-    // 근데 db에 저장되는건 postAttachments 테이블에 postSEQ인 postId와 올린 이미지 파일의 저장 경로 주소인 String이 저장돼야하는데 
-    const response = await axios.post('postAttachments', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
+    const response = await instance.post('postAttachments');
+    // const response = await instance.post('postAttachments', formData, {
+    //     headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //     },
+    // });
     return response.data; // 서버에서의 응답을 반환?
 };
 
-// export const addUploadImage = async (data) => {
-//     return await instance.post('imageUpload', data);
+// export const addAttachmentsAPI = async (data, postId) => {
+//     return await instance.post('postAttachments', data, postId);
 // };
 
 // 게시물 수정
@@ -91,21 +89,21 @@ export const deleteReview = async (postSeq) => {
 
 // 게시글에 신청하기
 export const applyToPost = async (userData, userId) => {
-  return await instance.post(`post/${userData}/apply`, { userId });
+    return await instance.post(`post/${userData}/apply`, { userId });
 };
 
 // 게시글의 신청자 목록 가져오기
 export const getApplicantsForPost = async (userData) => {
-  return await instance.get(`post/${userData}/applicants`);
+    return await instance.get(`post/${userData}/applicants`);
 };
 
 // 내활동 리스트 보기
 export const getmyList = async (boardSeq) => {
-  let url = `public/post`;
-  if (boardSeq) {
-    url += `?board=${boardSeq}`;
-  }
-  return await instance.get(url);
+    let url = `public/post`;
+    if (boardSeq) {
+        url += `?board=${boardSeq}`;
+    }
+    return await instance.get(url);
 };
 
 export const addPostLikeAPI = async (data) => {
