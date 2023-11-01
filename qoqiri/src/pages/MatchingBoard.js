@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
+import { getAttachments } from "../api/post";
 
 import axios from "axios";
 
@@ -76,7 +77,14 @@ const DetailView = ({ selectedPostSEQ }) => {
             style={{ display: "flex", justifyContent: "space-between" }}
           >
             <div className="profile">
-              <img src="" alt="프로필 이미지" className="profileImg" />
+              <div className="profileFlex">
+                <a href="" className="profileImg">
+                  <img
+                    src={`/upload/${post?.userInfo?.profileImg}`}
+                    alt="프로필 이미지"
+                  />
+                </a>
+              </div>
               <UserRating rating={post?.userInfo?.rating} />
             </div>
             <span className="nickname">{post?.userInfo?.userNickname}</span>
@@ -168,6 +176,8 @@ const MatchingBoard = () => {
 
   const [searchKeyword, setSearchKeyword] = useState(""); // 키워드 검색
   const [searchResults, setSearchResults] = useState([]);
+
+  const [attachments, setAttachments] = useState([]);
 
   const handleSearchChange = (e) => {
     setSearchKeyword(e.target.value);
@@ -271,6 +281,11 @@ const MatchingBoard = () => {
     setCategoryType(result.data);
   };
 
+  const attachmentsAPI = async () => {
+    const result = await getAttachments(selectedPostSEQ);
+    setAttachments(result.data);
+  };
+
   const toggleModal = (postSEQ) => {
     setIsOpen(!isOpen);
   };
@@ -283,6 +298,7 @@ const MatchingBoard = () => {
     postsAPI();
     categoryTypeAPI();
     categoryAPI();
+    attachmentsAPI(selectedPostSEQ);
   }, [selectedCatSEQ]);
 
   return (
@@ -325,20 +341,27 @@ const MatchingBoard = () => {
                   </div>
                   <div className="board-header-main">
                     <div className="profile">
-                      <a href="" className="profileImg">
-                        <img src="" alt="프로필 이미지" />
-                      </a>
+                      <div className="profileFlex">
+                        <a href="" className="profileImg">
+                          <img
+                            src={`/upload/${po.userInfo.profileImg}`}
+                            alt="프로필 이미지"
+                          />
+                        </a>
+                      </div>
                       <div>
                         <UserRating rating={po.userInfo.rating} />
                       </div>
                     </div>
                     <span className="nickname">{po.userInfo.userNickname}</span>
                     <div className="board-image-main">
-                      <div className="board-image">
-                        <img src="" />
-                        <img src="" />
-                        <img src="" />
-                      </div>
+                      {attachments.map((attachments) => (
+                        <div className="board-image">
+                          <img
+                            src={`http://localhost:8080/qiri/public/upload/${attachments.attachmentURL}`}
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
