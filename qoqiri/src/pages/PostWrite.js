@@ -10,7 +10,7 @@ const PostWrite = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [attachmentImg, setAttachmentImg] = useState([]);
-
+    const [previewImage, setPreviewImage] = useState(null); // 사진 미리보기
     // const [userInfo, setUserInfo] = useState([]);
 
     const [place, setPlace] = useState([]);
@@ -55,11 +55,17 @@ const PostWrite = () => {
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
-
             if (file.size <= maxFileSize) {
                 if (newAttachmentImg.length < maxFileCount) {
                     newAttachmentImg.push(file);
 
+                   // 파일 미리보기를 설정
+                const reader = new FileReader();
+                reader.onload = () => {
+                    // 읽은 파일의 데이터 URL을 이미지로 설정
+                    const attachmentImg = reader.result;
+                    };
+                    reader.readAsDataURL(file);
                     // newAttachmentImg.push(formData); // 첨부 파일 배열에 추가
                 } else {
                     alert('사진은 3장까지만 업로드 할 수 있습니다.');
@@ -70,6 +76,7 @@ const PostWrite = () => {
             }
         }
         setAttachmentImg(newAttachmentImg); // 변경된 첨부 파일 배열을 상태로 설정
+          
     };
 
     // 카테고리 선택 핸들러
@@ -312,9 +319,15 @@ const PostWrite = () => {
                                     accept="image/*"
                                     onChange={handleUploadImage}
                                     multiple
+                                    
                                 />
                                 <span>사진첨부</span>
                             </label>
+                        </div>
+                          <div className="file-preview">
+                            {attachmentImg && (
+                                <img src={attachmentImg} alt="미리보기" />
+                            )}
                         </div>
                         {/* {console.log('typeof boardSeq', typeof 'boardSeq')}; */}
                         <div className="post-content">
@@ -327,11 +340,11 @@ const PostWrite = () => {
                                     value={content}
                                 ></textarea>
                                 <div className="wordCount">
-                                    내용: {content.length} / {maxCharacterCount}
+                                    내용: {content.length} / {maxCharacterCount}                              
                                 </div>
-                            </div>
+                            </div>                      
                         </div>
-
+                      
                         <div className="submitButton">
                             <button type="submit" onClick={handleSubmit}>
                                 등록
