@@ -5,6 +5,7 @@ import Router from "./router";
 import "./assets/reset.css";
 import { Provider } from "react-redux";
 import store from "./store";
+import "../src/assets/fonts/Font.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

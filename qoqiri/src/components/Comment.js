@@ -17,33 +17,59 @@ const Box = styled.div`
 
   h2 {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
   .buttons {
     display: flex;
     height: 30px;
     width: 100%;
     justify-content: space-between;
+    margin-bottom: 15px;
   }
   .comment-button {
-    background: black;
+    background: orange;
     color: white;
     border-radius: 5px;
     padding: 5px 10px;
-    height: 30px;
+    height: 25px;
     margin-left: 10px;
+    border-style: none;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .buttonFlex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .like {
     cursor: pointer;
-    color: orangered;
+    color: #ff9326;
   }
   .like:hover {
-    color: currentColor;
+    color: #ff7200;
   }
   .like-count {
     display: flex;
     gap: 6px;
+  }
+  .like-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 750;
+  }
+
+  .spanButton {
+    display: flex;
+  }
+  .spanButton span {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
@@ -76,7 +102,7 @@ const Comment = ({ comment }) => {
       // 서버로 좋아요 정보를 전송
       const response = await postLike({
         commentLikeId,
-        // comments: comment.commentsSEQ,
+        comments: comment,
         userInfo: comment.userInfo,
       });
 
@@ -122,23 +148,27 @@ const Comment = ({ comment }) => {
     <Box>
       <h2>@{comment.userInfo.userNickname}</h2>
       <div className="buttons">
-        <span
-          contentEditable="true"
-          suppressContentEditableWarning
-          ref={contentRef}
-          onBlur={handleBlur}
-        >
-          {content}
-        </span>
-        <button className="comment-button" onClick={onClick}>
-          답글
-        </button>
-        <button className="comment-button" onClick={onUpdate}>
-          수정
-        </button>
-        <button className="comment-button" onClick={onDelete}>
-          삭제
-        </button>
+        <div className="spanButton">
+          <span
+            contentEditable="true"
+            suppressContentEditableWarning
+            ref={contentRef}
+            onBlur={handleBlur}
+          >
+            {content}
+          </span>
+          <div className="buttonFlex">
+            <button className="comment-button" onClick={onClick}>
+              <p>답글</p>
+            </button>
+            <button className="comment-button" onClick={onUpdate}>
+              수정
+            </button>
+            <button className="comment-button" onClick={onDelete}>
+              삭제
+            </button>
+          </div>
+        </div>
         <div className="like-count">
           <Date postDate={comment.commentDate} className="like-count" />
           <div className="like-count">
@@ -158,9 +188,11 @@ const Comment = ({ comment }) => {
         parent={comment.commentsSEQ}
         code={comment.post}
       />
-      {comment.replies?.map((reply) => (
-        <Reply reply={reply} key={reply.commentsSEQ} />
-      ))}
+      {comment.replies
+        ?.filter((comment) => comment.commentDelete === "N")
+        .map((reply) => (
+          <Reply reply={reply} key={reply.commentsSEQ} />
+        ))}
     </Box>
   );
 };

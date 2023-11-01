@@ -13,11 +13,19 @@ const Box = styled.div`
     margin-bottom: 5px;
   }
   button {
-    background: black;
+    background: orange;
+    border-style: none;
     color: white;
     border-radius: 5px;
     margin: 10px;
     padding: 5px 10px;
+    height: 25px;
+    margin-left: 10px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  span {
+    font-weight: 700;
   }
 `;
 
