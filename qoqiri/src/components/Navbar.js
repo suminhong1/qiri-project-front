@@ -4,73 +4,15 @@ import "../css/Navbar.css";
 import { GrHomeRounded } from "react-icons/gr";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Offcanvas from "react-bootstrap/Offcanvas";
-import { Link } from "react-router-dom";
-import { getChatRoomList } from "../api/chat";
-
-function OffCanvasExample({ show, handleClose, ...props }) {
-  const [chatRoomList, setChatRoomList] = useState([]);
-  const user = useSelector((state) => state.user);
-  const { id } = useParams();
-  const chatRoomListAPI = async () => {
-    const result = await getChatRoomList(user.id);
-    setChatRoomList(result.data);
-  };
-
-  useEffect(() => {
-    chatRoomListAPI();
-  }, [show]);
-
-  useEffect(() => {
-    chatRoomListAPI();
-  }, [id]);
-
-  useEffect(() => {
-    chatRoomListAPI();
-  }, [user]);
-
-  return (
-    <Offcanvas show={show} onHide={handleClose} {...props}>
-      <Offcanvas.Header closeButton>
-        <Offcanvas.Title style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-          내 채팅방
-        </Offcanvas.Title>
-      </Offcanvas.Header>
-      <Offcanvas.Body>
-        <div className="notice">
-          {chatRoomList?.map((chatRoomList) => (
-            <a
-              href={`/chatRoom/${chatRoomList?.chatRoom.chatRoomSEQ}`}
-              className="notice-link"
-              key={chatRoomList?.userChatRoomInfoSeq}
-            >
-              <div className="notice-top">
-                <span className="notice-exp">
-                  {chatRoomList?.chatRoom.post.postTitle}
-                </span>
-                <span className="notice-time">몇분전</span>
-              </div>
-              <div span className="notice-addr">
-                의 채팅방
-              </div>
-            </a>
-          ))}
-        </div>
-      </Offcanvas.Body>
-    </Offcanvas>
-  );
-}
+import OffCanvas from "./Offcanvas";
 
 const Navbar = () => {
   const location = useLocation();
-  const [bell, setBell] = useState([false]);
   const user = useSelector((state) => state.user);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-  useEffect(() => {}, [bell]);
 
   if (location.pathname === "/Login" || location.pathname === "/signup") {
     return null;
@@ -112,7 +54,7 @@ const Navbar = () => {
           />
         </div>
       </div>
-      <OffCanvasExample show={show} handleClose={handleClose} placement="end" />
+      <OffCanvas show={show} handleClose={handleClose} placement="end" />
     </>
   );
 };

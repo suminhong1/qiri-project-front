@@ -30,9 +30,11 @@ const SignUp = () => {
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [profilePictureUrl, setProfilePictureUrl] = useState("");
+  // 관심사 관련
+  const [categories, setCategories] = useState([]);
+  const [categoryTypes, setCategoryTypes] = useState([]);
   const [selectlike, setSelectlike] = useState([]);
   const [selectSeq, setSelectSeq] = useState([]);
-
 
   // 알림창(에러 메시지)
   const [idMessage, setIdMessage] = useState("");
@@ -53,10 +55,6 @@ const SignUp = () => {
   const [isEmail, setIsEmail] = useState(false);
   const [isPhone, setIsPhone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  // 관심사 관련
-  const [categories, setCategories] = useState([]);
-  const [categoryTypes, setCategoryTypes] = useState([]);
 
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {
@@ -136,7 +134,6 @@ const SignUp = () => {
       checkNameDuplicate(currentName);
     }
   };
-
 
   // 닉네임 입력 핸들러
   const onChangeNickname = (e) => {
@@ -332,7 +329,6 @@ const SignUp = () => {
     }
   };
 
-
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest, seq) => {
     console.log(seq);
@@ -404,7 +400,7 @@ const SignUp = () => {
       bloodType: selectedBloodType,
       mbti,
       statusMessage,
-      profileImg: profilePictureUrl
+      profileImg: profilePictureUrl,
     };
 
     const signUpDTO = {
@@ -423,11 +419,15 @@ const SignUp = () => {
         }
       );
 
-      const categoryResponse = await axios.post("http://localhost:8080/qiri/userCategoryInfo", signUpDTO, {
-        headers: {
-          "Content-Type": "application/json"
+      const categoryResponse = await axios.post(
+        "http://localhost:8080/qiri/userCategoryInfo",
+        signUpDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-      });
+      );
       console.log(categoryResponse);
 
       if (userResponse.data) {
@@ -447,7 +447,10 @@ const SignUp = () => {
       <div className="form-container">
         <div className="form">
           <div className="form-el">
-            <label htmlFor="id">아이디</label> <br />
+            <h4>* 는 필수 입력 항목입니다</h4>
+            <br></br>
+            <br></br>
+            <label htmlFor="id"> * 아이디 </label> <br />
             <input id="id" name="id" value={id} onChange={onChangeId} />
             <br></br>
             {!isNameAvailable && <p>이미 사용 중인 아이디입니다.</p>}
@@ -456,7 +459,7 @@ const SignUp = () => {
 
           {/* 이름 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="name">이름</label> <br />
+            <label htmlFor="name"> * 이름</label> <br />
             <input id="name" name="name" value={name} onChange={onChangeName} />
             <br />
             {!isNameAvailable && <p>이미 사용 중인 이름입니다.</p>}
@@ -465,7 +468,7 @@ const SignUp = () => {
 
           {/* 닉네임 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="nickname">닉네임</label> <br />
+            <label htmlFor="nickname"> * 닉네임</label> <br />
             <input
               id="nickname"
               name="nickname"
@@ -479,7 +482,7 @@ const SignUp = () => {
 
           {/* 비밀번호 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="password">비밀번호</label> <br />
+            <label htmlFor="password"> * 비밀번호</label> <br />
             <input
               id="password"
               name="password"
@@ -500,7 +503,7 @@ const SignUp = () => {
 
           {/* 비밀번호 확인 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="passwordConfirm">비밀번호 확인</label> <br />
+            <label htmlFor="passwordConfirm"> * 비밀번호 확인</label> <br />
             <input
               id="passwordConfirm"
               name="passwordConfirm"
@@ -521,7 +524,7 @@ const SignUp = () => {
 
           {/* 이메일 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="email">이메일</label> <br />
+            <label htmlFor="email"> * 이메일</label> <br />
             <input
               id="email"
               name="name"
@@ -533,7 +536,7 @@ const SignUp = () => {
 
           {/* 휴대전화번호 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="phone">휴대전화번호</label> <br />
+            <label htmlFor="phone">* 휴대전화번호</label> <br />
             <input id="phone" name="phone" value={phone} onChange={addHyphen} />
             <p className="message">{phoneMessage}</p>
           </div>
@@ -591,7 +594,8 @@ const SignUp = () => {
                     value="여"
                     checked={selectedGender === "여"}
                     onChange={handleGenderChange}
-                  />여
+                  />
+                  여
                 </label>
               </div>
             </div>
@@ -647,7 +651,7 @@ const SignUp = () => {
 
           {/* 지역 입력 양식 */}
           <div className="form-el select-for-place">
-            <label htmlFor="place">지역</label> <br />
+            <label htmlFor="place"> * 지역</label> <br />
             <select
               id="place"
               name="place"
@@ -745,12 +749,16 @@ const SignUp = () => {
                         (category) => (
                           <div
                             key={category.categorySEQ}
-                            className={`selectlike-box-item ${selectlike.includes(category.categoryName)
-                              ? "selected"
-                              : ""
-                              }`}
+                            className={`selectlike-box-item ${
+                              selectlike.includes(category.categoryName)
+                                ? "selected"
+                                : ""
+                            }`}
                             onClick={() =>
-                              handleInterestClick(category.categoryName, category.categorySEQ)
+                              handleInterestClick(
+                                category.categoryName,
+                                category.categorySEQ
+                              )
                             }
                           >
                             {category.categoryName}

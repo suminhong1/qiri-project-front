@@ -101,6 +101,10 @@ const Header = () => {
   });
 
   useEffect(() => {
+    dispatch(asyncChatRooms(user.id));
+  }, [user]);
+
+  useEffect(() => {
     const save = localStorage.getItem("user");
     if (Object.keys(user).length === 0 && save !== null) {
       dispatch(userSave(JSON.parse(save)));

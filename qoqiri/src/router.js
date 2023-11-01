@@ -14,8 +14,6 @@ import Post from "./pages/Post";
 import Review from "./pages/Review";
 import MiniUp from "./pages/MiniUp";
 import PostWrite from "./pages/PostWrite";
-import ChatList from "./pages/ChatList";
-import ChatRoom from "./pages/ChatRoom";
 import EditProfile from "./pages/EditProfile";
 import SignupInfo from "./pages/SignupInfo";
 import Myactive from "./pages/Myactive";
@@ -74,14 +72,6 @@ const router = createBrowserRouter([
       {
         path: "review",
         element: <Review />,
-      },
-      {
-        path: "ChatList/:id",
-        element: <ChatList />,
-      },
-      {
-        path: "chatRoom/:id",
-        element: <ChatRoom />,
       },
       {
         path: "/EditProfile",

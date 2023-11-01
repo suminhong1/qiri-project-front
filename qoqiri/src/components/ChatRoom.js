@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
-import { useParams, useNavigate } from "react-router-dom";
 import {
   getChatMessage,
   getChatRoomInfo,
@@ -17,7 +16,8 @@ const StyledChatRoom = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 700px; /* 화면 전체 높이를 차지하도록 설정 */
+  height: 100%;
+  width: 100%;
 
   * {
     white-space: normal;
@@ -29,14 +29,26 @@ const StyledChatRoom = styled.div`
 
   .container {
     margin-bottom: -1px;
-    height: 500px;
-    width: 800px;
-    min-width: 800px;
+    padding-left: 20px;
+    height: 700px;
+    width: 850px;
+    min-width: 850px;
     overflow-y: scroll;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    border: 1px solid #e5e5e5;
+    border-left: 3px solid #e5e5e5;
+    border-right: 3px solid #e5e5e5;
+  }
+  .msgHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .sendTime {
+    font-size: 0.8rem;
+    color: #808080;
   }
 
   .list-group {
@@ -45,14 +57,16 @@ const StyledChatRoom = styled.div`
     max-height: -webkit-fill-available;
   }
 
-  .list-loadChat,
   .list-group-item {
     margin-left: -12px;
     margin-right: -12px;
     border-radius: 0px;
+    border-left: none;
+    border-right: none;
     .chat {
       font-weight: bold;
       margin-bottom: 7px;
+      font-size: 1.1rem;
     }
   }
 
@@ -63,9 +77,8 @@ const StyledChatRoom = styled.div`
   }
 
   .inputgroup {
-    width: 800px;
-    min-width: 800px;
-    margin-bottom: 150px;
+    width: 850px;
+    min-width: 850px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -99,9 +112,9 @@ const StyledChatRoom = styled.div`
   }
 
   .roomHeader {
-    width: 800px;
+    width: 850px;
+    min-width: 850px;
     height: 50px;
-    margin-top: 50px;
     background-color: #ff7f38;
     color: white;
     display: flex;
@@ -141,34 +154,40 @@ const StyledChatRoom = styled.div`
   }
 
   .container::-webkit-scrollbar {
-    width: 0;
-    height: 0;
+    width: 8px; /* 스크롤바 너비 조절 */
+  }
+
+  .container::-webkit-scrollbar-thumb {
+    background-color: #ff7f38; /* 스크롤바 색상 조절 */
+    border-radius: 10px; /* 스크롤바 둥글게 만들기 */
+  }
+
+  .container::-webkit-scrollbar-thumb:hover {
+    background-color: #ff7f38; /* 스크롤바 호버 시 색상 변경 */
   }
 `;
 
-const ChatRoom = () => {
+const ChatRoom = ({ chatRoomId }) => {
   const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [userChatRoomInfo, setUserChatRoomInfo] = useState([]);
   const [loadMessage, setLoadMessage] = useState([]);
-  const { id } = useParams();
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const chatRoomInfoAPI = async () => {
-    const result = await getChatRoomInfo(id);
+    const result = await getChatRoomInfo(chatRoomId);
     setChatRoomInfo(result.data);
   };
 
   const chatMessageAPI = async () => {
-    const result = await getChatMessage(id);
+    const result = await getChatMessage(chatRoomId);
     setLoadMessage(result.data);
   };
 
   const userChatRoomInfoAPI = async () => {
-    const result = await getUserChatRoomInfo(id, user.id);
+    const result = await getUserChatRoomInfo(user.id, chatRoomId);
     setUserChatRoomInfo(result.data);
   };
 
@@ -181,7 +200,13 @@ const ChatRoom = () => {
     chatRoomInfoAPI();
     chatMessageAPI();
     userChatRoomInfoAPI();
-  }, [id]);
+  }, []);
+
+  useEffect(() => {
+    chatRoomInfoAPI();
+    chatMessageAPI();
+    userChatRoomInfoAPI();
+  }, [chatRoomId]);
 
   useEffect(() => {
     scrollToBottom();
@@ -191,7 +216,9 @@ const ChatRoom = () => {
     chatRoomInfoAPI();
     chatMessageAPI();
     userChatRoomInfoAPI();
+
     const currentTime = new Date();
+
     const socket = new SockJS("http://localhost:8080/ws/chat");
     stompClient.current = new Client({
       webSocketFactory: () => socket,
@@ -203,16 +230,19 @@ const ChatRoom = () => {
 
     stompClient.current.onConnect = (frame) => {
       console.log("Connected: " + frame);
-      stompClient.current.subscribe(`/sub/chat/room/${id}`, (message) => {
-        const recv = JSON.parse(message.body);
-        recvMessage(recv);
-      });
+      stompClient.current.subscribe(
+        `/sub/chat/room/${chatRoomId}`,
+        (message) => {
+          const recv = JSON.parse(message.body);
+          recvMessage(recv);
+        }
+      );
 
       stompClient.current.publish({
         destination: "/pub/chat/message",
         body: JSON.stringify({
           nickname: user.nickname,
-          chatRoomSEQ: id,
+          chatRoomSEQ: chatRoomId,
           message: user.nickname + "님이 채팅에 참여하였습니다.",
           sendTime: currentTime.toISOString(),
         }),
@@ -226,7 +256,7 @@ const ChatRoom = () => {
         stompClient.current.deactivate();
       }
     };
-  }, [user, id]);
+  }, [user, chatRoomId]);
 
   //메세지 발송 부분
   const sendMessage = async () => {
@@ -237,72 +267,96 @@ const ChatRoom = () => {
       return;
     }
 
-    const currentTime = new Date();
     stompClient.current.publish({
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
-        chatRoomSEQ: id,
+        chatRoomSEQ: chatRoomId,
         message: message,
-        sendTime: currentTime.toISOString(),
       }),
     });
+
     setMessage("");
   };
 
-  // 현재 채팅방에 발송된 메세지 채팅창에 띄우는 부분
+  // 현재 채팅방에 발송된 메세지 프론트에서 저장
   const recvMessage = (recv) => {
+    const currentTime = new Date();
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         nickname: recv.nickname,
+        chatRoomSEQ: recv.chatRoomSEQ,
         message: recv.message,
-        sendTime: recv.sendTime,
+        sendTime: currentTime.toISOString(),
       },
     ]);
   };
 
+  //채팅방 나가기
   const exit = async () => {
     const chatDTO = {
       nickname: user.nickname,
-      chatRoomSEQ: id,
+      chatRoomSEQ: chatRoomId,
     };
     leaveChatroom(chatDTO);
-    navigate("/");
+    window.location.reload();
+  };
+
+  // 시간 포멧 설정
+  const formatSendTime = (sendTime) => {
+    const date = new Date(sendTime);
+    const options = {
+      month: "numeric", // 월
+      day: "numeric", // 일
+      hour: "numeric", // 시간
+      minute: "numeric", // 분
+      hour12: true, // 오전/오후 표시
+    };
+    return date.toLocaleDateString("en-US", options);
   };
 
   return (
     <StyledChatRoom>
       <div className="chatroom">
-        <div>
-          <div className="roomHeader">
-            <div className="roomName">
-              {chatRoomInfo?.post?.postTitle}의 채팅방
-            </div>
-            <div className="leave">
-              <button className="leaveBtn" onClick={exit}>
-                나가기
-              </button>
-            </div>
+        <div className="roomHeader">
+          <div className="roomName">
+            {chatRoomInfo?.post?.postTitle}의 채팅방
+          </div>
+          <div className="leave">
+            <button className="leaveBtn" onClick={exit}>
+              나가기
+            </button>
           </div>
         </div>
 
         <div className="container" id="app">
           <ul className="list-group">
             {loadMessage
-              ?.filter(
+              ?.sort((a, b) => a.chatMessageSeq - b.chatMessageSeq)
+              .filter(
                 (msg) =>
-                  new Date(msg.sendTime) > new Date(userChatRoomInfo.joinDate)
+                  new Date(msg?.sendTime) > new Date(userChatRoomInfo?.joinDate)
               )
-              .map((msg, index) => (
-                <li className="list-loadChat" key={index}>
-                  <div className="chat">{msg?.userInfo?.userNickname}</div>
-                  {msg?.message} - {msg?.sendTime}
+              .map((msg) => (
+                <li className="list-group-item" key={msg?.chatMessageSeq}>
+                  <div className="msgHeader">
+                    <div className="chat">{msg?.userInfo?.userNickname}</div>
+                    <div className="sendTime">
+                      {formatSendTime(msg?.sendTime)}
+                    </div>
+                  </div>
+                  {msg?.message}
                 </li>
               ))}
             {messages.map((msg, index) => (
               <li className="list-group-item" key={index}>
-                <div className="chat">{msg?.nickname}</div>
+                <div className="msgHeader">
+                  <div className="chat">{msg?.nickname}</div>
+                  <div className="sendTime">
+                    {formatSendTime(msg?.sendTime)}
+                  </div>
+                </div>
                 {msg.message}
               </li>
             ))}

@@ -141,7 +141,7 @@
 }
 
 .interest-section .form-el label {
-  font-size: 25px; /* 원하는 크기로 조정하세요 */
+  font-size: 25px; /* 관심 주제를 선택해주세요 글자 부분 */
 }
 
 .selectlike-box {
@@ -156,7 +156,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  font-size: 16px;
+  font-size: 6px;
 }
 
 .selectlike-box-item {
@@ -166,7 +166,7 @@
   border: 1px solid #ccc;
   cursor: pointer;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 3px;
 }
 
 .selectlike-box-item.selected {
@@ -189,3 +189,4 @@
   object-fit: cover; 
   border-radius: 50%;
 }
+

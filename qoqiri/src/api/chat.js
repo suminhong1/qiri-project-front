@@ -3,7 +3,7 @@ import axios from "axios";
 const instance = axios.create({
   baseURL: "http://localhost:8080/qiri/",
 });
-// 내가 참여중인 채팅방 리스트 가져오기
+// 내가 참여중인 채팅방 리스트
 export const getChatRoomList = async (id) => {
   return await instance.get("public/chatRooms/" + id);
 };
@@ -13,8 +13,8 @@ export const getChatRoomInfo = async (id) => {
 };
 
 //참여중인 채팅방의 내 참여정보 가져오기
-export const getUserChatRoomInfo = async (code, userId) => {
-  return await instance.get(`public/chatRoomInfo/${code}/${userId}`);
+export const getUserChatRoomInfo = async (userId, code) => {
+  return await instance.get(`/public/chatRoomInfo/${userId}/${code}`);
 };
 
 // 채팅방의 채팅보기
@@ -35,4 +35,9 @@ export const leaveChatroom = async (data) => {
 // 매칭신청정보 저장
 export const requestMatching = async (postSEQ, id) => {
   return await instance.post("/matching/" + postSEQ, id);
+};
+
+//채팅방의 참여유저목록 가져오기
+export const getChatRoomUserList = async (code) => {
+  return await instance.get("chatroom/userlist/" + code);
 };
