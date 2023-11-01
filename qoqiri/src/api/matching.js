@@ -17,3 +17,8 @@ export const ApplyUserInfo = async (data) => {
 export const getMatchingUserInfoByPostSEQ = async (postSEQ) => {
   return await instance.get(`getApplyList/${postSEQ}`);
 };
+
+// 게시물의 post_title_dropbox 값을 'Y'로 변경하는 API
+export const updatePostTitleDropbox = async (postSEQ) => {
+  return await instance.put(`updateDropdownTitle/${postSEQ}`);
+};
