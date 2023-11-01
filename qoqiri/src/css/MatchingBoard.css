@@ -116,10 +116,17 @@ a {
   flex-wrap: wrap;
   flex-direction: column; /*수직 정렬*/
 }
+.profileFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-.profileImg {
-  width: 70px;
-  height: 50px;
+.profileImg img {
+  width: 55px;
+  height: 55px;
+  border: 1px solid #fcf8f1;
+  border-radius: 50px;
 }
 .profileLike {
   width: 70px;
