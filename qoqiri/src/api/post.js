@@ -18,16 +18,14 @@ export const addMatchingAPI = async (data) => {
 };
 
 // // 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
-export const addAttachmentsAPI = async (postId, file) => {
-    const formData = new FormData();
-    formData.append('postId', postId); // 정수형 데이터 추가
-    formData.append('file', file); // 파일 데이터 추가
-    const response = await instance.post('postAttachments');
-    // const response = await instance.post('postAttachments', formData, {
-    //     headers: {
-    //         'Content-Type': 'multipart/form-data',
-    //     },
-    // });
+export const addAttachmentsAPI = async (formData) => {
+    console.log(formData);
+    // const response = await instance.post('postAttachments', formData);
+    const response = await instance.post('postAttachments', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
     return response.data; // 서버에서의 응답을 반환?
 };
 

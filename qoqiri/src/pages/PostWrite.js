@@ -49,6 +49,9 @@ const PostWrite = () => {
     // 첨부파일 핸들러 여기서부터 마저 작업
     const handleUploadImage = async (e) => {
         const files = e.target.files;
+
+        console.log(files);
+
         const maxFileSize = 10 * 1024 * 1024;
         const maxFileCount = 3;
         const newAttachmentImg = [...attachmentImg];
@@ -58,10 +61,11 @@ const PostWrite = () => {
 
             if (file.size <= maxFileSize) {
                 if (newAttachmentImg.length < maxFileCount) {
-                    const formData = new FormData();
-                    formData.append('file', file);
+                    newAttachmentImg.push(file);
+                    // const formData = new FormData();
+                    // formData.append('file', file);
 
-                    newAttachmentImg.push(formData); // 첨부 파일 배열에 추가
+                    // newAttachmentImg.push(formData); // 첨부 파일 배열에 추가
                 } else {
                     alert('사진은 3장까지만 업로드 할 수 있습니다.');
                     break;
@@ -191,11 +195,27 @@ const PostWrite = () => {
 
         console.log(postResponse);
 
-        const Attachments = {
-            postSeq: postResponse.data.postSEQ,
-            attachmentURL: attachmentImg,
-        };
-        console.log('Attachments', Attachments);
+        const formData = new FormData();
+        // formData.enctype = 'multipart/form-data';
+        formData.append('postId', postResponse.data.postSEQ);
+
+        console.log(attachmentImg);
+        console.log(attachmentImg.length);
+
+        attachmentImg.forEach((image) => {
+            formData.append('files', image);
+        });
+
+        // for (let i = 0; i < attachmentImg.length; i++) {
+        //     console.log('attach : ' + attachmentImg[i]);
+
+        // }
+
+        // const Attachments = {
+        //     postSeq: postResponse.data.postSEQ,
+        //     attachmentURL: attachmentImg,
+        // };
+        // console.log('Attachments', Attachments);
 
         console.log(MatchingDTO.categoryList);
         console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
@@ -209,10 +229,7 @@ const PostWrite = () => {
 
         // 여기 마저 작성해라
 
-        const attachmentResponse = await addAttachmentsAPI({
-            postSeq: postResponse.data.postSEQ,
-            attachmentURL: Attachments,
-        });
+        const attachmentResponse = await addAttachmentsAPI(formData);
         console.log(attachmentResponse);
         console.log(postResponse.data.postSEQ);
 
