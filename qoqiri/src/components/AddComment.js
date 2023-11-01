@@ -15,7 +15,7 @@ const Form = styled.form`
     width: 90%;
     border: none;
     border-bottom: 1px solid #ddd;
-    height: 7vh;
+    height: 4vh;
     font-size: 1rem;
     font-weight: 700;
     border-radius: 5px;
@@ -28,6 +28,10 @@ const Form = styled.form`
     border-radius: 5px;
     margin: 10px;
     padding: 5px 10px;
+    height: 25px;
+    margin-left: 10px;
+    font-size: 10px;
+    font-weight: 700;
   }
 `;
 
@@ -50,6 +54,7 @@ const AddComment = ({ code, active, parent }) => {
       <input
         type="text"
         value={comment}
+        placeholder="댓글을 달아 원하는 끼리를 찾아보세요."
         onChange={(e) => {
           setComment(e.target.value);
         }}

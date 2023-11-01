@@ -69,10 +69,13 @@ const DetailView = ({ selectedPostSEQ }) => {
           <div className="board-header-time">
             <Date postDate={post?.postDate} />
           </div>
-          <div className="titleNickname">
+          <div className="titleNickname" style={{ marginBottom: "70px" }}>
             <div className="title">{post?.postTitle}</div>
           </div>
-          <div className="board-header-main">
+          <div
+            className="board-header-main"
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
             <div className="profile">
               <img src="" alt="프로필 이미지" className="profileImg" />
               <UserRating rating={post?.userInfo?.rating} />
@@ -276,7 +279,7 @@ const MatchingBoard = () => {
   }, [selectedCatSEQ]);
 
   return (
-    <>
+    <div className="real-main">
       <div className="main-content">
         <main className="main">
           <div className="select-bar">
@@ -373,7 +376,7 @@ const MatchingBoard = () => {
           </section>
         </main>
       </div>
-    </>
+    </div>
   );
 };
 export default MatchingBoard;

@@ -188,9 +188,11 @@ const Comment = ({ comment }) => {
         parent={comment.commentsSEQ}
         code={comment.post}
       />
-      {comment.replies?.map((reply) => (
-        <Reply reply={reply} key={reply.commentsSEQ} />
-      ))}
+      {comment.replies
+        ?.filter((comment) => comment.commentDelete === "N")
+        .map((reply) => (
+          <Reply reply={reply} key={reply.commentsSEQ} />
+        ))}
     </Box>
   );
 };
