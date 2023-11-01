@@ -45,26 +45,26 @@ export const editPostAPI = async (data) => {
 
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
-    return await instance.put('matchingCategoryInfo', data);
+  return await instance.put("matchingCategoryInfo", data);
 };
 
 // 첨부 파일 수정
 export const editAttachmentsAPI = async (formData) => {
-    console.log(formData);
-    const response = await instance.put('postAttachments', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-    return response.data;
+  console.log(formData);
+  const response = await instance.put("postAttachments", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
 };
 
 export const getMatchCate = async (id) => {
-    return await instance.get('matchingCategoryInfo' + id);
+  return await instance.get("matchingCategoryInfo" + id);
 };
 
 export const getAttach = async (id) => {
-    return await instance.get('postAttachments' + id);
+  return await instance.get("postAttachments" + id);
 };
 
 export const getBoards = async () => {
@@ -110,8 +110,8 @@ export const updateReview = async (data) => {
 };
 
 //리뷰 삭제하기
-export const deleteReview = async (postSeq) => {
-  return await instance.put(`reviewDelete/${postSeq}`);
+export const deleteReview = async (postSEQ) => {
+  return await instance.put(`reviewDelete/${postSEQ}`);
 };
 
 // 게시글에 신청하기
@@ -125,10 +125,10 @@ export const getApplicantsForPost = async (userData) => {
 };
 
 // 내활동 리스트 보기
-export const getmyList = async (boardSeq) => {
+export const getmyList = async (boardSEQ) => {
   let url = `public/post`;
-  if (boardSeq) {
-    url += `?board=${boardSeq}`;
+  if (boardSEQ) {
+    url += `?board=${boardSEQ}`;
   }
   return await instance.get(url);
 };
