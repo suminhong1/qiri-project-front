@@ -1,6 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import PostList from "./pages/BestPost";
-import ViewPost from "./pages/ViewPost";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
@@ -10,7 +8,6 @@ import MatchingBoard from "./pages/MatchingBoard";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import UserInfoPage from "./pages/Myinfo";
-import Post from "./pages/Post";
 import Review from "./pages/Review";
 import MiniUp from "./pages/MiniUp";
 import PostWrite from "./pages/PostWrite";
@@ -29,19 +26,19 @@ const router = createBrowserRouter([
         index: true,
         element: <Home />,
       },
-      {
-        path: "board/:id",
-        element: <PostList />,
-      },
-      {
-        path: "bestPost",
-        element: <PostList />,
-      },
+      // {
+      //   path: "board/:id",
+      //   element: <PostList />,
+      // },
+      // {
+      //   path: "bestPost",
+      //   element: <PostList />,
+      // },
 
-      {
-        path: "viewPost/:id",
-        element: <ViewPost />,
-      },
+      // {
+      //   path: "viewPost/:id",
+      //   element: <ViewPost />,
+      // },
       {
         path: "postWrite",
         element: <PostWrite />,
@@ -66,10 +63,10 @@ const router = createBrowserRouter([
         path: "myinfo",
         element: <UserInfoPage />,
       },
-      {
-        path: "Post/:id",
-        element: <Post />,
-      },
+      // {
+      //   path: "Post/:id",
+      //   element: <Post />,
+      // },
       {
         path: "review",
         element: <Review />,

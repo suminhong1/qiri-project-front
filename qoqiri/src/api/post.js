@@ -17,22 +17,20 @@ export const addMatchingAPI = async (data) => {
     return await instance.post('matchingCategoryInfo', data);
 };
 
-// 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
-export const addAttachmentsAPI = async (postId, file) => {
-    const formData = new FormData();
-    formData.append('postId', postId); // 정수형 데이터 추가
-    formData.append('file', file); // 파일 데이터 추가
-
-    const response = await axios.post('postAttachments', formData, {
+// // 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
+export const addAttachmentsAPI = async (formData) => {
+    console.log(formData);
+    // const response = await instance.post('postAttachments', formData);
+    const response = await instance.post('postAttachments', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
     });
-    return response.data; // 서버에서의 응답을 반환
+    return response.data; // 서버에서의 응답을 반환?
 };
 
-// export const addUploadImage = async (data) => {
-//     return await instance.post('imageUpload', data);
+// export const addAttachmentsAPI = async (data, postId) => {
+//     return await instance.post('postAttachments', data, postId);
 // };
 
 // 게시물 수정
@@ -89,21 +87,21 @@ export const deleteReview = async (postSeq) => {
 
 // 게시글에 신청하기
 export const applyToPost = async (userData, userId) => {
-  return await instance.post(`post/${userData}/apply`, { userId });
+    return await instance.post(`post/${userData}/apply`, { userId });
 };
 
 // 게시글의 신청자 목록 가져오기
 export const getApplicantsForPost = async (userData) => {
-  return await instance.get(`post/${userData}/applicants`);
+    return await instance.get(`post/${userData}/applicants`);
 };
 
 // 내활동 리스트 보기
 export const getmyList = async (boardSeq) => {
-  let url = `public/post`;
-  if (boardSeq) {
-    url += `?board=${boardSeq}`;
-  }
-  return await instance.get(url);
+    let url = `public/post`;
+    if (boardSeq) {
+        url += `?board=${boardSeq}`;
+    }
+    return await instance.get(url);
 };
 
 export const addPostLikeAPI = async (data) => {
