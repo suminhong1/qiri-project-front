@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/Review.css";
 import { saveReview, updateReview, deleteReview } from "../api/post";
+import { updatePostTitleDropbox } from "../api/matching";
 import axios from "axios";
 
 const instance = axios.create({
@@ -11,6 +12,7 @@ export const getPosts = async () => {
   return await instance.get("/public/post", {
     params: {
       board: 2,
+      // matched: "",
     },
   });
 };
@@ -29,12 +31,15 @@ const ReviewBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
+  const [userPosts, setUserPosts] = useState([]); // 사용자의 글 목록
+  const [selectedTitle, setSelectedTitle] = useState(null); // 선택된 글 타이틀
 
   useEffect(() => {
     postsAPI();
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setLoggedInUser(user);
+      fetchUserPosts(user.id); // 사용자 글 목록 가져오기
     }
   }, []);
 
@@ -87,9 +92,36 @@ const ReviewBoard = () => {
     setPosts(result.data);
   };
 
+  const fetchUserPosts = async (userId) => {
+    try {
+      const response = await instance.get("/public/post", {
+        params: {
+          board: 2,
+          userId: userId,
+        },
+      });
+      const filteredPosts = response.data.filter(
+        (post) => post.postTitleDropbox !== "Y"
+      );
+      setUserPosts(filteredPosts);
+    } catch (error) {
+      console.error("Failed to fetch user posts:", error);
+    }
+  };
+  // 드롭박스 만들기 및 선택하기
+
+  const handleTitleSelect = async (title) => {
+    setSelectedTitle(title);
+    const selectedPost = userPosts.find((post) => post.postTitle === title);
+    if (selectedPost) {
+      await updatePostTitleDropbox(selectedPost.postSEQ);
+    }
+  }; // 드롭박스 만들기 및 선택하기
+
   const handleWriteClick = async () => {
-    if (content.length === 0) {
-      alert("댓글을 입력해 주세요!!");
+    // 글 타이틀이 선택되지 않았을 경우 글쓰기 방지
+    if (!selectedTitle || selectedTitle === "글 타이틀 선택") {
+      alert("글 타이틀을 선택해주세요.");
       return;
     }
 
@@ -112,6 +144,7 @@ const ReviewBoard = () => {
         postTitle: content,
         postContent: content,
         boardSeq: 2,
+        postTitle: selectedTitle + " " + content, // 드롭박스 만들기 및 선택하기
       };
       console.log(reviewData);
 
@@ -131,6 +164,10 @@ const ReviewBoard = () => {
           ...reviews,
         ]);
         setContent("");
+        setUserPosts((prevPosts) =>
+          prevPosts.filter((post) => post.postTitle !== selectedTitle)
+        ); // 드롭박스 만들기 및 선택하기
+        setSelectedTitle(null); // 드롭박스 만들기 및 선택하기
       } catch (error) {
         alert("리뷰 저장에 실패하였습니다. 다시 시도해주세요.");
       }
@@ -169,6 +206,18 @@ const ReviewBoard = () => {
     <div className="rv-container">
       <h1>우리끼리한줄평</h1>
       <div className="rv-input-area">
+        <select
+          value={selectedTitle}
+          onChange={(e) => handleTitleSelect(e.target.value)}
+        >
+          <option value={null}>글 타이틀 선택</option>
+          {userPosts.map((post) => (
+            <option key={post.postSEQ} value={post.postTitle}>
+              {post.postTitle}
+            </option>
+          ))}
+        </select>
+        {/* 드롭박스 만들기 및 선택하기*/}
         <textarea
           placeholder="리뷰 내용을 입력하세요. (50자를 초과할 수 없습니다.)"
           value={content}
@@ -205,6 +254,7 @@ const ReviewBoard = () => {
                     onClick={() => handleWriterClick(po.userInfo.userId)}
                   >
                     끼리: {po.userInfo.userNickname}
+                    <div>끼리 찾기명 : {po.postTitle}</div>
                   </span>
                   {loggedInUser.id === po.userInfo.userId && (
                     <div className="rv-persnalBtn">
