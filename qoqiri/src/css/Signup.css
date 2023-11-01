@@ -45,7 +45,7 @@
 }
 
 .form-el input:focus {
-  border: 1px solid #FF7F38;
+  border: 1px solid #ff7f38;
 }
 
 .message {
@@ -57,7 +57,7 @@
 .signup-form {
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
 }
 .signup-form button[type="submit"] {
   width: 500%;
@@ -65,14 +65,14 @@
   border: none;
   font-weight: bold;
   border-radius: 5px;
-  background-color: #FF7F38;
+  background-color: #ff7f38;
   color: white;
   margin-top: 16px;
   cursor: pointer;
 }
 
 .signup-form button[type="submit"]:disabled {
-  background-color: #FF7F38;
+  background-color: #ff7f38;
   color: white;
 }
 
@@ -131,7 +131,6 @@
   width: 30%;
 }
 
-
 /* 관심사 선택 부분 */
 .interest-section {
   display: flex;
@@ -149,14 +148,13 @@
   flex-wrap: wrap;
   gap: 40px;
   margin-top: 8px;
-  
 }
 
 .box-options {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
-  font-size: 6px;
+  font-size: 16px;
 }
 
 .selectlike-box-item {
@@ -166,27 +164,26 @@
   border: 1px solid #ccc;
   cursor: pointer;
   border-radius: 20px;
-  font-size: 3px;
+  font-size: 13px;
 }
 
 .selectlike-box-item.selected {
-  background-color: #FF9615;
-  color: white; 
-  border: 1px solid #FF9615;
+  background-color: #ff9615;
+  color: white;
+  border: 1px solid #ff9615;
 }
 
 .selectlike-box h3 {
-  font-size: 17px; 
-  color: #FF9615;
+  font-size: 17px;
+  color: #ff9615;
 }
 
 /* 프로필 사진 부분 */
 .profile-picture-preview {
-  width: 150px; 
-  height: 150px; 
-  margin-top: 10px; 
-  border: 1px solid #ccc; 
-  object-fit: cover; 
+  width: 150px;
+  height: 150px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  object-fit: cover;
   border-radius: 50%;
 }
-

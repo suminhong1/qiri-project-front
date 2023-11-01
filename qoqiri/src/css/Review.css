@@ -22,7 +22,7 @@
   margin-bottom: 20px;
   position: relative;
   left: 1px;
-  top: -10px;
+
   height: 90px;
 }
 
@@ -61,15 +61,31 @@
   border-bottom: none;
 }
 
-.rv-writer {
+/* .rv-writerInfo {
   display: inline-block;
+} */
+
+.rv-writer {
   margin-right: 10px;
-  font-size: 12px;
+  font-size: 13px;
   display: flex;
   position: relative;
   top: 50px;
   cursor: pointer;
-  width: 50px;
+  width: 100%;
+}
+
+.rv-writer-title {
+  margin-right: 10px;
+  font-size: 13px;
+  position: relative;
+  top: 35px;
+  width: 100px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline;
+  left: 200px;
+  max-width: 100px;
 }
 
 .rv-stats-thums {
@@ -92,7 +108,11 @@
 }
 
 .rv-persnalBtn {
+  display: inline;
   width: 50px;
+  position: relative;
+  left: 1070px;
+  top: 16px;
 }
 
 .rv-review-item textarea {
@@ -177,4 +197,14 @@
   top: 10px;
   right: 10px;
   cursor: pointer;
+}
+
+.rv-select {
+  max-width: 100px;
+  display: flex;
+  justify-items: baseline;
+  font-weight: bold;
+  height: 90px;
+  border: 1px solid #e0e0e0;
+  position: relative;
 }

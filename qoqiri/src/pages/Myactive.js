@@ -21,7 +21,7 @@ const Myactive = () => {
         const userResponse = await getUser(user.id);
         setLoggedInUser(userResponse.data);
 
-        const postsResponse = await getmyList();
+        const postsResponse = await getmyList(0);
         const userPosts = postsResponse.data.filter(
           (post) => post.userInfo.userId === userResponse.data.userId
         );
@@ -29,7 +29,7 @@ const Myactive = () => {
       } catch (error) {}
     };
 
-    fetchUserInfoAndPosts(2);
+    fetchUserInfoAndPosts();
   }, []);
 
   if (!loggedInUser) {

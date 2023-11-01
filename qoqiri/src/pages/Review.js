@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../css/Review.css";
 import { saveReview, updateReview, deleteReview } from "../api/post";
-import { updatePostTitleDropbox } from "../api/matching";
 import axios from "axios";
 
 const instance = axios.create({
@@ -11,7 +10,7 @@ const instance = axios.create({
 export const getPosts = async () => {
   return await instance.get("/public/post", {
     params: {
-      board: 2,
+      boardSEQ: 2,
       // matched: "",
     },
   });
@@ -32,7 +31,7 @@ const ReviewBoard = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
   const [userPosts, setUserPosts] = useState([]); // 사용자의 글 목록
-  const [selectedTitle, setSelectedTitle] = useState(null); // 선택된 글 타이틀
+  const [selectedTitle, setSelectedTitle] = useState(""); // 선택된 글 타이틀
 
   useEffect(() => {
     postsAPI();
@@ -55,10 +54,10 @@ const ReviewBoard = () => {
     // 수정 로직
     const updateData = {
       token: loggedInUser.token,
-      postTitle: editingContent,
+      postTitle: selectedTitle,
       postContent: editingContent,
-      boardSeq: 2,
-      postSeq: editingPostId,
+      boardSEQ: 2,
+      postSEQ: editingPostId,
     };
 
     try {
@@ -96,7 +95,7 @@ const ReviewBoard = () => {
     try {
       const response = await instance.get("/public/post", {
         params: {
-          board: 2,
+          board: 0,
           userId: userId,
         },
       });
@@ -111,10 +110,11 @@ const ReviewBoard = () => {
   // 드롭박스 만들기 및 선택하기
 
   const handleTitleSelect = async (title) => {
+    console.log("타이틀명" + title);
     setSelectedTitle(title);
     const selectedPost = userPosts.find((post) => post.postTitle === title);
+    console.log("선택포스트 확인용" + selectedPost.postSEQ);
     if (selectedPost) {
-      await updatePostTitleDropbox(selectedPost.postSEQ);
     }
   }; // 드롭박스 만들기 및 선택하기
 
@@ -141,25 +141,26 @@ const ReviewBoard = () => {
       // PostDTO 형식에 맞게 reviewData 객체를 수정
       const reviewData = {
         token: loggedInUser.token, //로그인한 사용자의 토큰
-        postTitle: content,
         postContent: content,
-        boardSeq: 2,
-        postTitle: selectedTitle + " " + content, // 드롭박스 만들기 및 선택하기
+        boardSEQ: 2,
+        postTitle: selectedTitle, // 드롭박스 만들기 및 선택하기
       };
       console.log(reviewData);
 
       try {
         // 리뷰 내용을 백엔드로 전송
         await saveReview(reviewData);
+        console.log("리뷰 저장시 정보" + reviewData);
         alert("리뷰가 저장되었습니다.");
 
         // UI 업데이트
         setReviews([
           {
-            title: content,
-            content,
+            title: selectedTitle,
+            postContent: content,
             userId: loggedInUser.id,
             userNickname: loggedInUser.nickname,
+            postTitleDropbox: "Y",
           },
           ...reviews,
         ]);
@@ -207,6 +208,7 @@ const ReviewBoard = () => {
       <h1>우리끼리한줄평</h1>
       <div className="rv-input-area">
         <select
+          className="rv-select"
           value={selectedTitle}
           onChange={(e) => handleTitleSelect(e.target.value)}
         >
@@ -248,14 +250,18 @@ const ReviewBoard = () => {
                 </>
               ) : (
                 <>
-                  <p>{po.postContent}</p>
-                  <span
-                    className="rv-writer"
-                    onClick={() => handleWriterClick(po.userInfo.userId)}
-                  >
-                    끼리: {po.userInfo.userNickname}
-                    <div>끼리 찾기명 : {po.postTitle}</div>
-                  </span>
+                  <div className="rv-writerInfo">
+                    <p>{po.postContent}</p>
+                    <span
+                      className="rv-writer"
+                      onClick={() => handleWriterClick(po.userInfo.userId)}
+                    >
+                      끼리: {po.userInfo.userNickname}
+                    </span>
+                    <span className="rv-writer-title">
+                      글 제목 : {po.postTitle}
+                    </span>
+                  </div>
                   {loggedInUser.id === po.userInfo.userId && (
                     <div className="rv-persnalBtn">
                       <button
