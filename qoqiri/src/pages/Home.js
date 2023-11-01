@@ -43,11 +43,10 @@ const StyledHome = styled.div`
   }
 
   .cTypeCard {
-    width: 700px;
+    width: 600px;
     height: 500px;
     background-position: center center;
     background-size: cover;
-    border-radius: 20px;
     margin: 15px;
     position: relative;
   }
@@ -58,7 +57,7 @@ const StyledHome = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    border-radius: 20px;
+
     background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.6));
     transition: opacity 0.2s ease;
     z-index: 1;
@@ -75,9 +74,10 @@ const StyledHome = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2.5rem;
+    font-size: 4rem;
     font-weight: bold;
-    -webkit-text-stroke: 0.8px white;
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white,
+      1px 1px 0 white;
     z-index: 2; /* 추가 */
     position: relative; /* 추가 */
   }
@@ -85,9 +85,31 @@ const StyledHome = styled.div`
   .content {
     width: 100%;
     min-width: 1250px;
-    height: 200px;
+    height: 50px;
     font-weight: bold;
-    font-size: 3rem;
+    font-size: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .carousel-control-prev {
+    width: 150px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 2; /* cTypeCard보다 위에 표시 */
+  }
+
+  .carousel-control-next {
+    width: 150px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 2; /* cTypeCard보다 위에 표시 */
   }
 `;
 
@@ -114,35 +136,42 @@ const Home = () => {
       <section className="billboard">
         <div className="main-body">
           <Carousel activeIndex={index} onSelect={handleSelect}>
-            {/* <div className="cTypeSelect"> */}
-            {categoryTypes.map((categoryType) => (
-              <Carousel.Item>
-                <section
-                  className="cTypeCard"
-                  key={categoryType.ctSEQ}
-                  onMouseEnter={() => setHoveredCard(categoryType.ctSEQ)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  style={{
-                    backgroundImage: `url(/categoryType_logo/${categoryType.ctSEQ}.jpg)`,
-                  }}
-                >
-                  <div
-                    className="overlay"
-                    style={{
-                      opacity: hoveredCard === categoryType.ctSEQ ? 0 : 1,
-                    }}
-                  ></div>
-                  <a href="/" className="cTypeText">
-                    <p>{categoryType.ctName}</p>
-                  </a>
-                </section>
-                <Carousel.Caption></Carousel.Caption>
-              </Carousel.Item>
-            ))}
-            {/* </div> */}
+            {categoryTypes.map((categoryType, i) =>
+              i % 3 === 0 ? (
+                <Carousel.Item key={categoryType.ctSEQ}>
+                  <section className="cTypeSelect">
+                    {categoryTypes.slice(i, i + 3).map((categoryType, j) => (
+                      <div key={categoryType.ctSEQ}>
+                        <section
+                          className="cTypeCard"
+                          onMouseEnter={() =>
+                            setHoveredCard(categoryType.ctSEQ)
+                          }
+                          onMouseLeave={() => setHoveredCard(null)}
+                          style={{
+                            backgroundImage: `url(/categoryType_logo/${categoryType.ctSEQ}.jpg)`,
+                          }}
+                        >
+                          <div
+                            className="overlay"
+                            style={{
+                              opacity:
+                                hoveredCard === categoryType.ctSEQ ? 0 : 1,
+                            }}
+                          ></div>
+                          <a href="/" className="cTypeText">
+                            <p>{categoryType.ctName}</p>
+                          </a>
+                        </section>
+                      </div>
+                    ))}
+                  </section>
+                </Carousel.Item>
+              ) : null
+            )}
           </Carousel>
         </div>
-        <div className="content"></div>
+        <div className="content">원하는 끼리를 선택해보세요</div>
       </section>
     </StyledHome>
   );
