@@ -1,6 +1,6 @@
 .login-page {
   position: relative;
-  background: #FFFFFF;
+  background: #ffffff;
   max-width: 430px;
   margin: auto;
   padding: 20px;
@@ -8,13 +8,14 @@
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   margin: center;
   margin-top: 120px;
+  margin-bottom: 180px;
 }
 
 .titleWrap {
   margin-top: 40px;
   font-size: 26px;
-font-weight: bold;
-color: #262626;
+  font-weight: bold;
+  color: #262626;
 }
 .contentWrap {
   margin-top: 26px;
@@ -22,8 +23,8 @@ color: #262626;
 }
 .inputTitle {
   font-size: 12px;
-font-weight: 600;
-color: #262626;
+  font-weight: 600;
+  color: #262626;
 }
 .inputWrap {
   display: flex;
@@ -31,30 +32,30 @@ color: #262626;
   padding: 16px;
   margin-top: 8px;
   background-color: white;
-  border: 1px solid #E2E0E0;
+  border: 1px solid #e2e0e0;
 }
 .inputWrap:focus-within {
-  border: 1px solid #FF9615;
+  border: 1px solid #ff9615;
 }
 .input {
   width: 100%;
   outline: none;
-border: none;
+  border: none;
   height: 17px;
   font-size: 14px;
-font-weight: 400;
+  font-weight: 400;
 }
 .input::placeholder {
-  color: #DADADA;
+  color: #dadada;
 }
 .bottomButton {
   width: 80%;
-height: 48px;
+  height: 48px;
   border: none;
   font-weight: bold;
   margin-bottom: 16px;
   cursor: pointer;
-  background-color: #FF9615;
+  background-color: #ff9615;
   color: white;
   position: relative; /* 부모 요소로부터 상대 위치 설정 */
   overflow: hidden; /* 내부 요소의 넘치는 부분을 숨김 */
@@ -68,7 +69,7 @@ height: 48px;
   }
 }
 .bottomButton::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -89,7 +90,7 @@ height: 48px;
 } */
 .errorMessageWrap {
   margin-top: 8px;
-  color: #EF0000;
+  color: #ef0000;
   font-size: 12px;
 }
 .linksWrap {
@@ -102,7 +103,7 @@ height: 48px;
   text-decoration: none;
   color: #262626;
   font-weight: lighter; /* 글자 연하게 설정 */
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   font-size: 12px;
 }
 .linksWrap span {
@@ -110,5 +111,3 @@ height: 48px;
   color: #262626;
   font-size: 14px;
 }
-
-

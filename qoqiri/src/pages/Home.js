@@ -1,55 +1,148 @@
-import CategoryType from "../components/CategoryType";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getCategoryTypes } from "../api/categoryType";
+import Carousel from "react-bootstrap/Carousel";
 
 const StyledHome = styled.div`
   width: 100%;
   min-width: 1250px;
-  white-space: nowrap;
 
   .billboard {
     width: 100%;
     min-width: 1250px;
-    height: 600px;
+    height: 660px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    background-color: rgb(220, 245, 255);
+  }
+
+  .main-body {
+    width: 100%;
+    min-width: 1250px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cTypeSelect {
+    width: 100%;
+    height: 100%;
+
+    padding: 20px;
+    overflow-x: scroll;
+    scrollbar-width: none; /* Firefox 용 스크롤바를 숨깁니다 */
+    -ms-overflow-style: none; /* IE/Edge 용 스크롤바를 숨깁니다 */
+    display: -webkit-inline-box;
+  }
+
+  .cTypeSelect::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  .cTypeCard {
+    width: 700px;
+    height: 500px;
+    background-position: center center;
+    background-size: cover;
+    border-radius: 20px;
+    margin: 15px;
+    position: relative;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 20px;
+    background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.6));
+    transition: opacity 0.2s ease;
+    z-index: 1;
+  }
+
+  .cTypeCard:hover .overlay {
+    opacity: 0;
+  }
+
+  .cTypeText {
+    filter: none;
+    width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgb(220, 245, 255);
-  }
-  .content {
-    width: 1250px;
-    min-width: 1250px;
-    height: 450px;
+    font-size: 2.5rem;
     font-weight: bold;
-    .title {
-      font-size: 7rem;
-      margin-bottom: 40px;
-    }
-    .sub1 {
-      font-size: 4rem;
-      margin-bottom: 20px;
-    }
-    .sub2 {
-      font-size: 6rem;
-      margin-bottom: 20px;
-    }
-    .sub3 {
-      font-size: 6rem;
-    }
+    -webkit-text-stroke: 0.8px white;
+    z-index: 2; /* 추가 */
+    position: relative; /* 추가 */
+  }
+
+  .content {
+    width: 100%;
+    min-width: 1250px;
+    height: 200px;
+    font-weight: bold;
+    font-size: 3rem;
   }
 `;
 
 const Home = () => {
+  const [categoryTypes, setCategoryTypes] = useState([]);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [index, setIndex] = useState(0);
+
+  const handleSelect = (selectedIndex) => {
+    setIndex(selectedIndex);
+  };
+
+  const categoryTypeAPI = async () => {
+    const result = await getCategoryTypes();
+    setCategoryTypes(result.data);
+  };
+
+  useEffect(() => {
+    categoryTypeAPI();
+  }, []);
+
   return (
     <StyledHome>
       <section className="billboard">
-        {/* <div className="content">
-          <div className="title">같이 놀고싶다면 들어와!</div>
-          <div className="sub1">ㄴㅇㅁ </div>
-          <div className="sub2">함께 놀며 더 행복해지세요 </div>
-          <div className="sub3">PLAY WITH US </div>
-        </div> */}
-        <CategoryType />
+        <div className="main-body">
+          <Carousel activeIndex={index} onSelect={handleSelect}>
+            {/* <div className="cTypeSelect"> */}
+            {categoryTypes.map((categoryType) => (
+              <Carousel.Item>
+                <section
+                  className="cTypeCard"
+                  key={categoryType.ctSEQ}
+                  onMouseEnter={() => setHoveredCard(categoryType.ctSEQ)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  style={{
+                    backgroundImage: `url(/categoryType_logo/${categoryType.ctSEQ}.jpg)`,
+                  }}
+                >
+                  <div
+                    className="overlay"
+                    style={{
+                      opacity: hoveredCard === categoryType.ctSEQ ? 0 : 1,
+                    }}
+                  ></div>
+                  <a href="/" className="cTypeText">
+                    <p>{categoryType.ctName}</p>
+                  </a>
+                </section>
+                <Carousel.Caption></Carousel.Caption>
+              </Carousel.Item>
+            ))}
+            {/* </div> */}
+          </Carousel>
+        </div>
+        <div className="content"></div>
       </section>
     </StyledHome>
   );
