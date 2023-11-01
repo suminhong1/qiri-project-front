@@ -37,26 +37,6 @@
     min-width: 900px;
 }
 
-/* form {
-    max-width: 35vw;
-    min-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    border: 1px solid #e2e0e0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-} */
-
-/* form img {
-    width: 5%;
-    height: auto;
-    margin-bottom: 20px;
-} */
-
 /* 관심사 선택 부분 */
 #interest-section {
     display: flex;
@@ -66,24 +46,24 @@
 }
 
 #interest-section .form-el label {
-    font-size: 25px; /* 원하는 크기로 조정하세요 */
+    font-size: 25px; 
 }
 
-.categoryLike-box {
+.set-categoryLike-box {
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
     margin-top: 8px;
 }
 
-.box-options {
+.set-box-options {
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
     font-size: 16px;
 }
 
-.categoryLike-box-item {
+.set-categoryLike-box-item {
     font-style: inherit;
     margin: 5px;
     padding: 7px 10px;
@@ -93,13 +73,13 @@
     font-size: 13px;
 }
 
-.categoryLike-box-item.selected {
+.set-categoryLike-box-item.selected {
     background-color: #ff9615;
     color: white;
     border: 1px solid #ff9615;
 }
 
-.categoryLike-box h3 {
+.set-categoryLike-box h3 {
     font-size: 17px;
     color: #ff9615;
 }

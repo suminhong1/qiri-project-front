@@ -44,7 +44,7 @@ const router = createBrowserRouter([
                 element: <PostWrite />,
             },
             {
-                path: 'postEdit',
+                path: 'postEdit/:id',
                 element: <PostEdit />,
             },
             {
