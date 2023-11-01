@@ -41,3 +41,8 @@ export const requestMatching = async (postSEQ, id) => {
 export const getChatRoomUserList = async (code) => {
   return await instance.get("chatroom/userlist/" + code);
 };
+
+//채팅방 최초접속확인
+export const joinMessage = async (data) => {
+  return await instance.put("/chatroom/user/join", data);
+};

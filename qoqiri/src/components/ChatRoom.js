@@ -5,6 +5,7 @@ import {
   getChatMessage,
   getChatRoomInfo,
   getUserChatRoomInfo,
+  joinMessage,
   leaveChatroom,
 } from "../api/chat";
 import { useSelector } from "react-redux";
@@ -171,7 +172,7 @@ const ChatRoom = ({ chatRoomId }) => {
   const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const [userChatRoomInfo, setUserChatRoomInfo] = useState([]);
+  const [userChatRoomInfo, setUserChatRoomInfo] = useState("");
   const [loadMessage, setLoadMessage] = useState([]);
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
@@ -189,6 +190,7 @@ const ChatRoom = ({ chatRoomId }) => {
   const userChatRoomInfoAPI = async () => {
     const result = await getUserChatRoomInfo(user.id, chatRoomId);
     setUserChatRoomInfo(result.data);
+    return result.data;
   };
 
   const scrollToBottom = () => {
@@ -196,29 +198,30 @@ const ChatRoom = ({ chatRoomId }) => {
     chatContainer.scrollTop = chatContainer.scrollHeight;
   };
 
-  useEffect(() => {
-    chatRoomInfoAPI();
-    chatMessageAPI();
-    userChatRoomInfoAPI();
-  }, []);
+  const chatDTO = {
+    id: user.id,
+    chatRoomSEQ: chatRoomId,
+  };
 
   useEffect(() => {
-    chatRoomInfoAPI();
-    chatMessageAPI();
-    userChatRoomInfoAPI();
+    const fetchData = async () => {
+      await chatRoomInfoAPI();
+      await chatMessageAPI();
+      await userChatRoomInfoAPI();
+    };
+
+    fetchData();
   }, [chatRoomId]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [loadMessage, messages]);
 
   useEffect(() => {
     chatRoomInfoAPI();
     chatMessageAPI();
-    userChatRoomInfoAPI();
 
     const currentTime = new Date();
-
     const socket = new SockJS("http://localhost:8080/ws/chat");
     stompClient.current = new Client({
       webSocketFactory: () => socket,
@@ -228,39 +231,45 @@ const ChatRoom = ({ chatRoomId }) => {
       heartbeatOutgoing: 4000,
     });
 
-    stompClient.current.onConnect = (frame) => {
-      console.log("Connected: " + frame);
-      stompClient.current.subscribe(
-        `/sub/chat/room/${chatRoomId}`,
-        (message) => {
-          const recv = JSON.parse(message.body);
-          recvMessage(recv);
+    // 무조건 유저의 채팅방 정보를 받아온 뒤에 작동해야됨!
+    userChatRoomInfoAPI().then((userChatRoomInfo) => {
+      stompClient.current.onConnect = (frame) => {
+        stompClient.current.subscribe(
+          `/sub/chat/room/${chatRoomId}`,
+          (message) => {
+            const recv = JSON.parse(message.body);
+            recvMessage(recv);
+          }
+        );
+
+        if (userChatRoomInfo.joinMessageSent == "N") {
+          stompClient.current.publish({
+            destination: "/pub/chat/message",
+            body: JSON.stringify({
+              nickname: user.nickname,
+              chatRoomSEQ: chatRoomId,
+              message: user.nickname + "님이 채팅에 참여하였습니다.",
+              sendTime: currentTime.toISOString(),
+            }),
+          });
+          joinMessage(chatDTO);
         }
-      );
+      };
 
-      stompClient.current.publish({
-        destination: "/pub/chat/message",
-        body: JSON.stringify({
-          nickname: user.nickname,
-          chatRoomSEQ: chatRoomId,
-          message: user.nickname + "님이 채팅에 참여하였습니다.",
-          sendTime: currentTime.toISOString(),
-        }),
-      });
-    };
+      stompClient.current.activate();
 
-    stompClient.current.activate();
-
-    return () => {
-      if (stompClient.current.active) {
-        stompClient.current.deactivate();
-      }
-    };
+      return () => {
+        if (stompClient.current.active) {
+          stompClient.current.deactivate();
+        }
+      };
+    });
   }, [user, chatRoomId]);
 
   //메세지 발송 부분
   const sendMessage = async () => {
-    const trimmedMessage = message.trim(); // 입력한 메시지의 양 끝 공백을 제거
+    // 입력한 메시지의 양 끝 공백 제거
+    const trimmedMessage = message.trim();
 
     // 메세지가 비어 있으면 동작하지 않음
     if (!trimmedMessage) {
@@ -279,7 +288,7 @@ const ChatRoom = ({ chatRoomId }) => {
     setMessage("");
   };
 
-  // 현재 채팅방에 발송된 메세지 프론트에서 저장
+  // 현재 채팅방에 메세지 발송시 프론트에 표시
   const recvMessage = (recv) => {
     const currentTime = new Date();
     setMessages((prevMessages) => [
@@ -295,10 +304,17 @@ const ChatRoom = ({ chatRoomId }) => {
 
   //채팅방 나가기
   const exit = async () => {
-    const chatDTO = {
-      nickname: user.nickname,
-      chatRoomSEQ: chatRoomId,
-    };
+    const currentTime = new Date();
+    stompClient.current.publish({
+      destination: "/pub/chat/message",
+      body: JSON.stringify({
+        nickname: user.nickname,
+        chatRoomSEQ: chatRoomId,
+        message: user.nickname + "님이 채팅방에서 퇴장하였습니다.",
+        sendTime: currentTime.toISOString(),
+      }),
+    });
+
     leaveChatroom(chatDTO);
     window.location.reload();
   };

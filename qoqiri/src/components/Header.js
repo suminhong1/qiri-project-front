@@ -22,7 +22,7 @@ const StyledHeader = styled.header`
     display: flex;
     height: 130px;
     justify-content: space-between;
-    min-width: 1200px;
+    min-width: 1250px;
   }
 
   .header-logo {

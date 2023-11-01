@@ -1,10 +1,11 @@
-import alarm from "../assets/alarm.gif";
 import { useState, useEffect } from "react";
 import "../css/Navbar.css";
 import { GrHomeRounded } from "react-icons/gr";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import OffCanvas from "./Offcanvas";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
 
 const Navbar = () => {
   const location = useLocation();
@@ -47,10 +48,10 @@ const Navbar = () => {
             visibility: Object.keys(user).length === 0 ? "hidden" : "visible",
           }}
         >
-          <img
-            src={alarm}
-            style={{ height: "40px", width: "auto" }}
-            alt="alarm"
+          <FontAwesomeIcon
+            icon={faComment}
+            size="xl"
+            style={{ color: "#ff7f38" }}
           />
         </div>
       </div>

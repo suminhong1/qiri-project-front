@@ -2,12 +2,12 @@ import React, { useState, useEffect } from "react";
 import { getUser } from "../api/user";
 import { getmyList } from "../api/post";
 import "../css/Myactive.css";
-import { useNavigate } from "react-router-dom"; // useNavigate 훅을 가져옵니다.
+import { useNavigate } from "react-router-dom";
 
 const Myactive = () => {
   const [myPosts, setMyPosts] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
-  const navigate = useNavigate(); // useNavigate 훅을 사용하여 navigate 함수를 가져옵니다.
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserInfoAndPosts = async () => {
@@ -21,7 +21,7 @@ const Myactive = () => {
         const userResponse = await getUser(user.id);
         setLoggedInUser(userResponse.data);
 
-        const postsResponse = await getmyList(2);
+        const postsResponse = await getmyList();
         const userPosts = postsResponse.data.filter(
           (post) => post.userInfo.userId === userResponse.data.userId
         );
@@ -31,10 +31,6 @@ const Myactive = () => {
 
     fetchUserInfoAndPosts(2);
   }, []);
-
-  const handleOpenApplyPage = (postId) => {
-    navigate(`/apply/${postId}`);
-  };
 
   if (!loggedInUser) {
     return <div>로그인이 필요합니다.</div>;
@@ -51,7 +47,7 @@ const Myactive = () => {
             <p>글 내용 : {post.postContent}</p>
             <button
               className="apply-button"
-              onClick={() => handleOpenApplyPage(post.userInfo.userId)}
+              onClick={() => navigate(`/apply/${post.postSEQ}`)}
             >
               신청목록
             </button>

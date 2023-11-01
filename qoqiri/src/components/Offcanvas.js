@@ -5,11 +5,13 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 const OffCanvas = ({ show, handleClose, ...props }) => {
+  const user = useSelector((state) => state.user); // 내정보
+  const chatRoomList = useSelector((state) => state.chatRoom); // 내가 참여중인 채팅방 리스트
+
   const [chatRoomUserList, setChatRoomUserList] = useState([]);
-  const user = useSelector((state) => state.user);
-  const chatRoomList = useSelector((state) => state.chatRoom);
   const [chatRoomId, setChatRoomId] = useState(null);
 
+  // 내가 참여중인 채팅방 리스트를 통해 참여중인 채팅방의 참여자 조회
   const chatRoomUserListAPI = async (chatRoomSEQ) => {
     const result = await getChatRoomUserList(chatRoomSEQ);
     setChatRoomUserList((prev) => {
@@ -82,7 +84,6 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
                         {user?.userInfo?.userNickname}&nbsp;
                       </span>
                     ))}
-                    님과의 채팅방
                   </div>
                 </div>
               );

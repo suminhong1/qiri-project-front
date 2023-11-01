@@ -13,8 +13,19 @@ const ApplyForm = ({ userId }) => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const response = await getUser(userId);
-      setUserData(response.data);
+      if (!userId) {
+        // 유효하지 않은 userId 값 체크
+        console.error("Invalid userId:", userId);
+        console.log(userData);
+        return;
+      }
+
+      try {
+        const response = await getUser(userId);
+        setUserData(response.data);
+      } catch (error) {
+        console.error("API 호출 에러:", error);
+      }
     };
 
     fetchUserData();
@@ -74,8 +85,24 @@ const ApplyForm = ({ userId }) => {
             style={customButtonStyle}
             onClick={handleCardClick}
           >
-            프로필 정보보기
+            프로필 정보
           </button>
+          <div className="ap-bottomBtn">
+            <button
+              className="ap-front-chatBtn"
+              style={customButtonStyle}
+              onClick={handleCardClick}
+            >
+              채팅
+            </button>
+            <button
+              className="ap-front-applyBtn"
+              style={customButtonStyle}
+              onClick={handleCardClick}
+            >
+              승낙
+            </button>
+          </div>
         </div>
         <div className="ap-card-back">
           <div className="ap-card-body">
@@ -97,7 +124,9 @@ const ApplyForm = ({ userId }) => {
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">지역:</div>
-              <div className="ap-info-value">{userData?.addr}</div>
+              <div className="ap-info-value">
+                {userData?.placeType?.placeTypeName || "비공개"}
+              </div>
             </div>
             <hr />
             <div className="ap-info-row">
@@ -110,10 +139,6 @@ const ApplyForm = ({ userId }) => {
               <div className="ap-info-value">{userData?.birthday}</div>
             </div>
             <hr />
-            <div className="ap-info-row">
-              <div className="ap-info-label">관심사:</div>
-              <div className="ap-info-value">{userData?.categorys}</div>
-            </div>
           </div>
         </div>
 
