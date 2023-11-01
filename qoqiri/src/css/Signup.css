@@ -1,192 +1,188 @@
 .form {
-  max-width: 35vw;
-  min-width: 500px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: #f7f7f7;
-  border-radius: 8px;
-  border: 1px solid #e2e0e0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+    max-width: 35vw;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
 }
 
 .form h3 {
-  font-size: 26px;
-  font-weight: bold;
-  color: #262626;
-  margin-bottom: 20px;
+    font-size: 26px;
+    font-weight: bold;
+    color: #262626;
+    margin-bottom: 20px;
 }
 
 .form-el {
-  margin-top: 16px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .form-el label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #262626;
+    font-size: 12px;
+    font-weight: 600;
+    color: #262626;
 }
 
 .form-el input {
-  width: 75%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #e2e0e0;
-  font-size: 18px;
-  font-weight: 400;
-  margin-top: 4px;
-  outline: none;
+    width: 75%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
 }
 
 .form-el input:focus {
-  border: 1px solid #FF7F38;
+    border: 1px solid #ff7f38;
 }
 
 .message {
-  font-size: 15px;
-  color: #ef0000;
-  margin-top: 4px;
+    font-size: 15px;
+    color: #ef0000;
+    margin-top: 4px;
 }
 
 .signup-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-.signup-form button[type="submit"] {
-  width: 500%;
-  height: 48px;
-  border: none;
-  font-weight: bold;
-  border-radius: 5px;
-  background-color: #FF7F38;
-  color: white;
-  margin-top: 16px;
-  cursor: pointer;
+.signup-form button[type='submit'] {
+    width: 500%;
+    height: 48px;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #ff7f38;
+    color: white;
+    margin-top: 16px;
+    cursor: pointer;
 }
 
-.signup-form button[type="submit"]:disabled {
-  background-color: #FF7F38;
-  color: white;
+.signup-form button[type='submit']:disabled {
+    background-color: #ff7f38;
+    color: white;
 }
 
 .show-password-button {
-  border: 2px solid #e2e0e0;
-  margin-bottom: 5px;
+    border: 2px solid #e2e0e0;
+    margin-bottom: 5px;
 }
 
 .form img {
-  width: 5%;
-  height: auto;
-  margin-bottom: 20px;
+    width: 5%;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 .form-el.label-for-gender {
-  margin-top: 16px; /* 간격 조절 */
+    margin-top: 16px; /* 간격 조절 */
 }
 
 .gender-options {
-  display: flex;
-  flex-direction: row;
-  gap: 20px; /* 남자 여자 글자 사이의 간격 조절 */
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* 남자 여자 글자 사이의 간격 조절 */
 }
 
 .gender-option {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
-.gender-option input[type="radio"] {
-  margin-right: 2px; /* 라디오 버튼 간격 조절 */
+.gender-option input[type='radio'] {
+    margin-right: 2px; /* 라디오 버튼 간격 조절 */
 }
 
 .form-el.label-for-bloodType {
-  margin-top: 16px; /* 간격 조절 */
+    margin-top: 16px; /* 간격 조절 */
 }
 
 /* 혈액형 선택창 스타일 */
 .form-el select {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #e2e0e0;
-  font-size: 14px;
-  font-weight: 400;
-  margin-top: 4px;
-  outline: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
 }
 
 /* 지역 선택창 조정 */
 .form-el select#place {
-  width: 30%;
+    width: 30%;
 }
 
 .form-el select#mbti {
-  width: 30%;
+    width: 30%;
 }
-
 
 /* 관심사 선택 부분 */
 .interest-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 16px;
 }
 
 .interest-section .form-el label {
-  font-size: 25px; /* 관심 주제를 선택해주세요 글자 부분 */
+    font-size: 25px; /* 관심 주제를 선택해주세요 글자 부분 */
 }
 
 .selectlike-box {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 40px;
-  margin-top: 8px;
-  
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 8px;
 }
 
 .box-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  font-size: 6px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 6px;
 }
 
 .selectlike-box-item {
-  font-style: inherit;
-  margin: 5px;
-  padding: 7px 10px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  border-radius: 20px;
-  font-size: 3px;
+    font-style: inherit;
+    margin: 5px;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 20px;
 }
 
 .selectlike-box-item.selected {
-  background-color: #FF9615;
-  color: white; 
-  border: 1px solid #FF9615;
+    background-color: #ff9615;
+    color: white;
+    border: 1px solid #ff9615;
 }
 
 .selectlike-box h3 {
-  font-size: 17px; 
-  color: #FF9615;
+    font-size: 17px;
+    color: #ff9615;
 }
 
 /* 프로필 사진 부분 */
 .profile-picture-preview {
-  width: 150px; 
-  height: 150px; 
-  margin-top: 10px; 
-  border: 1px solid #ccc; 
-  object-fit: cover; 
-  border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+    border-radius: 50%;
 }
-

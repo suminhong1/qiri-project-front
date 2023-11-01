@@ -38,6 +38,30 @@ export const editPostAPI = async (data) => {
     return await instance.put('post', data);
 };
 
+// 선택한 카테고리 수정
+export const editMatchingAPI = async (data) => {
+    return await instance.put('matchingCategoryInfo', data);
+};
+
+// 첨부 파일 수정
+export const editAttachmentsAPI = async (formData) => {
+    console.log(formData);
+    const response = await instance.put('postAttachments', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+    return response.data;
+};
+
+export const getMatchCate = async (id) => {
+    return await instance.get('matchingCategoryInfo' + id);
+};
+
+export const getAttach = async (id) => {
+    return await instance.get('postAttachments' + id);
+};
+
 export const getBoards = async () => {
     return await instance.get('public/board');
 };

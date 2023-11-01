@@ -9,7 +9,7 @@ import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 
 const PostWrite = () => {
-    const [postSeq, setPostSeq] = useState();
+    const [postSEQ, setPostSEQ] = useState();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [attachmentImg, setAttachmentImg] = useState([]);
@@ -28,7 +28,7 @@ const PostWrite = () => {
     const [categories, setCategories] = useState([]);
     const [categoryTypes, setCategoryTypes] = useState([]);
 
-    const [selectSeq, setSelectSeq] = useState([]);
+    const [selectSEQ, setSelectSEQ] = useState([]);
     const [selectlike, setSelectlike] = useState([]);
 
     const maxCharacterCount = 100000; // 게시판 글자 제한
@@ -46,7 +46,7 @@ const PostWrite = () => {
         setContent(newContent);
     };
 
-    // 첨부파일 핸들러 여기서부터 마저 작업
+    // 첨부파일 핸들러
     const handleUploadImage = async (e) => {
         const files = e.target.files;
 
@@ -81,14 +81,14 @@ const PostWrite = () => {
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
         // console.log(seq);
         setSelectlike([]);
-        setSelectSeq([]);
+        setSelectSEQ([]);
 
         if (selectlike.includes(categorySEQ)) {
             setSelectlike(selectlike.filter((item) => item !== categorySEQ)); // selectLike(선택할 주제들) 배열임 그 안에 interest(관심사)가 포함돼있으면 interest를 제거함??
-            setSelectSeq(selectSeq.filter((item) => item !== TypeSEQ)); // seq가 뭔 배열인데
+            setSelectSEQ(selectSEQ.filter((item) => item !== TypeSEQ)); // seq가 뭔 배열인데
         } else {
             setSelectlike([...selectlike, categorySEQ]); // selectLike(선택할 주제들) 배열에  interest 관심사가 포함돼있지 않으면 interest를 selectLike 배열에 추가하고
-            setSelectSeq([...selectSeq, TypeSEQ]); // 얘도그렇고
+            setSelectSEQ([...selectSEQ, TypeSEQ]); // 얘도그렇고
         }
     };
 
@@ -160,21 +160,24 @@ const PostWrite = () => {
         alert('글쓰기를 취소했습니다');
     };
 
+    const handleUpdate = (e) => {
+        navigate('/PostEdit');
+    };
     // 서버에 전송
     const handleSubmit = async (e) => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
         }
         console.log(selectlike);
-        console.log(selectSeq);
+        console.log(selectSEQ);
 
         const PostDTO = {
             token: localStorage.getItem('token'), // 유저 정보
             postTitle: title, // 제목
             postContent: content, // 내용
-            placeSeq: selectedPlace, // 선택한 세부 지역
-            placeTypeSeq: selectedPlaceType, // 선택한 지역 앞에가 사용한 dto나 domain의 필드명 이름 뒤에가 사용한 useState이름
-            boardSeq: selectedBoard, // 선택한 게시판
+            placeSEQ: selectedPlace, // 선택한 세부 지역
+            placeTypeSEQ: selectedPlaceType, // 선택한 지역 앞에가 사용한 dto나 domain의 필드명 이름 뒤에가 사용한 useState이름
+            boardSEQ: selectedBoard, // 선택한 게시판
         };
         console.log(localStorage.getItem('token'));
         console.log('PostDTO: ', PostDTO);
@@ -182,7 +185,7 @@ const PostWrite = () => {
         // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
         const MatchingDTO = {
             categoryList: selectlike,
-            categoryTypeList: selectSeq,
+            categoryTypeList: selectSEQ,
         };
         console.log('MatchingDTO: ', MatchingDTO);
 
@@ -222,7 +225,7 @@ const PostWrite = () => {
 
         // addPostAPI 호출 이후에 addMatchingAPI를 호출
         const matchingResponse = await addMatchingAPI({
-            postSeq: postResponse.data.postSEQ,
+            postSEQ: postResponse.data.postSEQ,
             categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는것 맞나
         });
         console.log(matchingResponse);
@@ -324,7 +327,7 @@ const PostWrite = () => {
                                     }}
                                 >
                                     {place?.map((place) => (
-                                        <option key={place?.placeSeq} value={place?.placeSeq}>
+                                        <option key={place?.placeSEQ} value={place?.placeSEQ}>
                                             {/* value에 선택한 place name을 placeSEQ로 할당*/}
                                             {place?.placeName}
                                             {/* getPlaceAPI로 불러온 place 리스트를  select 바에서 이름으로 보여줌*/}
@@ -386,11 +389,12 @@ const PostWrite = () => {
                         <div className="cancelButton">
                             <button onClick={handleCancel}>취소 </button>
                         </div>
-                        {/* <div className="updateButton">
-                                <button type="submit" onClick={handleSubmit}>
-                                    수정
-                                </button>
-                            </div>
+                        <div className="updateButton">
+                            <button type="submit" onClick={handleUpdate}>
+                                수정
+                            </button>
+                        </div>
+                        {/*
                             <div className="deleteButton">
                                 <button type="submit" onClick={handleSubmit}>
                                     삭제
