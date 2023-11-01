@@ -5,12 +5,13 @@ import { getCategoryTypes } from '../api/categoryType';
 import { getCategories } from '../api/category';
 import { getPlaceTypes } from '../api/placeType';
 import { useNavigate } from 'react-router-dom';
-import { EditProfile } from '../api/user';
-import { useContext } from 'react';
+import { editProfile } from '../api/user';
+// import { useContext } from 'react';
 import { useDispatch } from "react-redux";
+import { userLogout } from '../store/userSlice';
 import { asyncEditProfile } from "../store/userSlice";
 
-const EditMyInfo = () => {
+const EditProfile = () => {
   // 상태 변수들
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -333,7 +334,6 @@ const EditMyInfo = () => {
 
   // 관심 주제 선택 핸들러
   const handleInterestClick = (interest, seq) => {
-    console.log(seq);
     if (selectlike.includes(interest)) {
       setSelectlike(selectlike.filter((item) => item !== interest));
       setSelectSeq(selectSeq.filter((item) => item !== seq));
@@ -342,6 +342,7 @@ const EditMyInfo = () => {
       setSelectSeq([...selectSeq, seq]);
     }
   };
+  
 
   useEffect(() => {
     const fetchCategoryTypes = async () => {
@@ -413,28 +414,30 @@ const EditMyInfo = () => {
         });
       }
 
-       const getUserCategoryInfo = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
-        const selectSeq = response.data;
-        const categorySeqList = selectSeq.map(userCategory => userCategory.userCategorySeq);
-        setSelectlike(categorySeqList);
-        setSelectSeq(categorySeqList);
-      } catch (error) {
-        console.error(error);
+      const getUserCategoryInfo = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
+          const selectSeq = response.data.map(item => item.category.categorySEQ);
+          setSelectSeq(selectSeq);
+
+          const selectedCategories = categories.filter(category => selectSeq.includes(category.categorySEQ));
+          const selectedCategoryNames = selectedCategories.map(category => category.categoryName);
+          setSelectlike(selectedCategoryNames);
+        } catch (error) {
+          console.error(error);
+        }
       }
+      getUserCategoryInfo();
     }
-    getUserCategoryInfo();
-  }
-}, []);
+  }, []);
 
-
+  
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault(); // 폼 기본 제출 방지
     }
 
-    const updateMyInfo = {
+    const userInfoDTO = {
       id,
       pwd: password,
       name,
@@ -452,18 +455,36 @@ const EditMyInfo = () => {
       profileImg: profilePictureUrl,
     };
 
+    const signUpDTO = {
+      userInfoDTO,
+      userCategories: selectSeq.map((userCategorySeq) => ({ userCategorySeq })),
+    };
+
     try {
-      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", updateMyInfo, {
+      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", signUpDTO,
+      {
         headers: {
-          Authorization: `Bearer ${user.token}`
+          "Content-Type": "application/json",
         },
-      });
+      }
+    );
+
+    const categoryResponse = await axios.post(
+      "http://localhost:8080/qiri/userCategoryInfo",
+      signUpDTO,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(categoryResponse);
 
       if (updateResponse.status === 200) {
 
-        dispatch(asyncEditProfile(updateMyInfo));
-
-        alert('회원정보 수정 완료.');
+        dispatch(asyncEditProfile(userInfoDTO));
+        dispatch(userLogout(user));
+        alert('회원정보 수정 완료. 로그아웃 합니다.');
         navigate('/');
       } else {
         alert('회원정보 수정 실패. 다시 시도해주세요.');
@@ -479,7 +500,7 @@ const EditMyInfo = () => {
       <div className="form-container">
         <div className="form">
           <div className="form-el">
-            <label htmlFor="id">아이디</label> <br />
+            <label htmlFor="id">아이디 (아이디는 변경 불가능합니다.)</label> <br />
             <input id="id" name="id" value={id} onChange={onChangeId} />
             <br></br>
             {!isNameAvailable && <p>이미 사용 중인 아이디입니다.</p>}
@@ -506,7 +527,7 @@ const EditMyInfo = () => {
 
           {/* 비밀번호 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="password">비밀번호</label> <br />
+            <label htmlFor="password">비밀번호 (변경을 원하지 않는 경우, 기존 비밀번호를 입력해주세요)</label> <br />
             <input
               id="password"
               name="password"
@@ -761,29 +782,27 @@ const EditMyInfo = () => {
                   <div key={categoryType.ctSEQ}>
                     <h3>{categoryType.ctName}</h3>
                     <div className="box-options">
-                      {getCategoriesByType(categoryType.ctSEQ).map(
-                        (category) => (
-                          <div
-                            key={category.categorySEQ}
-                            className={`selectlike-box-item ${selectlike.includes(category.categoryName)
-                              ? "selected"
-                              : ""
-                              }`}
-                            onClick={() =>
-                              handleInterestClick(category.categoryName, category.categorySEQ)
-                            }
-                          >
-                            {category.categoryName}
-                          </div>
-                        )
-                      )}
+                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
+                        <div
+                          key={category.categorySEQ}
+                          className={`selectlike-box-item ${selectSeq.includes(category.categorySEQ) ? "selected" : ""
+                            }`}
+                          onClick={() =>
+                            handleInterestClick(
+                              category.categoryName,
+                              category.categorySEQ
+                            )
+                          }
+                        >
+                          {category.categoryName}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-
           <br />
           <br />
           <form onSubmit={handleSubmit} className="signup-form">
@@ -795,4 +814,4 @@ const EditMyInfo = () => {
   );
 };
 
-export default EditMyInfo;
+export default EditProfile;
