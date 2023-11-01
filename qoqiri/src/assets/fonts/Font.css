@@ -1,8 +1,24 @@
+/* bold */
+@font-face {
+  font-family: "NanumSquareRoundB";
+  src: url("../fonts/NanumSquareRoundB.ttf") format("truetype");
+}
+/* extra bold */
+@font-face {
+  font-family: "NanumSquareRoundEB";
+  src: url("../fonts/NanumSquareRoundEB.ttf") format("truetype");
+}
+/* light */
 @font-face {
   font-family: "NanumSquareRoundL";
   src: url("../fonts/NanumSquareRoundL.ttf") format("truetype");
 }
+/* regular */
+@font-face {
+  font-family: "NanumSquareRoundR";
+  src: url("../fonts/NanumSquareRoundR.ttf") format("truetype");
+}
 
 * {
-  font-family: "NanumSquareRoundL" !important;
+  font-family: "NanumSquareRoundR" !important;
 }
