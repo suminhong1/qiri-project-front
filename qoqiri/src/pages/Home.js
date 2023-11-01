@@ -4,10 +4,12 @@ import styled from "styled-components";
 
 const StyledHome = styled.div`
   width: 100%;
+  min-width: 1250px;
   white-space: nowrap;
 
   .billboard {
     width: 100%;
+    min-width: 1250px;
     height: 600px;
     display: flex;
     justify-content: center;
@@ -15,8 +17,8 @@ const StyledHome = styled.div`
     background-color: rgb(220, 245, 255);
   }
   .content {
-    width: 1400px;
-    min-width: 1400px;
+    width: 1250px;
+    min-width: 1250px;
     height: 450px;
     font-weight: bold;
     .title {
@@ -41,14 +43,14 @@ const Home = () => {
   return (
     <StyledHome>
       <section className="billboard">
-        <div className="content">
+        {/* <div className="content">
           <div className="title">같이 놀고싶다면 들어와!</div>
           <div className="sub1">ㄴㅇㅁ </div>
           <div className="sub2">함께 놀며 더 행복해지세요 </div>
           <div className="sub3">PLAY WITH US </div>
-        </div>
+        </div> */}
+        <CategoryType />
       </section>
-      <CategoryType />
     </StyledHome>
   );
 };

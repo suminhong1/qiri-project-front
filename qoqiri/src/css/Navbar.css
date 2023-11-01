@@ -4,14 +4,14 @@
   background-color: white;
   z-index: 10;
   width: 100%;
+  min-width: 1250px;
+  height: 45px;
   display: flex;
   border-top: 1px solid #dddddd;
   border-bottom: 2px solid #ff7f38;
   justify-content: space-between;
   align-items: center;
   font-size: 1.5rem;
-  min-width: 1200px;
-  height: 45px;
 }
 
 .navbar-menu a {

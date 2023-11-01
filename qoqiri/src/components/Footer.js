@@ -4,6 +4,7 @@ import styled from "styled-components";
 const StyleFooter = styled.div`
   border-top: 1px solid #e5e5e5;
   width: 100%;
+  min-width: 1250px;
   height: 120px;
   display: flex;
   justify-content: center;

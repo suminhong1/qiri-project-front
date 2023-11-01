@@ -204,28 +204,24 @@ const ChatRoom = ({ chatRoomId }) => {
   };
 
   useEffect(() => {
-    chatRoomInfoAPI();
-    chatMessageAPI();
-    userChatRoomInfoAPI();
-  }, []);
+    const fetchData = async () => {
+      await chatRoomInfoAPI();
+      await chatMessageAPI();
+      await userChatRoomInfoAPI();
+    };
 
-  useEffect(() => {
-    chatRoomInfoAPI();
-    chatMessageAPI();
-    userChatRoomInfoAPI();
+    fetchData();
   }, [chatRoomId]);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [loadMessage, messages]);
 
   useEffect(() => {
     chatRoomInfoAPI();
     chatMessageAPI();
-    userChatRoomInfoAPI();
 
     const currentTime = new Date();
-
     const socket = new SockJS("http://localhost:8080/ws/chat");
     stompClient.current = new Client({
       webSocketFactory: () => socket,
@@ -235,19 +231,18 @@ const ChatRoom = ({ chatRoomId }) => {
       heartbeatOutgoing: 4000,
     });
 
-    stompClient.current.onConnect = (frame) => {
-      console.log("Connected: " + frame);
-      stompClient.current.subscribe(
-        `/sub/chat/room/${chatRoomId}`,
-        (message) => {
-          const recv = JSON.parse(message.body);
-          recvMessage(recv);
-        }
-      );
-      // userChatRoomInfo가 로드된 후에 처리하도록 수정
-      userChatRoomInfoAPI().then((userChatRoomInfoData) => {
-        if (userChatRoomInfo.joinMessageSent === "N") {
-          console.log(userChatRoomInfo.joinMessageSent);
+    // 무조건 유저의 채팅방 정보를 받아온 뒤에 작동해야됨!
+    userChatRoomInfoAPI().then((userChatRoomInfo) => {
+      stompClient.current.onConnect = (frame) => {
+        stompClient.current.subscribe(
+          `/sub/chat/room/${chatRoomId}`,
+          (message) => {
+            const recv = JSON.parse(message.body);
+            recvMessage(recv);
+          }
+        );
+
+        if (userChatRoomInfo.joinMessageSent == "N") {
           stompClient.current.publish({
             destination: "/pub/chat/message",
             body: JSON.stringify({
@@ -258,24 +253,23 @@ const ChatRoom = ({ chatRoomId }) => {
             }),
           });
           joinMessage(chatDTO);
-        } else {
-          console.log(userChatRoomInfo.joinMessageSent);
         }
-      });
-    };
+      };
 
-    stompClient.current.activate();
+      stompClient.current.activate();
 
-    return () => {
-      if (stompClient.current.active) {
-        stompClient.current.deactivate();
-      }
-    };
+      return () => {
+        if (stompClient.current.active) {
+          stompClient.current.deactivate();
+        }
+      };
+    });
   }, [user, chatRoomId]);
 
   //메세지 발송 부분
   const sendMessage = async () => {
-    const trimmedMessage = message.trim(); // 입력한 메시지의 양 끝 공백을 제거
+    // 입력한 메시지의 양 끝 공백 제거
+    const trimmedMessage = message.trim();
 
     // 메세지가 비어 있으면 동작하지 않음
     if (!trimmedMessage) {
@@ -321,10 +315,6 @@ const ChatRoom = ({ chatRoomId }) => {
       }),
     });
 
-    const chatDTO = {
-      nickname: user.nickname,
-      chatRoomSEQ: chatRoomId,
-    };
     leaveChatroom(chatDTO);
     window.location.reload();
   };

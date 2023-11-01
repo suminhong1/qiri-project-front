@@ -50,7 +50,7 @@ const Navbar = () => {
         >
           <FontAwesomeIcon
             icon={faComment}
-            size="lg"
+            size="xl"
             style={{ color: "#ff7f38" }}
           />
         </div>
