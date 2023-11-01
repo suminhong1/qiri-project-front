@@ -342,6 +342,7 @@ const EditProfile = () => {
       setSelectSeq([...selectSeq, seq]);
     }
   };
+  
 
   useEffect(() => {
     const fetchCategoryTypes = async () => {
