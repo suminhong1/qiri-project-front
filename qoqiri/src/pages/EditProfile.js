@@ -383,7 +383,7 @@ const EditProfile = () => {
   });
 
 
-
+// 로그인된 사용자 정보 불러오기
   useEffect(() => {
     const userInfo = localStorage.getItem('user');
     if (userInfo) {
@@ -414,6 +414,7 @@ const EditProfile = () => {
         });
       }
 
+      // 관심사 카테고리 정보 불러오기
       const getUserCategoryInfo = async () => {
         try {
           const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
@@ -431,7 +432,7 @@ const EditProfile = () => {
     }
   }, []);
 
-  
+  // 수정한 정보 데이터 넘기기
   const handleSubmit = async (e) => {
     if (e) {
       e.preventDefault(); // 폼 기본 제출 방지
@@ -469,8 +470,8 @@ const EditProfile = () => {
       }
     );
 
-    const categoryResponse = await axios.post(
-      "http://localhost:8080/qiri/userCategoryInfo",
+    const categoryResponse = await axios.put(
+      "http://localhost:8080/qiri/userCategoryInfo/editProfile",
       signUpDTO,
       {
         headers: {
@@ -766,7 +767,7 @@ const EditProfile = () => {
             {profilePictureUrl && (
               <img
                 src={'/upload/' + profilePictureUrl}
-                alt="프로필 사진 미리보기"
+                alt="미리보기"
                 className="profile-picture-preview"
               />
             )}
