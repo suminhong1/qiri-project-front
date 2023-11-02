@@ -13,5 +13,9 @@ export const postLike = async (data) => {
 };
 
 export const delLike = async (id) => {
-  return await instance.put("commentLike/" + id);
+  return await instance.delete("commentLike/" + id);
+};
+
+export const getLikeList = async (id) => {
+  return await instance.get("commentsLikeList/" + id);
 };

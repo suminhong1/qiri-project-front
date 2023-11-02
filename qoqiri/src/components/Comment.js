@@ -6,9 +6,12 @@ import { useDispatch } from "react-redux";
 import { deleteComment, updateComment } from "../store/commentSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
+import { faThumbsUp as solidThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import Date from "../components/Date";
-import { getLike, postLike } from "../api/commentLike";
+import { getLike, postLike, delLike } from "../api/commentLike";
+
 import axios from "axios";
+import { faArrowUpWideShort } from "@fortawesome/free-solid-svg-icons";
 
 const Box = styled.div`
   width: 95%;
@@ -79,6 +82,9 @@ const Comment = ({ comment }) => {
   const [like, setLike] = useState(0);
   const contentRef = useRef(null);
   const dispatch = useDispatch();
+  const [liked, setLiked] = useState(false);
+  const [seq, setSeq] = useState(0);
+
   const onClick = () => {
     setIsActive(!isActive);
   };
@@ -88,32 +94,49 @@ const Comment = ({ comment }) => {
   };
 
   const likeAPI = async () => {
+    // 서버에서 사용자가 현재 Comment를 좋아요 했는지 여부를 확인
     const result = await getLike(comment.commentsSEQ);
+    setLiked(result.data > 0); // 사용자가 좋아요를 했으면 true, 아니면 false로 설정
     setLike(result.data); // 좋아요 수 설정
   };
 
-  // Comment 컴포넌트 내부에 thumbsUp 함수 추가
-  const thumbsUp = async () => {
-    // 서버에 좋아요 요청을 보내고, 성공 시 화면에 반영
-    try {
-      // 좋아요를 누른 Comment의 ID를 서버로 전달
-      const commentLikeId = comment.commentsSEQ;
-
-      // 서버로 좋아요 정보를 전송
-      const response = await postLike({
-        commentLikeId,
-        comments: comment,
-        userInfo: comment.userInfo,
-      });
-
-      // 성공적으로 서버에서 처리되면 좋아요 수 업데이트
+  const toggleLike = async () => {
+    if (liked) {
+      // 이미 좋아요를 누른 상태면 좋아요 취소 API를 호출
+      // console.log(comment.commentsSEQ);
+      // console.log(seq);
+      const response = await delLike(seq); // 좋아요 삭제 API 호출
+      // console.log(response);
       if (response.status === 200) {
-        setLike(like + 1); // 좋아요 수 증가
+        setLiked(false); // 사용자의 좋아요 상태 업데이트
+        setLike(like - 1); // 좋아요 수 감소
       } else {
-        console.error("좋아요를 추가하는 중에 문제가 발생했습니다.");
+        console.error("좋아요 취소 중에 문제가 발생했습니다.");
       }
-    } catch (error) {
-      console.error("좋아요를 추가하는 중에 문제가 발생했습니다.", error);
+      try {
+      } catch (error) {
+        console.error("좋아요 취소 중에 문제가 발생했습니다.", error);
+      }
+    } else {
+      // 아직 좋아요를 누르지 않았으면 좋아요 API를 호출
+      try {
+        const commentLikeId = comment.commentsSEQ;
+        const response = await postLike({
+          commentLikeId,
+          comments: comment,
+          userInfo: comment.userInfo,
+        });
+        // console.log(response.data.clSEQ);
+        setSeq(response.data.clSEQ);
+        if (response.status === 200) {
+          setLiked(true); // 사용자의 좋아요 상태 업데이트
+          setLike(like + 1); // 좋아요 수 증가
+        } else {
+          console.error("좋아요 추가 중에 문제가 발생했습니다.");
+        }
+      } catch (error) {
+        console.error("좋아요 추가 중에 문제가 발생했습니다.", error);
+      }
     }
   };
 
@@ -172,11 +195,19 @@ const Comment = ({ comment }) => {
         <div className="like-count">
           <Date postDate={comment.commentDate} className="like-count" />
           <div className="like-count">
-            <FontAwesomeIcon
-              icon={faThumbsUp}
-              className="like"
-              onClick={thumbsUp}
-            />
+            {liked ? ( // liked 상태에 따라 아이콘 변경
+              <FontAwesomeIcon
+                icon={solidThumbsUp}
+                className="like"
+                onClick={toggleLike}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faThumbsUp}
+                className="like"
+                onClick={toggleLike}
+              />
+            )}
             {like}
             {/* 좋아요 수 렌더링 */}
           </div>
@@ -189,7 +220,7 @@ const Comment = ({ comment }) => {
         code={comment.post}
       />
       {comment.replies
-        ?.filter((comment) => comment.commentDelete === "N")
+        ?.filter((comment) => comment.commentDelete == "N")
         .map((reply) => (
           <Reply reply={reply} key={reply.commentsSEQ} />
         ))}
