@@ -187,10 +187,8 @@ const MatchingBoard = () => {
   };
 
   const PostsByCategoryTypeAPI = async () => {
-    if (id == !null) {
-      const result = getPostsByCategoryType(id);
-      setPosts(result.data);
-    }
+    const result = await getPostsByCategoryType(id);
+    setPosts(result.data);
   };
 
   const handleSearchClick = async () => {
@@ -209,13 +207,15 @@ const MatchingBoard = () => {
 
   useEffect(() => {
     // 페이지가 로드될 때 전체 게시물 목록을 불러오는 API 호출
-    const fetchAllPosts = async () => {
-      const response = await instance.get("/public/post");
-      // 전체 게시물을 setSearchResults로 업데이트
-      setPosts(response.data);
-    };
+    if (id == null) {
+      const fetchAllPosts = async () => {
+        const response = await instance.get("/public/post");
+        // 전체 게시물을 setSearchResults로 업데이트
+        setPosts(response.data);
+      };
 
-    fetchAllPosts();
+      fetchAllPosts();
+    }
   }, []);
 
   useEffect(() => {
@@ -227,7 +227,11 @@ const MatchingBoard = () => {
   }, []); // 신청버튼테스트용
 
   useEffect(() => {
-    PostsByCategoryTypeAPI();
+    if (id == null) {
+      postsAPI(); // id가 없을 때는 postsAPI 실행
+    } else {
+      PostsByCategoryTypeAPI(); // id가 있을 때는 PostsByCategoryTypeAPI 실행
+    }
     console.log(posts);
   }, [id]);
 
@@ -304,7 +308,6 @@ const MatchingBoard = () => {
   };
 
   useEffect(() => {
-    postsAPI();
     categoryTypeAPI();
     categoryAPI();
     attachmentsAPI(selectedPostSEQ);
@@ -316,6 +319,9 @@ const MatchingBoard = () => {
         <main className="main">
           <div className="select-bar">
             <div className="active-button">
+              <a href="/matchingBoard" className="active">
+                전체보기
+              </a>
               {categoryType.map((cat) => (
                 <a
                   href={`/matchingBoard/${cat?.ctSEQ}`}
