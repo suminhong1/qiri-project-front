@@ -655,7 +655,7 @@ const SignUp = () => {
             <select
               id="place"
               name="place"
-              value={placeType.placeTypeName}
+              value={selectedPlaceType.placeTypeName}
               onChange={handlePlaceChange}
             >
               <option value="">선택하세요</option>
