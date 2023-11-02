@@ -69,10 +69,6 @@ const PostWrite = () => {
       if (file.size <= maxFileSize) {
         if (newAttachmentImg.length < maxFileCount) {
           newAttachmentImg.push(file);
-          // const formData = new FormData();
-          // formData.append('file', file);
-
-          // newAttachmentImg.push(formData); // 첨부 파일 배열에 추가
         } else {
           alert("사진은 3장까지만 업로드 할 수 있습니다.");
           break;
@@ -91,11 +87,11 @@ const PostWrite = () => {
     setSelectSEQ([]);
 
     if (selectlike.includes(categorySEQ)) {
-      setSelectlike(selectlike.filter((item) => item !== categorySEQ)); // selectLike(선택할 주제들) 배열임 그 안에 interest(관심사)가 포함돼있으면 interest를 제거함??
-      setSelectSEQ(selectSEQ.filter((item) => item !== TypeSEQ)); // seq가 뭔 배열인데
+      setSelectlike(selectlike.filter((item) => item !== categorySEQ)); // selectLike(선택할 주제들)
+      setSelectSEQ(selectSEQ.filter((item) => item !== TypeSEQ));
     } else {
-      setSelectlike([...selectlike, categorySEQ]); // selectLike(선택할 주제들) 배열에  interest 관심사가 포함돼있지 않으면 interest를 selectLike 배열에 추가하고
-      setSelectSEQ([...selectSEQ, TypeSEQ]); // 얘도그렇고
+      setSelectlike([...selectlike, categorySEQ]); // selectLike(선택할 주제들)
+      setSelectSEQ([...selectSEQ, TypeSEQ]);
     }
   };
 
@@ -209,7 +205,7 @@ const PostWrite = () => {
     console.log(postResponse);
 
     const formData = new FormData();
-    // formData.enctype = 'multipart/form-data';
+
     formData.append("postId", postResponse.data.postSEQ);
 
     console.log(attachmentImg);
@@ -218,17 +214,6 @@ const PostWrite = () => {
     attachmentImg.forEach((image) => {
       formData.append("files", image);
     });
-
-    // for (let i = 0; i < attachmentImg.length; i++) {
-    //     console.log('attach : ' + attachmentImg[i]);
-
-    // }
-
-    // const Attachments = {
-    //     postSeq: postResponse.data.postSEQ,
-    //     attachmentURL: attachmentImg,
-    // };
-    // console.log('Attachments', Attachments);
 
     console.log(MatchingDTO.categoryList);
     console.log(
@@ -240,7 +225,7 @@ const PostWrite = () => {
       postSEQ: postResponse.data.postSEQ,
       categories: MatchingDTO.categoryList.map((categorySEQ) => ({
         categorySEQ,
-      })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는것 맞나
+      })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
     });
     console.log(matchingResponse);
 
@@ -257,12 +242,6 @@ const PostWrite = () => {
     } else {
       alert("글쓰기 실패");
     }
-    // } catch (error) {
-    //     console.error(error);
-    //     alert('오류가 발생했습니다. 다시 시도해주세요.');
-    //     console.log('실패' + attachmentResponse);
-    //     console.log('실패' + postResponse.data.postSEQ);
-    // }
   };
 
   return (
@@ -271,37 +250,32 @@ const PostWrite = () => {
         <div id="form">
           <form method="POST">
             <div id="interest-section">
-              {/* <label>관심 주제를 선택하세요</label> */}
               <div className="form-el">
                 <br />
-                <div className="categoryLike-box">
+                <div className="set-categoryLike-box">
                   {categoryTypes.map((categoryType) => (
                     <div key={categoryType.ctSEQ}>
                       <h3>{categoryType.ctName}</h3>
-                      <div className="box-options">
+                      <div className="set-box-options">
                         {/* 여기서 한번에 묶은 카테고리 카테고리 타입을 맵으로 보여줌 */}
                         {getCategoriesByType(categoryType.ctSEQ).map(
                           (category) => (
                             <div
                               key={category.categorySEQ}
-                              className={`categoryLike-box-item ${
-                                selectlike.includes(category.categoryName)
+                              className={`set-categoryLike-box-item ${
+                                selectlike.includes(category.categorySEQ)
                                   ? "selected"
                                   : ""
                                 // 선택한 카테고리 배경색 나오게함
                               }`}
                               onClick={() =>
                                 handleInterestClick(
-                                  // 선택된 카테고리 이름과 seq를 selectLike 배열에 추가하거나 제거하는 이벤트 selectSeq도 마찬가지
-
                                   category.categorySEQ,
                                   category.categoryType.ctSEQ
                                 )
                               }
                             >
-                              {/* {console.log(category)} */}
                               {category.categoryName}
-                              {/*페이지에서 직접 보이는 카테고리 이름*/}
                             </div>
                           )
                         )}
@@ -356,22 +330,6 @@ const PostWrite = () => {
                   ))}
                 </select>
               </div>
-
-              {/* <div id="board-types">
-                                <select
-                                    onChange={(e) => {
-                                        setSelectedBoard(e.target.value);
-                                    }}
-                                >
-                                    {boards?.map((board) => (
-                                        <option key={board?.boardSEQ} value={board?.boardSEQ}>
-                                            사용자가 선택한 board를 boardName으로 불러온 후 boardSeq값을 할당*/}
-              {/* {board?.boardName} */}
-              {/* getBoardsAPI로 불러온 board 리스트를 select 바에서 이름으로 보여줌
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>*/}
             </div>
             <div id="file-upload">
               <label htmlFor="image-upload">
@@ -410,11 +368,7 @@ const PostWrite = () => {
             <div className="cancelButton">
               <button onClick={handleCancel}>취소 </button>
             </div>
-            <div className="updateButton">
-              <button type="submit" onClick={handleUpdate}>
-                수정
-              </button>
-            </div>
+
             {/*
                             <div className="deleteButton">
                                 <button type="submit" onClick={handleSubmit}>
