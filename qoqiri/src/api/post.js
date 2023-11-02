@@ -59,8 +59,9 @@ export const editAttachmentsAPI = async (formData) => {
   return response.data;
 };
 
-export const getMatchCate = async (id) => {
-  return await instance.get("matchingCategoryInfo" + id);
+// 매칭카테고리인포 테이블 전부 가져오기
+export const getMatchCategoryInfo = async () => {
+  return await instance.get("matchingCategoryInfo");
 };
 
 export const getAttach = async (id) => {
@@ -135,4 +136,9 @@ export const getmyList = async (boardSEQ) => {
 
 export const addPostLikeAPI = async (data) => {
   return await instance.post("postLike", data);
+};
+
+//카테고리타입SEQ받아서 해당하는 POST가져오기
+export const getPostsByCategoryType = async (code) => {
+  return await instance.get("post/categoryType/" + code);
 };

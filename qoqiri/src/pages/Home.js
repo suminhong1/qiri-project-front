@@ -159,7 +159,10 @@ const Home = () => {
                                 hoveredCard === categoryType.ctSEQ ? 0 : 1,
                             }}
                           ></div>
-                          <a href="/" className="cTypeText">
+                          <a
+                            href={`/matchingboard/${categoryType.ctSEQ}`}
+                            className="cTypeText"
+                          >
                             <p>{categoryType.ctName}</p>
                           </a>
                         </section>
@@ -171,7 +174,7 @@ const Home = () => {
             )}
           </Carousel>
         </div>
-        <div className="content">원하는 끼리를 선택해보세요</div>
+        <div className="content">관심사를 선택해보세요</div>
       </section>
     </StyledHome>
   );

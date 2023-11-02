@@ -3,7 +3,11 @@ import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Date from "../components/Date";
-import { getPost } from "../api/post";
+import {
+  getMatchCategoryInfo,
+  getPost,
+  getPostsByCategoryType,
+} from "../api/post";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowTurnDown } from "@fortawesome/free-solid-svg-icons";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
@@ -18,6 +22,7 @@ import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 import { getAttachments } from "../api/post";
 
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080/qiri",
@@ -173,14 +178,19 @@ const MatchingBoard = () => {
   const [categoryType, setCategoryType] = useState([]);
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null);
   const [loggedInUser, setLoggedInUser] = useState(""); // 현재 로그인된 사용자 정보를 가져옴(신청버튼테스트용)
-
   const [searchKeyword, setSearchKeyword] = useState(""); // 키워드 검색
-  const [searchResults, setSearchResults] = useState([]);
-
   const [attachments, setAttachments] = useState([]);
+  const { id } = useParams();
 
   const handleSearchChange = (e) => {
     setSearchKeyword(e.target.value);
+  };
+
+  const PostsByCategoryTypeAPI = async () => {
+    if (id == !null) {
+      const result = getPostsByCategoryType(id);
+      setPosts(result.data);
+    }
   };
 
   const handleSearchClick = async () => {
@@ -191,7 +201,7 @@ const MatchingBoard = () => {
       );
 
       // 검색 결과를 setSearchResults로 업데이트
-      setSearchResults(response.data);
+      setPosts(response.data);
     } catch (error) {
       console.error("검색 중 오류 발생:", error);
     }
@@ -200,13 +210,9 @@ const MatchingBoard = () => {
   useEffect(() => {
     // 페이지가 로드될 때 전체 게시물 목록을 불러오는 API 호출
     const fetchAllPosts = async () => {
-      try {
-        const response = await instance.get("/public/post");
-        // 전체 게시물을 setSearchResults로 업데이트
-        setSearchResults(response.data);
-      } catch (error) {
-        console.error("게시물 불러오기 중 오류 발생:", error);
-      }
+      const response = await instance.get("/public/post");
+      // 전체 게시물을 setSearchResults로 업데이트
+      setPosts(response.data);
     };
 
     fetchAllPosts();
@@ -219,6 +225,11 @@ const MatchingBoard = () => {
       setLoggedInUser(user);
     }
   }, []); // 신청버튼테스트용
+
+  useEffect(() => {
+    PostsByCategoryTypeAPI();
+    console.log(posts);
+  }, [id]);
 
   const handleApplyClick = async () => {
     // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
@@ -264,8 +275,6 @@ const MatchingBoard = () => {
     }
   }; // 신청버튼테스트용
 
-  useEffect(() => {}, [selectedPostSEQ]);
-
   const postsAPI = async () => {
     const result = await getPosts();
     setPosts(result.data);
@@ -309,56 +318,55 @@ const MatchingBoard = () => {
             <div className="active-button">
               {categoryType.map((cat) => (
                 <a
-                  href="#"
+                  href={`/matchingBoard/${cat?.ctSEQ}`}
                   className="active"
-                  key={cat.ctSEQ}
-                  onClick={() => {
-                    setSelectedCatSEQ(cat.ctSEQ);
-                  }}
+                  key={cat?.ctSEQ}
                 >
-                  {cat.ctName}
+                  {cat?.ctName}
                 </a>
               ))}
             </div>
           </div>
           <section className="section">
-            {searchResults.map((po) => (
+            {posts?.map((po) => (
               <div
                 onClick={() => {
-                  setSelectedPostSEQ(po.postSEQ);
+                  setSelectedPostSEQ(po?.postSEQ);
 
                   setIsOpen(!isOpen);
                 }}
                 className="board"
-                key={po.postSEQ}
+                key={po?.postSEQ}
               >
                 <div className="board-header">
                   <div className="board-header-time">
-                    <Date postDate={po.postDate} />
+                    <Date postDate={po?.postDate} />
                   </div>
                   <div className="titleNickname">
-                    <div className="title">{po.postTitle}</div>
+                    <div className="title">{po?.postTitle}</div>
                   </div>
                   <div className="board-header-main">
                     <div className="profile">
                       <div className="profileFlex">
                         <a href="" className="profileImg">
                           <img
-                            src={`/upload/${po.userInfo.profileImg}`}
+                            src={`/upload/${po?.userInfo?.profileImg}`}
                             alt="프로필 이미지"
                           />
                         </a>
                       </div>
                       <div>
-                        <UserRating rating={po.userInfo.rating} />
+                        <UserRating rating={po?.userInfo?.rating} />
                       </div>
                     </div>
-                    <span className="nickname">{po.userInfo.userNickname}</span>
+                    <span className="nickname">
+                      {po?.userInfo?.userNickname}
+                    </span>
                     <div className="board-image-main">
                       {attachments.map((attachments) => (
                         <div className="board-image">
                           <img
-                            src={`http://localhost:8080/qiri/public/upload/${attachments.attachmentURL}`}
+                            src={`http://localhost:8080/qiri/public/upload/${attachments?.attachmentURL}`}
                           />
                         </div>
                       ))}
@@ -376,8 +384,8 @@ const MatchingBoard = () => {
                 </div>
                 <div className="board-foot">
                   <div className="foot-place-detail">
-                    <p>{po.place.placeName}</p>
-                    <p>{po.place.placeType.placeTypeName}</p>
+                    <p>{po?.place?.placeName}</p>
+                    <p>{po?.place?.placeType?.placeTypeName}</p>
                   </div>
                 </div>
               </div>
