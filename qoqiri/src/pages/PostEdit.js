@@ -34,6 +34,11 @@ const PostEdit = () => {
 
     const [selectPlace, setSelectPlace] = useState([]);
 
+    const sexAPI =async ()=>{
+
+        
+    }
+
     // const [selectCategories, setSelectCategories] = useState([]);
 
     const maxCharacterCount = 100000;
@@ -49,7 +54,7 @@ const PostEdit = () => {
     };
     useEffect(() => {
         getPostAPI();
-        selectCategoryAPI();
+        // selectCategoryAPI();
         selectAttachAPI();
     }, [id]);
 
@@ -58,32 +63,40 @@ const PostEdit = () => {
         const result = await getAttach(id);
         setAttachmentImg(result.data);
     };
+        // 선택한 category 리스트 불러오기
+    // const selectCategoryAPI = async () => {
+    //     const result = await getMatchCate(id);
+    //     setSelectSeq(result.data);
+    // };
 
     // 선택한 category 리스트 불러오기
-    const selectCategoryAPI = async () => {
-        const result = await getMatchCate(id);
-        setSelectSeq(result.data);
-    };
-
-    // useEffect(() => {
-    //     console.log(selectSeq);
-    // }, [selectSeq]);
-    // useEffect(() => {
-    //     const selectCategoryAPI = async () => {
-    //         try {
-    //             const response = await getMatchCate(id);
-    //             const selectSeq = response.data.map((item) => item.category.categorySEQ);
-    //             setSelectSeq(selectSeq);
-
-    //             const selectedCategories = categories.filter((category) => selectSeq.includes(category.categorySEQ));
-    //             const selectedCategoryNames = selectedCategories.map((category) => category.categoryName);
-    //             setSelectlike(selectedCategoryNames);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //     selectCategoryAPI();
-    // }, []);
+    useEffect(() => {
+        const selectCategoryAPI = async () => {
+            try {
+                const result = await getMatchCate(id);
+    
+                //  카테고리 시퀀스를 추출
+                const SelectSeq = result.data.map(item => item.category.categorySEQ);
+    
+                // 선택한 카테고리 시퀀스로 카테고리 필터링
+                const selectedCategories = categories.filter(category => selectSeq.includes(category.categorySEQ));
+    
+                // 선택한 카테고리 시퀀스 추출
+                const selectedCategorySEQ = selectedCategories.map(category => category.categorySEQ);
+    
+                // 상태 업데이트
+                setSelectlike(selectedCategorySEQ);
+                setSelectSeq(SelectSeq);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    
+        // 함수 호출
+        selectCategoryAPI();
+    }, []);
+   
+ 
 
     // 제목 입력 핸들러
     const onChangeTitle = (e) => {
