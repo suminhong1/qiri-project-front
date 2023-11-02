@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../css/Review.css";
-import { saveReview, updateReview, deleteReview } from "../api/post";
+import {
+  saveReview,
+  updateReview,
+  deleteReview,
+  updatePostTitleDropbox,
+} from "../api/review";
 import axios from "axios";
 
 const instance = axios.create({
@@ -10,8 +15,7 @@ const instance = axios.create({
 export const getPosts = async () => {
   return await instance.get("/public/post", {
     params: {
-      boardSEQ: 2,
-      // matched: "",
+      board: 2,
     },
   });
 };
@@ -32,6 +36,7 @@ const ReviewBoard = () => {
   const [editingPostId, setEditingPostId] = useState(null);
   const [userPosts, setUserPosts] = useState([]); // 사용자의 글 목록
   const [selectedTitle, setSelectedTitle] = useState(""); // 선택된 글 타이틀
+  const [editingPostTitle, setEditingPostTitle] = useState(""); // 수정할 글 타이틀
 
   useEffect(() => {
     postsAPI();
@@ -43,10 +48,11 @@ const ReviewBoard = () => {
   }, []);
 
   // 리뷰 수정버튼 활성화함수
-  const handleEditClick = (postId, content) => {
+  const handleEditClick = (postId, content, postTitle) => {
     setIsEditing(true);
     setEditingPostId(postId);
     setEditingContent(content); // 기존 내용을 수정 상태로 설정
+    setEditingPostTitle(postTitle); // 여기에 postTitle을 저장합니다.
   };
 
   // 리뷰 업데이트 확인함수
@@ -54,11 +60,12 @@ const ReviewBoard = () => {
     // 수정 로직
     const updateData = {
       token: loggedInUser.token,
-      postTitle: selectedTitle,
+      postTitle: editingPostTitle,
       postContent: editingContent,
-      boardSEQ: 2,
+      board: 2,
       postSEQ: editingPostId,
     };
+    console.log(updateData);
 
     try {
       await updateReview(updateData);
@@ -66,23 +73,26 @@ const ReviewBoard = () => {
       setIsEditing(false);
       setEditingPostId(null);
       setContent("");
+      window.location.replace("http://localhost:3000/review");
     } catch (error) {
       alert("게시글 수정에 실패하였습니다. 다시 시도해주세요.");
     }
   };
 
   // 리뷰 삭제 확인함수
-  const handleDeleteClick = async (postSEQ, userId) => {
+  const handleDeleteClick = async (postSEQ, userId, postTitle) => {
     if (loggedInUser.id === userId) {
       try {
-        await deleteReview(postSEQ);
+        await deleteReview(postSEQ, postTitle);
         alert("리뷰가 삭제되었습니다.");
-        // UI에서 해당 리뷰 제거 or 페이지 새로고침
+
+        // 드롭박스를 업데이트하기 위해 사용자 글 목록을 다시 가져옴
+        fetchUserPosts(loggedInUser.id);
+
+        window.location.replace("http://localhost:3000/review");
       } catch (error) {
         alert("리뷰 삭제에 실패하였습니다. 다시 시도해주세요.");
       }
-    } else {
-      alert("본인의 리뷰만 삭제할 수 있습니다.");
     }
   };
 
@@ -95,7 +105,7 @@ const ReviewBoard = () => {
     try {
       const response = await instance.get("/public/post", {
         params: {
-          board: 0,
+          board: 1,
           userId: userId,
         },
       });
@@ -152,6 +162,15 @@ const ReviewBoard = () => {
         await saveReview(reviewData);
         console.log("리뷰 저장시 정보" + reviewData);
         alert("리뷰가 저장되었습니다.");
+
+        // 선택한 포스트의 postTitleDropbox를 "Y"로 변경
+        const selectedPost = userPosts.find(
+          (post) => post.postTitle === selectedTitle
+        );
+        window.location.replace("http://localhost:3000/review");
+        if (selectedPost) {
+          await updatePostTitleDropbox(selectedPost.postSEQ);
+        }
 
         // UI 업데이트
         setReviews([
@@ -212,7 +231,7 @@ const ReviewBoard = () => {
           value={selectedTitle}
           onChange={(e) => handleTitleSelect(e.target.value)}
         >
-          <option value={null}>글 타이틀 선택</option>
+          <option value={""}>글 타이틀 선택</option>
           {userPosts.map((post) => (
             <option key={post.postSEQ} value={post.postTitle}>
               {post.postTitle}
@@ -267,7 +286,11 @@ const ReviewBoard = () => {
                       <button
                         className="rv-psUpdataBtn"
                         onClick={() =>
-                          handleEditClick(po.postSEQ, po.postContent)
+                          handleEditClick(
+                            po.postSEQ,
+                            po.postContent,
+                            po.postTitle
+                          )
                         }
                       >
                         수정
@@ -275,7 +298,11 @@ const ReviewBoard = () => {
                       <button
                         className="rv-psDeleteBtn"
                         onClick={() =>
-                          handleDeleteClick(po.postSEQ, po.userInfo.userId)
+                          handleDeleteClick(
+                            po.postSEQ,
+                            po.userInfo.userId,
+                            po.postTitle
+                          )
                         }
                       >
                         삭제

@@ -492,5 +492,30 @@ const MatchingBoard = () => {
             </div>
         </div>
     );
+            <input
+              type="text"
+              placeholder="검색어를 입력하세요"
+              value={searchKeyword}
+              onChange={handleSearchChange}
+            />
+            <button onClick={handleSearchClick}>검색</button>
+            {isOpen && (
+              <div className="Matching-modal-main">
+                <div className="Matching-modal-overlay">
+                  <div className="Matching-modal">
+                    <div className="close-button" onClick={closeModal}>
+                      &times;
+                    </div>
+                    <DetailView selectedPostSEQ={selectedPostSEQ} />
+                    <button onClick={handleApplyClick}>매칭신청하기</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+        </main>
+      </div>
+    </div>
+  );
 };
 export default MatchingBoard;
