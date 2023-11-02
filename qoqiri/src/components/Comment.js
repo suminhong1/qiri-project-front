@@ -83,7 +83,18 @@ const Comment = ({ comment }) => {
   const contentRef = useRef(null);
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
-  const [seq, setSeq] = useState(0);
+  const [seq, setSeq] = useState(null); // 댓글마다의 'seq' 값을 상태로 추가
+
+  
+  useEffect(() => {
+    likeAPI();
+
+    // 댓글마다의 'seq' 값을 localStorage에서 가져와 설정
+    const storedSeq = localStorage.getItem(`seq_${comment.commentsSEQ}`);
+    if (storedSeq) {
+      setSeq(storedSeq);
+    }
+  }, []);
 
   const onClick = () => {
     setIsActive(!isActive);
@@ -102,23 +113,17 @@ const Comment = ({ comment }) => {
 
   const toggleLike = async () => {
     if (liked) {
-      // 이미 좋아요를 누른 상태면 좋아요 취소 API를 호출
-      // console.log(comment.commentsSEQ);
-      // console.log(seq);
-      const response = await delLike(seq); // 좋아요 삭제 API 호출
-      // console.log(response);
+      const response = await delLike(seq);
       if (response.status === 200) {
-        setLiked(false); // 사용자의 좋아요 상태 업데이트
-        setLike(like - 1); // 좋아요 수 감소
+        setLiked(false);
+        setLike(like - 1);
+        // 좋아요를 취소할 때 'seq'를 localStorage에서 제거
+        localStorage.removeItem(`seq_${comment.commentsSEQ}`);
+        setSeq(null); // 'seq' 상태를 null로 설정
       } else {
         console.error("좋아요 취소 중에 문제가 발생했습니다.");
       }
-      try {
-      } catch (error) {
-        console.error("좋아요 취소 중에 문제가 발생했습니다.", error);
-      }
     } else {
-      // 아직 좋아요를 누르지 않았으면 좋아요 API를 호출
       try {
         const commentLikeId = comment.commentsSEQ;
         const response = await postLike({
@@ -126,11 +131,12 @@ const Comment = ({ comment }) => {
           comments: comment,
           userInfo: comment.userInfo,
         });
-        // console.log(response.data.clSEQ);
         setSeq(response.data.clSEQ);
         if (response.status === 200) {
-          setLiked(true); // 사용자의 좋아요 상태 업데이트
-          setLike(like + 1); // 좋아요 수 증가
+          setLiked(true);
+          setLike(like + 1);
+          // 좋아요를 할 때 'seq'를 localStorage에 저장
+          localStorage.setItem(`seq_${comment.commentsSEQ}`, response.data.clSEQ);
         } else {
           console.error("좋아요 추가 중에 문제가 발생했습니다.");
         }
@@ -139,10 +145,6 @@ const Comment = ({ comment }) => {
       }
     }
   };
-
-  useEffect(() => {
-    likeAPI(); // 컴포넌트 렌더링 시 좋아요 수 가져오기
-  }, []);
 
   const onUpdate = () => {
     dispatch(
