@@ -1,12 +1,18 @@
-import '../css/PostEdit.css';
 import React, { useState, useEffect } from 'react';
-import { getPlace, getPlaceType, getPost } from '../api/post';
+import '../css/PostEdit.css';
+import { getPlace, getPlaceType, getEditPost, getPost, getMatchCate, getAttach } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
-const PostEdit = ({ postSEQ }) => {
-    const [post, setPost] = useState({});
+const PostEdit = () => {
+    const { id } = useParams();
+
+    const dispatch = useDispatch();
+
+    // const [editPost, setEditPost] = useState(0);
+    const [post, setPost] = useState(0);
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -18,7 +24,7 @@ const PostEdit = ({ postSEQ }) => {
     const [selectedPlace, setSelectedPlace] = useState(1);
     const [selectedPlaceType, setSelectedPlaceType] = useState(1);
 
-    const [selectedBoard, setSelectedBoard] = useState(1);
+    // const [selectedBoard, setSelectedBoard] = useState(1);
 
     const [categories, setCategories] = useState([]);
     const [categoryTypes, setCategoryTypes] = useState([]);
@@ -26,7 +32,58 @@ const PostEdit = ({ postSEQ }) => {
     const [selectSeq, setSelectSeq] = useState([]);
     const [selectlike, setSelectlike] = useState([]);
 
+    const [selectPlace, setSelectPlace] = useState([]);
+
+    // const [selectCategories, setSelectCategories] = useState([]);
+
     const maxCharacterCount = 100000;
+    // 편집에서 필요한건 기존 정보 불러오는 것! 테이블 3개 정보 다
+    // 그 중 카테고리 정보 가지고 온 것! <-- 내가 선택한 카테고리들 얘랑 비교!
+
+    // 게시물 불러오기
+    const getPostAPI = async () => {
+        const result = await getPost(id);
+        console.log(result);
+
+        setPost(result.data);
+    };
+    useEffect(() => {
+        getPostAPI();
+        selectCategoryAPI();
+        selectAttachAPI();
+    }, [id]);
+
+    // 첨부파일 불러오기
+    const selectAttachAPI = async () => {
+        const result = await getAttach(id);
+        setAttachmentImg(result.data);
+    };
+
+    // 선택한 category 리스트 불러오기
+    const selectCategoryAPI = async () => {
+        const result = await getMatchCate(id);
+        setSelectSeq(result.data);
+    };
+
+    // useEffect(() => {
+    //     console.log(selectSeq);
+    // }, [selectSeq]);
+    // useEffect(() => {
+    //     const selectCategoryAPI = async () => {
+    //         try {
+    //             const response = await getMatchCate(id);
+    //             const selectSeq = response.data.map((item) => item.category.categorySEQ);
+    //             setSelectSeq(selectSeq);
+
+    //             const selectedCategories = categories.filter((category) => selectSeq.includes(category.categorySEQ));
+    //             const selectedCategoryNames = selectedCategories.map((category) => category.categoryName);
+    //             setSelectlike(selectedCategoryNames);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+    //     selectCategoryAPI();
+    // }, []);
 
     // 제목 입력 핸들러
     const onChangeTitle = (e) => {
@@ -114,14 +171,7 @@ const PostEdit = ({ postSEQ }) => {
         setPlaceType(result.data);
     };
 
-    // 수정할 게시글 불러오기
-    const postAPI = async () => {
-        const result = await getPost(postSEQ);
-        setPost(result.data);
-    };
-
     useEffect(() => {
-        postAPI();
         placeAPI();
         placeTypeAPI();
     }, []);
@@ -134,24 +184,23 @@ const PostEdit = ({ postSEQ }) => {
     const navigate = useNavigate();
     return (
         <>
-            <div id="form-container" key={post?.postSEQ}>
+            <div id="form-container">
                 <div id="form">
                     <form method="POST">
                         <div id="interest-section">
                             <div className="form-el">
                                 <br />
-                                <div className="categoryLike-box">
-                                    {post?.categoryTypes.map((categoryType) => (
+                                <div className="edit-categoryLike-box">
+                                    {categoryTypes.map((categoryType) => (
                                         <div key={categoryType.ctSEQ}>
                                             <h3>{categoryType.ctName}</h3>
-                                            <div className="box-options">
+                                            <div className="edit-box-options">
                                                 {/* 여기서 한번에 묶은 카테고리 카테고리 타입을 맵으로 보여줌 */}
                                                 {getCategoriesByType(categoryType.ctSEQ).map((category) => (
                                                     <div
                                                         key={category.categorySEQ}
-                                                        className={`categoryLike-box-item ${
-                                                            selectlike.includes(category.categoryName) ? 'selected' : ''
-                                                            // 선택한 카테고리 배경색 나오게함
+                                                        className={`edit-categoryLike-box-item ${
+                                                            selectlike.includes(category.categorySEQ) ? 'selected' : ''
                                                         }`}
                                                         onClick={() =>
                                                             handleInterestClick(
@@ -169,14 +218,14 @@ const PostEdit = ({ postSEQ }) => {
                                 </div>
                             </div>
                         </div>
-                        <div id="postTitle">
+                        <div id="postTitle" key={post?.postSEQ}>
                             <input
                                 type="text"
                                 name="title"
                                 id="title"
                                 value={title}
                                 onChange={onChangeTitle}
-                                placeholder="제목"
+                                placeholder={post?.postTitle}
                                 maxLength="100"
                             />
 
@@ -194,7 +243,7 @@ const PostEdit = ({ postSEQ }) => {
                                 </select>
                             </div>
 
-                            <div className="place-types">
+                            <div className="edit-place-types">
                                 <select
                                     onChange={(e) => {
                                         setSelectedPlace(e.target.value);
@@ -229,11 +278,10 @@ const PostEdit = ({ postSEQ }) => {
                                     id="editor"
                                     maxLength={maxCharacterCount}
                                     onChange={handleEditorChange}
-                                    value={content}
+                                    value={post?.postContent}
                                 ></textarea>
                                 <div className="wordCount">
                                     내용:
-                                    {post?.postContent}
                                     {content.length} / {maxCharacterCount}
                                 </div>
                             </div>

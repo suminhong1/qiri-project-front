@@ -20,7 +20,6 @@ export const addMatchingAPI = async (data) => {
 // // 첨부파일 경로와 postSEQ를 postAttachments 테이블로 저장하는 API
 export const addAttachmentsAPI = async (formData) => {
   console.log(formData);
-  // const response = await instance.post('postAttachments', formData);
   const response = await instance.post("postAttachments", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -34,13 +33,9 @@ export const getAttachments = async (id) => {
   return await instance.get("postAttachments/" + id);
 };
 
-// export const addAttachmentsAPI = async (data, postId) => {
-//     return await instance.post('postAttachments', data, postId);
-// };
-
 // 게시물 수정
-export const editPostAPI = async (data) => {
-  return await instance.put("post", data);
+export const editPostAPI = async (id) => {
+  return await instance.put("post", id);
 };
 
 // 선택한 카테고리 수정
@@ -59,13 +54,15 @@ export const editAttachmentsAPI = async (formData) => {
   return response.data;
 };
 
-// 매칭카테고리인포 테이블 전부 가져오기
-export const getMatchCategoryInfo = async () => {
-  return await instance.get("matchingCategoryInfo");
+export const getMatchCate = async (id) => {
+  // 매칭카테고리인포
+  // return await instance.get('public/post/' + id + '/matchingCategoryInfo');
+  return await instance.get("matchingCategoryInfo/" + id);
 };
 
 export const getAttach = async (id) => {
-  return await instance.get("postAttachments" + id);
+  // 첨부파일
+  return await instance.get("postAttachments/" + id);
 };
 
 export const getBoards = async () => {

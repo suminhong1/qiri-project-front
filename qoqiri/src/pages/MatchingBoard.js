@@ -25,149 +25,145 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080/qiri",
+    baseURL: 'http://localhost:8080/qiri',
 });
 
 export const getPosts = async () => {
-  return await instance.get("/public/post");
+    return await instance.get('/public/post');
 };
 
 const DetailView = ({ selectedPostSEQ }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [post, setPost] = useState({});
-  const [commentsCount, setCommentsCount] = useState(0);
-  const dispatch = useDispatch();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const [post, setPost] = useState([]);
+    const [commentsCount, setCommentsCount] = useState(0);
+    const dispatch = useDispatch();
 
-  const comments = useSelector((state) => {
-    return state.comment;
-  });
+    const comments = useSelector((state) => {
+        return state.comment;
+    });
 
-  const openModal = (imageIndex) => {
-    setSelectedImageIndex(imageIndex);
-    setIsModalOpen(true);
-  };
+    const openModal = (imageIndex) => {
+        setSelectedImageIndex(imageIndex);
+        setIsModalOpen(true);
+    };
 
-  const closeModal = () => {
-    setSelectedImageIndex(0);
-    setIsModalOpen(false);
-  };
+    const closeModal = () => {
+        setSelectedImageIndex(0);
+        setIsModalOpen(false);
+    };
 
-  const postAPI = async () => {
-    const result = await getPost(selectedPostSEQ);
-    setPost(result.data);
-  };
+    const postAPI = async () => {
+        const result = await getPost(selectedPostSEQ);
+        console.log('??');
+        console.log(result.data);
+        setPost(result.data);
+    };
 
-  useEffect(() => {
-    postAPI();
-  }, []);
+    useEffect(() => {
+        postAPI();
+    }, []);
 
-  useEffect(() => {
-    dispatch(viewComments(selectedPostSEQ));
-  }, [dispatch]);
+    useEffect(() => {
+        dispatch(viewComments(selectedPostSEQ));
+    }, [dispatch]);
 
-  const images = ["", "", ""];
-  return (
-    <>
-      <div className="board-detail" key={post?.postSEQ}>
-        <div className="board-header">
-          <div className="board-header-time">
-            <Date postDate={post?.postDate} />
-          </div>
-          <div className="titleNickname" style={{ marginBottom: "70px" }}>
-            <div className="title">{post?.postTitle}</div>
-          </div>
-          <div
-            className="board-header-main"
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <div className="profile">
-              <div className="profileFlex">
-                <a href="" className="profileImg">
-                  <img
-                    src={`/upload/${post?.userInfo?.profileImg}`}
-                    alt="프로필 이미지"
-                  />
-                </a>
-              </div>
-              <UserRating rating={post?.userInfo?.rating} />
-            </div>
-            <span className="nickname">{post?.userInfo?.userNickname}</span>
-            <div className="board-image-main">
-              <div className="board-image">
-                {images.map((imageSrc, index) => (
-                  <img
-                    key={index}
-                    src={imageSrc}
-                    alt={`이미지 ${index + 1}`}
-                    onClick={() => openModal(index)}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="Detail-write-board">
-          <div className="Detail-write">{post?.postContent}</div>
-        </div>
-        <div className="board-foot">
-          <div className="foot-place-detail">
-            <p>{post?.place?.placeName}</p>
-            <p>{post?.place?.placeType?.placeTypeName}</p>
-          </div>
-        </div>
-        <hr />
-        <AddComment code={post !== null ? post.postSEQ : null} />
-        {comments
-          .filter((comment) => comment.commentDelete === "N")
-          .map((comment) => (
-            <Comment key={comment.commentsSEQ} comment={comment} />
-          ))}
-      </div>
-      {isModalOpen && (
-        <div className="Matching-modal-overlay">
-          <div className="Matching-modal">
-            <div
-              onClick={() => {
-                if (selectedImageIndex > 0) {
-                  setSelectedImageIndex(selectedImageIndex - 1);
-                }
-              }}
-              className="arrow-button left-arrow"
-            >
-              &lt;
-            </div>
-            <Carousel
-              showArrows={false}
-              selectedItem={selectedImageIndex}
-              dynamicHeight={true}
-              showThumbs={false}
-            >
-              {images.map((imageSrc, index) => (
-                <div key={index}>
-                  <img src={imageSrc} alt={`이미지 ${index + 1}`} />
+    const images = ['', '', ''];
+    return (
+        <>
+            <div className="board-detail" key={post?.postSEQ}>
+                <div className="board-header">
+                    <div className="board-header-time">
+                        <Date postDate={post?.postDate} />
+                    </div>
+                    <div className="titleNickname" style={{ marginBottom: '70px' }}>
+                        <div className="title">{post?.postTitle}</div>
+                    </div>
+                    <div className="board-header-main" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                        <div className="profile">
+                            <div className="profileFlex">
+                                <a href="" className="profileImg">
+                                    <img src={`/upload/${post?.userInfo?.profileImg}`} alt="프로필 이미지" />
+                                </a>
+                            </div>
+                            <UserRating rating={post?.userInfo?.rating} />
+                        </div>
+                        <span className="nickname">{post?.userInfo?.userNickname}</span>
+                        <div className="board-image-main">
+                            <div className="board-image">
+                                {images.map((imageSrc, index) => (
+                                    <img
+                                        key={index}
+                                        src={imageSrc}
+                                        alt={`이미지 ${index + 1}`}
+                                        onClick={() => openModal(index)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              ))}
-            </Carousel>
+                <div className="Detail-write-board">
+                    <div className="Detail-write">{post?.postContent}</div>
+                </div>
+                <div className="board-foot">
+                    <div className="foot-place-detail">
+                        <p>{post?.place?.placeName}</p>
+                        <p>{post?.place?.placeType?.placeTypeName}</p>
+                    </div>
+                </div>
+                <hr />
+                <AddComment code={post !== null ? post.postSEQ : null} />
+                {comments
+                    .filter((comment) => comment.commentDelete === 'N')
+                    .map((comment) => (
+                        <Comment key={comment.commentsSEQ} comment={comment} />
+                    ))}
+            </div>
+            {isModalOpen && (
+                <div className="Matching-modal-overlay">
+                    <div className="Matching-modal">
+                        <div
+                            onClick={() => {
+                                if (selectedImageIndex > 0) {
+                                    setSelectedImageIndex(selectedImageIndex - 1);
+                                }
+                            }}
+                            className="arrow-button left-arrow"
+                        >
+                            &lt;
+                        </div>
+                        <Carousel
+                            showArrows={false}
+                            selectedItem={selectedImageIndex}
+                            dynamicHeight={true}
+                            showThumbs={false}
+                        >
+                            {images.map((imageSrc, index) => (
+                                <div key={index}>
+                                    <img src={imageSrc} alt={`이미지 ${index + 1}`} />
+                                </div>
+                            ))}
+                        </Carousel>
 
-            <div
-              onClick={() => {
-                if (selectedImageIndex < images.length - 1) {
-                  setSelectedImageIndex(selectedImageIndex + 1);
-                }
-              }}
-              className="arrow-button right-arrow"
-            >
-              &gt;
-            </div>
-            <div onClick={closeModal} className="close-button">
-              &times;
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+                        <div
+                            onClick={() => {
+                                if (selectedImageIndex < images.length - 1) {
+                                    setSelectedImageIndex(selectedImageIndex + 1);
+                                }
+                            }}
+                            className="arrow-button right-arrow"
+                        >
+                            &gt;
+                        </div>
+                        <div onClick={closeModal} className="close-button">
+                            &times;
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
+    );
 };
 
 const MatchingBoard = () => {
@@ -215,8 +211,10 @@ const MatchingBoard = () => {
       setPosts(response.data);
     };
 
-    fetchAllPosts();
-  }, []);
+    const handleSearchClick = async () => {
+        try {
+            // 검색어를 백엔드로 전달하고 검색 결과를 요청
+            const response = await instance.get(`/public/post?keyword=${searchKeyword}`);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -257,58 +255,81 @@ const MatchingBoard = () => {
     const dataToSend = {
       token: loggedInUser.token, // 토큰 추가
       postSEQ: selectedPostSEQ,
+            // 검색 결과를 setSearchResults로 업데이트
+            setSearchResults(response.data);
+
     };
-    console.log(dataToSend);
 
-    try {
-      const response = await ApplyUserInfo(dataToSend);
+    useEffect(() => {
+        // 페이지가 로드될 때 전체 게시물 목록을 불러오는 API 호출
+        const fetchAllPosts = async () => {
+            try {
+                const response = await instance.get('/public/post');
+                // 전체 게시물을 setSearchResults로 업데이트
+                setSearchResults(response.data);
+            } catch (error) {
+                console.error('게시물 불러오기 중 오류 발생:', error);
+            }
+        };
 
-      if (response.status === 200) {
-        console.log("데이터 저장 성공");
-        alert("신청 완료!!");
-        return response.data;
-      } else {
-        console.error("데이터 저장 실패");
-      }
-    } catch (error) {
-      alert("이미 신청한 게시물입니다.", error);
-    }
-  }; // 신청버튼테스트용
+        fetchAllPosts();
+    }, []);
 
   const postsAPI = async () => {
     const result = await getPosts();
     setPosts(result.data);
   };
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
 
-  const categoryAPI = async () => {
-    const result = await getCategories();
-    setCategory(result.data);
-  };
+        if (user) {
+            setLoggedInUser(user);
+        }
+    }, []); // 신청버튼테스트용
 
-  const categoryTypeAPI = async () => {
-    const result = await getCategoryTypes();
-    setCategoryType(result.data);
-  };
+    const handleApplyClick = async () => {
+        // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
+        const currentPost = posts.find((po) => po.postSEQ === selectedPostSEQ);
+        console.log('아이디 가져오기', loggedInUser?.id);
+        // 작성자의 ID와 로그인한 사용자의 ID가 동일한지 확인
+        if (currentPost?.userInfo?.userId === loggedInUser?.id) {
+            alert('본인이 작성한 게시물에는 신청할 수 없습니다.');
+            return;
+        }
 
-  const attachmentsAPI = async () => {
-    const result = await getAttachments(selectedPostSEQ);
-    setAttachments(result.data);
-  };
+        try {
+            const response = await saveData(loggedInUser, selectedPostSEQ);
 
-  const toggleModal = (postSEQ) => {
-    setIsOpen(!isOpen);
-  };
+            if (response) {
+                console.log('신청 성공');
+            }
+        } catch (error) {
+            console.error('신청 중 오류 발생:', error);
+        }
+    };
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
+    const saveData = async () => {
+        // 토큰 가져오기
+        const dataToSend = {
+            token: loggedInUser.token, // 토큰 추가
+            postSEQ: selectedPostSEQ,
+        };
+        console.log(dataToSend);
 
-  useEffect(() => {
-    postsAPI();
-    categoryTypeAPI();
-    categoryAPI();
-    attachmentsAPI(selectedPostSEQ);
-  }, [selectedCatSEQ]);
+        try {
+            const response = await ApplyUserInfo(dataToSend);
+
+            if (response.status === 200) {
+                console.log('데이터 저장 성공');
+                alert('신청 완료!!');
+                return response.data;
+            } else {
+                console.error('데이터 저장 실패');
+            }
+        } catch (error) {
+            alert('이미 신청한 게시물입니다.', error);
+        }
+    }; // 신청버튼테스트용
 
   return (
     <div className="real-main">
@@ -369,7 +390,6 @@ const MatchingBoard = () => {
                             src={`http://localhost:8080/qiri/public/upload/${attachments?.attachmentURL}`}
                           />
                         </div>
-                      ))}
                     </div>
                   </div>
                 </div>
@@ -391,30 +411,86 @@ const MatchingBoard = () => {
               </div>
             ))}
 
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              value={searchKeyword}
-              onChange={handleSearchChange}
-            />
-            <button onClick={handleSearchClick}>검색</button>
-            {isOpen && (
-              <div className="Matching-modal-main">
-                <div className="Matching-modal-overlay">
-                  <div className="Matching-modal">
-                    <div className="close-button" onClick={closeModal}>
-                      &times;
-                    </div>
-                    <DetailView selectedPostSEQ={selectedPostSEQ} />
-                    <button onClick={handleApplyClick}>리뷰버튼테스트용</button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </section>
-        </main>
-      </div>
-    </div>
-  );
+                                    setIsOpen(!isOpen);
+                                }}
+                                className="board"
+                                key={po.postSEQ}
+                            >
+                                <div className="board-header">
+                                    <div className="board-header-time">
+                                        <Date postDate={po.postDate} />
+                                    </div>
+                                    <div className="titleNickname">
+                                        <div className="title">{po.postTitle}</div>
+                                    </div>
+                                    <div className="board-header-main">
+                                        <div className="profile">
+                                            <div className="profileFlex">
+                                                <a href="" className="profileImg">
+                                                    <img
+                                                        src={`/upload/${po.userInfo.profileImg}`}
+                                                        alt="프로필 이미지"
+                                                    />
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <UserRating rating={po.userInfo.rating} />
+                                            </div>
+                                        </div>
+                                        <span className="nickname">{po.userInfo.userNickname}</span>
+                                        <div className="board-image-main">
+                                            {attachments.map((attachments) => (
+                                                <div className="board-image">
+                                                    <img
+                                                        src={`http://localhost:8080/qiri/public/upload/${attachments.attachmentURL}`}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="write-board">
+                                    <div className="write">
+                                        {po.postContent}
+                                        <a href="#" className="comment-count">
+                                            <FontAwesomeIcon icon={faMessage} />
+                                            <div className="count">0</div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div className="board-foot">
+                                    <div className="foot-place-detail">
+                                        <p>{po.place.placeName}</p>
+                                        <p>{po.place.placeType.placeTypeName}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+
+                        <input
+                            type="text"
+                            placeholder="검색어를 입력하세요"
+                            value={searchKeyword}
+                            onChange={handleSearchChange}
+                        />
+                        <button onClick={handleSearchClick}>검색</button>
+                        {isOpen && (
+                            <div className="Matching-modal-main">
+                                <div className="Matching-modal-overlay">
+                                    <div className="Matching-modal">
+                                        <div className="close-button" onClick={closeModal}>
+                                            &times;
+                                        </div>
+                                        <DetailView selectedPostSEQ={selectedPostSEQ} />
+                                        <button onClick={handleApplyClick}>리뷰버튼테스트용</button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </section>
+                </main>
+            </div>
+        </div>
+    );
 };
 export default MatchingBoard;
