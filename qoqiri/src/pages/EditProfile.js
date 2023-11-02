@@ -470,8 +470,8 @@ const EditProfile = () => {
       }
     );
 
-    const categoryResponse = await axios.put(
-      "http://localhost:8080/qiri/userCategoryInfo/editProfile",
+    const categoryResponse = await axios.post(
+      "http://localhost:8080/qiri/userCategoryInfo",
       signUpDTO,
       {
         headers: {
