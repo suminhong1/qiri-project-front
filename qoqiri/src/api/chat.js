@@ -22,19 +22,9 @@ export const getChatMessage = async (id) => {
   return await instance.get("chat/room/message/" + id);
 };
 
-// 채팅방 만들기
-export const createChatRoom = async (data) => {
-  return await instance.post("chatroom/create/", data);
-};
-
 // 채팅방나가기 및 참여자 없는 채팅방 정보 자동 삭제
 export const leaveChatroom = async (data) => {
   return await instance.put("chatroom/leave", data);
-};
-
-// 매칭신청정보 저장
-export const requestMatching = async (postSEQ, id) => {
-  return await instance.post("/matching/" + postSEQ, id);
 };
 
 //채팅방의 참여유저목록 가져오기
@@ -45,4 +35,14 @@ export const getChatRoomUserList = async (code) => {
 //채팅방 최초접속확인
 export const joinMessage = async (data) => {
   return await instance.put("/chatroom/user/join", data);
+};
+
+//내가 참여한 생팅방 생성(매칭 신청시 생성됨)
+export const joinChatRoom = async (data) => {
+  return await instance.post("/chatroom/join", data);
+};
+
+//매칭신청자의 채팅방 접속
+export const enterChatRoom = async (data) => {
+  return await instance.post("/chatroom/enter", data);
 };

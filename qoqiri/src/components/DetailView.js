@@ -10,6 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
+import { createChatRoom, joinChatRoom } from "../api/chat";
 
 const DetailView = ({ selectedPostSEQ }) => {
   const [posts, setPosts] = useState([]);
@@ -38,6 +39,11 @@ const DetailView = ({ selectedPostSEQ }) => {
     setPost(result.data);
   };
 
+  const ChatDTO = {
+    id: user.id,
+    postSEQ: selectedPostSEQ,
+  };
+
   const handleApplyClick = async () => {
     // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
     const currentPost = posts.find((po) => po.postSEQ === selectedPostSEQ);
@@ -50,9 +56,10 @@ const DetailView = ({ selectedPostSEQ }) => {
 
     try {
       const response = await saveData(user, selectedPostSEQ);
+      joinChatRoom(ChatDTO);
 
       if (response) {
-        console.log("신청 성공");
+        console.log("신청 성공 및 채팅방 생성!");
       }
     } catch (error) {
       console.error("신청 중 오류 발생:", error);
@@ -72,7 +79,7 @@ const DetailView = ({ selectedPostSEQ }) => {
 
       if (response.status === 200) {
         console.log("데이터 저장 성공");
-        alert("신청 완료!!");
+        alert("신청 성공 및 채팅방 생성!");
         return response.data;
       } else {
         console.error("데이터 저장 실패");
@@ -135,7 +142,9 @@ const DetailView = ({ selectedPostSEQ }) => {
           <div className="Detail-write">{post?.postContent}</div>
         </div>
         <div className="board-foot">
-          <button className="play">같이놀자!</button>
+          <button className="play" onClick={handleApplyClick}>
+            같이놀자!
+          </button>
           <div className="foot-place-detail">
             <p>{post?.place?.placeName}</p>
             <p>{post?.place?.placeType?.placeTypeName}</p>

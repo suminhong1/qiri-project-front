@@ -18,6 +18,11 @@ export const getMatchingUserInfoByPostSEQ = async (postSEQ) => {
   return await instance.get(`getApplyList/${postSEQ}`);
 };
 
+// 매칭승락
+export const matchingAccept = async (data) => {
+  return await instance.put("/matchingAccept", data);
+};
+
 // // 게시물의 post_title_dropbox 값을 'Y'로 변경하는 API
 // export const updatePostTitleDropbox = async (postSEQ) => {
 //   return await instance.put(`updateDropdownTitle/${postSEQ}`);

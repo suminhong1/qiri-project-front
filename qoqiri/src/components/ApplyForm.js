@@ -3,13 +3,19 @@ import Imgmodal from "./imgmodal";
 import "../css/ApplyForm.css";
 import { getUser } from "../api/user";
 import defaultimg from "../assets/defaultimg.png";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { enterChatRoom } from "../api/chat";
+import { matchingAccept } from "../api/matching";
 
 const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userData, setUserData] = useState({ introduction: "" });
+  const { postSEQ } = useParams();
 
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
@@ -41,6 +47,21 @@ const ApplyForm = ({ userId }) => {
 
   const handleModalClose = () => {
     setIsModalOpen(false);
+  };
+
+  const ChatDTO = {
+    id: user.id,
+    postSEQ: postSEQ,
+    applicantId: userId,
+  };
+
+  const chatStart = () => {
+    alert("내 채팅방에 추가되었습니다!");
+    enterChatRoom(ChatDTO);
+  };
+
+  const matchingAcceptAPI = () => {
+    matchingAccept(ChatDTO);
   };
 
   const customButtonStyle = {
@@ -87,13 +108,13 @@ const ApplyForm = ({ userId }) => {
             프로필 정보
           </button>
           <div className="ap-bottomBtn">
-            <button className="ap-front-chatBtn" onClick={"/"}>
+            <button className="ap-front-chatBtn" onClick={chatStart}>
               채팅
             </button>
             <button
               className="ap-front-applyBtn"
               style={customButtonStyle}
-              onClick={handleCardClick}
+              onClick={matchingAcceptAPI}
             >
               승낙
             </button>
