@@ -83,18 +83,9 @@ const Comment = ({ comment }) => {
   const contentRef = useRef(null);
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
-  const [seq, setSeq] = useState(null); // 댓글마다의 'seq' 값을 상태로 추가
-
-  
-  useEffect(() => {
-    likeAPI();
-
-    // 댓글마다의 'seq' 값을 localStorage에서 가져와 설정
-    const storedSeq = localStorage.getItem(`seq_${comment.commentsSEQ}`);
-    if (storedSeq) {
-      setSeq(storedSeq);
-    }
-  }, []);
+  const [seq, setSeq] = useState(0);
+  const [likeStatus, setLikeStatus] = useState(false);  
+  const [userInfo, setUserinfo] = useState([]);
 
   const onClick = () => {
     setIsActive(!isActive);
@@ -112,14 +103,13 @@ const Comment = ({ comment }) => {
   };
 
   const toggleLike = async () => {
-    if (liked) {
+    if (likeStatus) {
       const response = await delLike(seq);
       if (response.status === 200) {
-        setLiked(false);
+        setLikeStatus(false);
         setLike(like - 1);
-        // 좋아요를 취소할 때 'seq'를 localStorage에서 제거
-        localStorage.removeItem(`seq_${comment.commentsSEQ}`);
-        setSeq(null); // 'seq' 상태를 null로 설정
+        // 사용자의 좋아요 상태를 로컬 스토리지에서 제거
+        localStorage.removeItem(`like_${comment.commentsSEQ}_${userInfo.userInfo}`);
       } else {
         console.error("좋아요 취소 중에 문제가 발생했습니다.");
       }
@@ -131,12 +121,15 @@ const Comment = ({ comment }) => {
           comments: comment,
           userInfo: comment.userInfo,
         });
+
         setSeq(response.data.clSEQ);
+        setUserinfo(response.data);
+
         if (response.status === 200) {
-          setLiked(true);
+          setLikeStatus(true);
           setLike(like + 1);
-          // 좋아요를 할 때 'seq'를 localStorage에 저장
-          localStorage.setItem(`seq_${comment.commentsSEQ}`, response.data.clSEQ);
+          // 사용자의 좋아요 상태를 로컬 스토리지에 저장
+          localStorage.setItem(`like_${comment.commentsSEQ}_${userInfo.userInfo}`, 'liked');
         } else {
           console.error("좋아요 추가 중에 문제가 발생했습니다.");
         }
@@ -145,6 +138,17 @@ const Comment = ({ comment }) => {
       }
     }
   };
+  
+
+  useEffect(() => {
+    likeAPI();
+
+    // 사용자의 좋아요 상태를 로컬 스토리지에서 가져와 설정
+    const userLikeStatus = localStorage.getItem(`like_${comment.commentsSEQ}_${userInfo.userInfo}`);
+    if (userLikeStatus === 'liked') {
+      setLikeStatus(true);
+    }
+  }, [comment.commentsSEQ, userInfo.userInfo]);
 
   const onUpdate = () => {
     dispatch(
