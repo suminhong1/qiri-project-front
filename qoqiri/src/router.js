@@ -26,19 +26,6 @@ const router = createBrowserRouter([
                 index: true,
                 element: <Home />,
             },
-            // {
-            //   path: "board/:id",
-            //   element: <PostList />,
-            // },
-            // {
-            //   path: "bestPost",
-            //   element: <PostList />,
-            // },
-
-            // {
-            //   path: "viewPost/:id",
-            //   element: <ViewPost />,
-            // },
             {
                 path: 'postWrite',
                 element: <PostWrite />,
@@ -67,10 +54,6 @@ const router = createBrowserRouter([
                 path: 'myinfo',
                 element: <UserInfoPage />,
             },
-            // {
-            //   path: "Post/:id",
-            //   element: <Post />,
-            // },
             {
                 path: 'review',
                 element: <Review />,

@@ -1,28 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import '../css/PostEdit.css';
-import { getPlace, getPlaceType, getEditPost, getPost } from '../api/post';
+import { getPlace, getPlaceType, getEditPost, getPost, getMatchCate, getAttach } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-
-// import axios from "axios";
-
-// const instance = axios.create({
-//     baseURL: "http://localhost:8080/qiri",
-//   });
-  
-//   export const getPosts = async () => {
-//     return await instance.get("/public/post");
-//   };
+import { useDispatch, useSelector } from 'react-redux';
 
 const PostEdit = () => {
-    
-    const {id} = useParams();
+    const { id } = useParams();
+
     const dispatch = useDispatch();
 
     // const [editPost, setEditPost] = useState(0);
-    const [post, setPost]=useState(0);
+    const [post, setPost] = useState(0);
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -42,17 +32,58 @@ const PostEdit = () => {
     const [selectSeq, setSelectSeq] = useState([]);
     const [selectlike, setSelectlike] = useState([]);
 
+    const [selectPlace, setSelectPlace] = useState([]);
+
+    // const [selectCategories, setSelectCategories] = useState([]);
+
     const maxCharacterCount = 100000;
+    // 편집에서 필요한건 기존 정보 불러오는 것! 테이블 3개 정보 다
+    // 그 중 카테고리 정보 가지고 온 것! <-- 내가 선택한 카테고리들 얘랑 비교!
 
-    useEffect(()=>{
+    // 게시물 불러오기
+    const getPostAPI = async () => {
+        const result = await getPost(id);
+        console.log(result);
+
+        setPost(result.data);
+    };
+    useEffect(() => {
         getPostAPI();
-    },[id]);
+        selectCategoryAPI();
+        selectAttachAPI();
+    }, [id]);
 
-    // 수정할 게시글 불러오기
-    // const postAPI = async () => {
-    //     const result = await getEditPost();
-    //     setEditPost(result.data);
-    // };
+    // 첨부파일 불러오기
+    const selectAttachAPI = async () => {
+        const result = await getAttach(id);
+        setAttachmentImg(result.data);
+    };
+
+    // 선택한 category 리스트 불러오기
+    const selectCategoryAPI = async () => {
+        const result = await getMatchCate(id);
+        setSelectSeq(result.data);
+    };
+
+    // useEffect(() => {
+    //     console.log(selectSeq);
+    // }, [selectSeq]);
+    // useEffect(() => {
+    //     const selectCategoryAPI = async () => {
+    //         try {
+    //             const response = await getMatchCate(id);
+    //             const selectSeq = response.data.map((item) => item.category.categorySEQ);
+    //             setSelectSeq(selectSeq);
+
+    //             const selectedCategories = categories.filter((category) => selectSeq.includes(category.categorySEQ));
+    //             const selectedCategoryNames = selectedCategories.map((category) => category.categoryName);
+    //             setSelectlike(selectedCategoryNames);
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
+    //     selectCategoryAPI();
+    // }, []);
 
     // 제목 입력 핸들러
     const onChangeTitle = (e) => {
@@ -127,11 +158,6 @@ const PostEdit = () => {
     const getCategoriesByType = (ctSEQ) => {
         return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ);
     };
-    // 게시물 불러오기
-    const getPostAPI = async ()=>{
-        const result = await getPost(id);
-        setPost(result.data)
-    }
 
     // place 리스트 불러오기
     const placeAPI = async () => {
@@ -145,10 +171,7 @@ const PostEdit = () => {
         setPlaceType(result.data);
     };
 
-    
-
     useEffect(() => {
-       
         placeAPI();
         placeTypeAPI();
     }, []);
@@ -161,8 +184,8 @@ const PostEdit = () => {
     const navigate = useNavigate();
     return (
         <>
-            <div id="form-container" >
-                <div id="form" key={post?.postSEQ}> 
+            <div id="form-container">
+                <div id="form">
                     <form method="POST">
                         <div id="interest-section">
                             <div className="form-el">
@@ -177,27 +200,25 @@ const PostEdit = () => {
                                                     <div
                                                         key={category.categorySEQ}
                                                         className={`edit-categoryLike-box-item ${
-                                                            selectlike.includes(category.categoryName) ? 'selected' : ''
-                                                            // 선택한 카테고리 배경색 나오게함
+                                                            selectlike.includes(category.categorySEQ) ? 'selected' : ''
                                                         }`}
                                                         onClick={() =>
                                                             handleInterestClick(
-                                                              category.categoryName,
-                                                              category.categorySEQ
+                                                                category.categorySEQ,
+                                                                category.categoryType.ctSEQ
                                                             )
-                                                          }
-                                                        >
-                                                          {category.categoryName}
-                                                        </div>
-                                               )
-                                               )}
-                                             </div>
-                                           </div>
+                                                        }
+                                                    >
+                                                        {category.categoryName}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                         </div>
-                        <div id="postTitle">
+                        <div id="postTitle" key={post?.postSEQ}>
                             <input
                                 type="text"
                                 name="title"
@@ -260,8 +281,8 @@ const PostEdit = () => {
                                     value={post?.postContent}
                                 ></textarea>
                                 <div className="wordCount">
-                                    내용:                               
-                                    {content.length} / {maxCharacterCount}                                
+                                    내용:
+                                    {content.length} / {maxCharacterCount}
                                 </div>
                             </div>
                         </div>
