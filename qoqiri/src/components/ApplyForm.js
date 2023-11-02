@@ -8,7 +8,6 @@ const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   const [userData, setUserData] = useState({ introduction: "" });
 
   useEffect(() => {
@@ -88,11 +87,7 @@ const ApplyForm = ({ userId }) => {
             프로필 정보
           </button>
           <div className="ap-bottomBtn">
-            <button
-              className="ap-front-chatBtn"
-              style={customButtonStyle}
-              onClick={handleCardClick}
-            >
+            <button className="ap-front-chatBtn" onClick={"/"}>
               채팅
             </button>
             <button

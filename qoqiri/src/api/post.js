@@ -99,31 +99,6 @@ export const getSearch = async (keyword) => {
   return await instance.get("public/post/search/" + keyword);
 };
 
-// 리뷰 저장하기
-export const saveReview = async (data) => {
-  return await instance.post("reviewWrite", data);
-};
-
-// 리뷰 업데이트하기
-export const updateReview = async (data) => {
-  return await instance.put("reviewUpdate", data);
-};
-
-//리뷰 삭제하기
-export const deleteReview = async (postSEQ) => {
-  return await instance.put(`reviewDelete/${postSEQ}`);
-};
-
-// 게시글에 신청하기
-export const applyToPost = async (userData, userId) => {
-  return await instance.post(`post/${userData}/apply`, { userId });
-};
-
-// 게시글의 신청자 목록 가져오기
-export const getApplicantsForPost = async (userData) => {
-  return await instance.get(`post/${userData}/applicants`);
-};
-
 // 내활동 리스트 보기
 export const getmyList = async (boardSEQ) => {
   let url = `public/post`;

@@ -200,6 +200,7 @@
 }
 
 .rv-select {
+  font-size: 13px;
   max-width: 100px;
   display: flex;
   justify-items: baseline;

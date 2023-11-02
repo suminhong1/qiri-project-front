@@ -398,7 +398,7 @@ const MatchingBoard = () => {
                       &times;
                     </div>
                     <DetailView selectedPostSEQ={selectedPostSEQ} />
-                    <button onClick={handleApplyClick}>리뷰버튼테스트용</button>
+                    <button onClick={handleApplyClick}>매칭신청하기</button>
                   </div>
                 </div>
               </div>

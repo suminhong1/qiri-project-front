@@ -7,10 +7,10 @@
 }
 
 .myactive-container h1 {
-  font-size: 24px;
-  margin-bottom: 30px;
-  color: #333;
-  text-align: center;
+  color: #ff7f38;
+  font-size: 44px;
+  font-weight: bold;
+  height: 100px;
 }
 
 .post-item {
