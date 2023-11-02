@@ -114,3 +114,13 @@ export const addPostLikeAPI = async (data) => {
 export const getPostsByCategoryType = async (code) => {
   return await instance.get("post/categoryType/" + code);
 };
+
+// 모든 게시글 가져오기
+export const getPosts = async () => {
+  return await instance.get("/public/post");
+};
+
+// 게시글 검색
+export const getSearchResults = async (keyword) => {
+  return await instance.get("/public/post?keyword=" + keyword);
+};

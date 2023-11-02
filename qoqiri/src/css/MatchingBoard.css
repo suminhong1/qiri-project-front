@@ -360,3 +360,14 @@ svg:not(:host).svg-inline--fa {
   box-sizing: content-box;
   color: orange;
 }
+
+.play {
+  background: orange;
+  border-style: none;
+  color: white;
+  border-radius: 5px;
+  padding: 5px 10px;
+  height: 40px;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
