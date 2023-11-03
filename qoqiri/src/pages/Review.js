@@ -39,13 +39,22 @@ const ReviewBoard = () => {
   const [editingPostTitle, setEditingPostTitle] = useState(""); // 수정할 글 타이틀
 
   useEffect(() => {
-    postsAPI();
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
       setLoggedInUser(user);
       fetchUserPosts(user.id); // 사용자 글 목록 가져오기
+      postsAPI();
     }
   }, []);
+
+  useEffect(() => {
+    // This will be executed after loggedInUser is set and component re-renders
+    if (loggedInUser) {
+      console.log("로그인한 아이디", loggedInUser.id);
+      fetchUserPosts(loggedInUser.id); // This should now work correctly
+      postsAPI();
+    }
+  }, [loggedInUser]);
 
   // 리뷰 수정버튼 활성화함수
   const handleEditClick = (postId, content, postTitle) => {
@@ -110,25 +119,31 @@ const ReviewBoard = () => {
         },
       });
       const filteredPosts = response.data.filter(
-        (post) => post.postTitleDropbox !== "Y"
+        (post) =>
+          post.postTitleDropbox !== "Y" &&
+          post.userInfo.userId == loggedInUser.id
       );
+
+      console.log("필터된 친구들" + filteredPosts);
       setUserPosts(filteredPosts);
     } catch (error) {
       console.error("Failed to fetch user posts:", error);
     }
   };
+
   // 드롭박스 만들기 및 선택하기
 
   const handleTitleSelect = async (title) => {
     console.log("타이틀명" + title);
     setSelectedTitle(title);
     const selectedPost = userPosts.find((post) => post.postTitle === title);
-    console.log("선택포스트 확인용" + selectedPost.postSEQ);
+
     if (selectedPost) {
     }
   }; // 드롭박스 만들기 및 선택하기
 
   const handleWriteClick = async () => {
+    console.log();
     // 글 타이틀이 선택되지 않았을 경우 글쓰기 방지
     if (!selectedTitle || selectedTitle === "글 타이틀 선택") {
       alert("글 타이틀을 선택해주세요.");

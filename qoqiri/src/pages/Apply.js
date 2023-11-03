@@ -3,14 +3,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ApplyForm from "../components/ApplyForm";
 import "../css/Apply.css";
 import { getMatchingUserInfoByPostSEQ } from "../api/matching";
-import { useNavigate } from "react-router-dom"; // 추가
-import { useParams } from "react-router-dom"; // useParams 추가
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { createGroupChat } from "../api/chat";
 
 const Apply = () => {
-  const [userIds, setUserIds] = useState([]);
-  const [hiddenUserIds, setHiddenUserIds] = useState([]);
+  const [appliedUsers, setAppliedUsers] = useState([]);
   const navigate = useNavigate();
   const { postSEQ } = useParams();
   const user = useSelector((state) => state.user);
@@ -19,43 +17,27 @@ const Apply = () => {
     navigate("/myMatching");
   };
 
-  useEffect(() => {
-    const storedHiddenIds = localStorage.getItem("hiddenUserIds");
-    if (storedHiddenIds) {
-      setHiddenUserIds(JSON.parse(storedHiddenIds));
-    }
-  }, []);
-
   // 모든 ApplyForm이 숨겨졌는지 여부를 계산하는 함수
-  const isEveryFormHidden = () => {
     // userIds 배열의 모든 원소가 hiddenUserIds에 포함되어 있는지 검사
-    return (
       userIds.length > 0 &&
-      userIds.every((userId) => hiddenUserIds.includes(userId))
-    );
-  };
-
-  const handleHideSection = (userId) => {
-    setHiddenUserIds((prevIds) => {
-      const updatedIds = [...prevIds, userId];
       localStorage.setItem("hiddenUserIds", JSON.stringify(updatedIds)); // 로컬 스토리지에 저장
       return updatedIds;
-    });
-  };
-
   useEffect(() => {
     const fetchAppliedUserIds = async () => {
       const response = await getMatchingUserInfoByPostSEQ(postSEQ);
-      setUserIds(response.data.map((info) => info.id));
-    };
 
-    fetchAppliedUserIds();
-  }, [postSEQ]);
+      setAppliedUsers(
+        response.data.filter((info) => info.matchingAccept !== "H")
+      );
+    };
+    if (user.id) {
+      fetchAppliedUserIds();
+    }
+  }, [postSEQ, user.id]);
 
   const groupChat = () => {
     alert("승락한 사람들이 모두 포함된 채팅방이 생성되었습니다!");
     createGroupChat(ChatDTO);
-    window.location.reload();
   };
 
   const matchingEnd = () => {
@@ -71,32 +53,28 @@ const Apply = () => {
   return (
     <div className="ApplyMain">
       <div className="AC">
-        <legend className="Applytag">궁금해요</legend>
-        <button className="backButton" onClick={handleBack}>
+        <div className="Applytag">궁금해요</div>
+        <button className="ap-backButton" onClick={handleBack}>
           뒤로가기
         </button>
-        {isEveryFormHidden() ? ( // 모든 ApplyForm이 숨겨진 경우
+        {console.log("보이니?" + appliedUsers)}
+
+        {appliedUsers.length === 0 ? (
           <p className="ap-empty-p">터엉...ㅠㅠ</p>
         ) : (
-          userIds.map(
-            (userId) =>
-              userId &&
-              !hiddenUserIds.includes(userId) && (
-                <section className="ap-section" key={userId}>
-                  <button
-                    className="closeButton"
-                    onClick={() => handleHideSection(userId)}
-                  >
-                    잠깐 가릴게요
-                  </button>
-                  <ApplyForm userId={userId} />
-                </section>
-              )
-          )
+          appliedUsers.map((userInfo) => (
+            <section className="ap-section" key={userInfo.id}>
+              <ApplyForm userId={userInfo.id} />
+            </section>
+          ))
         )}
       </div>
-      <button onClick={groupChat}>승락한 사람 모두와 떠들기</button>
-      <button onClick={matchingEnd}>같이 놀 사람을 모두 구했어요!</button>
+      <button className="ap-left-bottom-button" onClick={groupChat}>
+        승락한 사람 모두와 떠들기! Click!
+      </button>
+      <button className="ap-right-bottom-button" onClick={matchingEnd}>
+        같이 놀 사람을 모두 구했어요! Click!
+      </button>
     </div>
   );
 };
