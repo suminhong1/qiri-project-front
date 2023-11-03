@@ -12,15 +12,19 @@ const PostWrite = () => {
     const [postSEQ, setPostSEQ] = useState();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+
     const [attachmentImg, setAttachmentImg] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]);
 
     // const [userInfo, setUserInfo] = useState([]);
 
     const [place, setPlace] = useState([]);
     const [placeType, setPlaceType] = useState([]);
 
-    const [selectedPlace, setSelectedPlace] = useState(1);
-    const [selectedPlaceType, setSelectedPlaceType] = useState(1);
+    const [filteredPlaces, setFilteredPlaces] = useState([]);
+
+    const [selectedPlace, setSelectedPlace] = useState();
+    const [selectedPlaceType, setSelectedPlaceType] = useState(null);
 
     const [boards, setBoards] = useState([]);
     const [selectedBoard, setSelectedBoard] = useState(1);
@@ -35,6 +39,21 @@ const PostWrite = () => {
 
     const navigate = useNavigate();
 
+    const handlePlaceTypeChange = (event) => {
+        const selectedType = event.target.value;
+        setSelectedPlaceType(selectedType);
+
+        const filtered = place.filter((place) => place.placeType.placeTypeSEQ == selectedType);
+        setFilteredPlaces(filtered);
+
+        setSelectedPlace(null);
+    };
+
+    const handlePlaceChange = (event) => {
+        const selectedPlace = event.target.value;
+        setSelectedPlace(selectedPlace);
+    };
+
     // 제목 입력 핸들러
     const onChangeTitle = (e) => {
         const currentTitle = e.target.value;
@@ -45,7 +64,7 @@ const PostWrite = () => {
         const newContent = event.target.value;
         setContent(newContent);
     };
-
+    const maxFileCount = 3;
     // 첨부파일 핸들러
     const handleUploadImage = async (e) => {
         const files = e.target.files;
@@ -53,8 +72,7 @@ const PostWrite = () => {
         console.log(files);
 
         const maxFileSize = 10 * 1024 * 1024;
-        const maxFileCount = 3;
-        const newAttachmentImg = [...attachmentImg];
+        const newAttachmentImg = [];
 
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
@@ -70,12 +88,19 @@ const PostWrite = () => {
                 alert('사진 용량이 10MB를 초과합니다.');
             }
         }
+
         setAttachmentImg(newAttachmentImg); // 변경된 첨부 파일 배열을 상태로 설정
+        updateImagePreviews(newAttachmentImg);
     };
 
-    const filterplace = (e) => {
-        setPlace(selectedPlace);
-        setPlaceType(selectedPlaceType);
+    const updateImagePreviews = (newAttachmentImg) => {
+        const previews = [];
+
+        for (let i = 0; i < newAttachmentImg.length && i < maxFileCount; i++) {
+            previews.push(URL.createObjectURL(newAttachmentImg[i]));
+        }
+
+        setImagePreviews(previews); // 미리보기 이미지 URL
     };
 
     // 카테고리 선택 핸들러
@@ -284,37 +309,37 @@ const PostWrite = () => {
                                 placeholder="제목"
                                 maxLength="100"
                             />
-
-                            <div className="place-types">
-                                <select
-                                    onChange={(e) => {
-                                        setSelectedPlaceType(e.target.value); // 사용자가 선택한 placeTypeName을 placeTypeSEQ로 setSelectedPlaceType에 저장
-                                    }}
-                                >
-                                    {placeType?.map((placeType) => (
-                                        <option key={placeType?.placeTypeSEQ} value={placeType?.placeTypeSEQ}>
-                                            {/* value에 선택한 placeType name을 placeTypeSEQ로 할당*/}
-                                            {placeType?.placeTypeName}
-                                            {/*getPlaceTypeAPI로 불러온 placeType 리스트를  select 바에서 이름으로 보여줌*/}
+                            <div>
+                                <h1>지역 선택</h1>
+                                <select onChange={handlePlaceTypeChange}>
+                                    <option value="">지역을 선택해주세요</option>
+                                    {placeType.map((type) => (
+                                        <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
+                                            {type.placeTypeName}
                                         </option>
                                     ))}
                                 </select>
-                            </div>
 
-                            <div className="place-types">
-                                <select
-                                    onChange={(e) => {
-                                        setSelectedPlace(e.target.value); // 사용자가 선택한 placeName을 placeSEQ로 setSelectedPlace에 저장
-                                    }}
-                                >
-                                    {place?.map((place) => (
-                                        <option key={place?.placeSEQ} value={place?.placeSEQ}>
-                                            {/* value에 선택한 place name을 placeSEQ로 할당*/}
-                                            {place?.placeName}
-                                            {/* getPlaceAPI로 불러온 place 리스트를  select 바에서 이름으로 보여줌*/}
-                                        </option>
-                                    ))}
-                                </select>
+                                {selectedPlaceType && (
+                                    <div>
+                                        <h2>상세 지역</h2>
+                                        <select onChange={handlePlaceChange}>
+                                            <option value="">상세 지역을 선택해주세요</option>
+                                            {filteredPlaces.map((place) => (
+                                                <option key={place.placeSEQ} value={place.placeSEQ}>
+                                                    {place.placeName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+
+                                {selectedPlace && (
+                                    <div>
+                                        {/* <h2>Selected Place</h2>
+                                        <p>{selectedPlace}</p> */}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div id="file-upload">
@@ -329,6 +354,28 @@ const PostWrite = () => {
                                 />
                                 <span>사진첨부</span>
                             </label>
+                            <div>
+                                <div className="board-image-main">
+                                    <div className="board-image">
+                                        {attachmentImg.map((attachment, index) => (
+                                            <img
+                                                key={index}
+                                                src={URL.createObjectURL(attachment)}
+                                                alt={`사진 ${index + 1}`}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {imagePreviews.map((preview, index) => (
+                                    <img
+                                        key={index}
+                                        src={preview}
+                                        alt={`사진 미리보기 ${index + 1}`}
+                                        style={{ width: '150px', height: '150px' }}
+                                    />
+                                ))}
+                            </div>
                         </div>
                         {/* {console.log('typeof boardSeq', typeof 'boardSeq')}; */}
                         <div className="post-content">

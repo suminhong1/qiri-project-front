@@ -3,7 +3,6 @@ import '../css/PostEdit.css';
 import {
     getPlace,
     getPlaceType,
-    getPlaceee,
     getEditPost,
     getPost,
     getMatchCate,
@@ -11,11 +10,13 @@ import {
     editPostAPI,
     editMatchingAPI,
     editAttachmentsAPI,
+    deletePost,
 } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { wait } from '@testing-library/user-event/dist/utils';
 
 const PostEdit = () => {
     const { id } = useParams();
@@ -31,8 +32,10 @@ const PostEdit = () => {
     const [place, setPlace] = useState([]);
     const [placeType, setPlaceType] = useState([]);
 
-    const [selectedPlace, setSelectedPlace] = useState(1);
-    const [selectedPlaceType, setSelectedPlaceType] = useState(1);
+    const [filteredPlaces, setFilteredPlaces] = useState([]);
+
+    const [selectedPlace, setSelectedPlace] = useState();
+    const [selectedPlaceType, setSelectedPlaceType] = useState(null);
 
     const [categories, setCategories] = useState([]);
     const [categoryTypes, setCategoryTypes] = useState([]);
@@ -50,14 +53,27 @@ const PostEdit = () => {
         console.log(result);
 
         const postData = result.data;
+
         setTitle(postData.postTitle);
         setContent(postData.postContent);
-
-        setSelectedPlace(postData.placeSEQ);
-        setSelectedPlaceType(postData.placeTypeSEQ);
-
-        setPost(postData);
+        setSelectedPlace(postData.place.placeSEQ);
     };
+
+    const handlePlaceTypeChange = (event) => {
+        const selectedType = event.target.value;
+        setSelectedPlaceType(selectedType);
+
+        const filtered = place.filter((place) => place.placeType.placeTypeSEQ == selectedType);
+        setFilteredPlaces(filtered);
+
+        setSelectedPlace(null);
+    };
+
+    const handlePlaceChange = (event) => {
+        const selectedPlace = event.target.value;
+        setSelectedPlace(selectedPlace);
+    };
+
     // 선택한 category 리스트 불러오기
     const selectCategoryAPI = async () => {
         const selectedCategoriesData = await getMatchCate(id);
@@ -73,20 +89,6 @@ const PostEdit = () => {
         selectCategoryAPI();
         selectAttachAPI();
     }, [id]);
-
-    // useEffect(() => {
-    //     fetch('/api/places')
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setPlace(data);
-    //         });
-
-    //     fetch('/api/placeTypes')
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setPlaceType(data);
-    //         });
-    // }, []);
 
     // 첨부파일 불러오기
     const selectAttachAPI = async () => {
@@ -183,12 +185,30 @@ const PostEdit = () => {
     useEffect(() => {
         placeAPI();
         placeTypeAPI();
-    }, []);
+    }, [id]);
 
     const handleCancel = (e) => {
         navigate('/');
         alert('글쓰기를 취소했습니다');
     };
+    const handleDelete = async () => {
+        try {
+            const response = await editPostAPI(id); // id는 게시물의 postSeq
+
+            if (response.status === 200) {
+                alert(response);
+                navigate(-1);
+            } else {
+                alert('게시물 삭제에 실패했습니다.');
+            }
+        } catch (error) {
+            alert('게시물 삭제에 실패했습니다.');
+        }
+    };
+
+    // const onDelete = () => {
+    //     dispatch(deletePost(post.postSEQ));
+    // };
 
     const handleSubmit = async (e) => {
         if (e) {
@@ -201,7 +221,6 @@ const PostEdit = () => {
             postTitle: title, // 제목
             postContent: content, // 내용
             placeSEQ: selectedPlace, // 선택한 세부 지역
-            placeTypeSEQ: selectedPlaceType, // 선택한 지역 앞에가 사용한 dto나 domain의 필드명 이름 뒤에가 사용한 useState이름
         };
         console.log(localStorage.getItem('token'));
         console.log('PostDTO: ', PostDTO);
@@ -220,7 +239,7 @@ const PostEdit = () => {
         console.log(postResponse);
         // 첨부 파일
         const formData = new FormData();
-        // formData.enctype = 'multipart/form-data';
+
         formData.append('postId', postResponse.data.postSEQ);
 
         console.log(attachmentImg);
@@ -275,8 +294,8 @@ const PostEdit = () => {
                                                         }`}
                                                         onClick={() =>
                                                             handleInterestClick(
-                                                                category.categorySEQ,
-                                                                category.categoryType.ctSEQ
+                                                                category.categoryName,
+                                                                category.categorySEQ
                                                             )
                                                         }
                                                     >
@@ -298,42 +317,38 @@ const PostEdit = () => {
                                 onChange={onChangeTitle}
                                 placeholder="제목"
                                 maxLength="100"
-                                // key={post?.postSEQ}
                             />
-
-                            <div className="edit-place-types">
-                                <select
-                                    // value={selectedPlaceType}
-                                    onChange={(e) => {
-                                        setSelectedPlaceType(e.target.value);
-                                    }}
-                                >
-                                    {/* {placeType.map((type) => (
+                            <div>
+                                <h1>지역 선택</h1>
+                                <select onChange={handlePlaceTypeChange}>
+                                    <option value="">지역을 선택해주세요</option>
+                                    {placeType.map((type) => (
                                         <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
-                                            {type.placeTypeNmae}
-                                        </option>
-                                    ))} */}
-                                    {placeType?.map((placeType) => (
-                                        <option key={post?.place.placeTypeSEQ} value={post?.placeTypeSEQ}>
-                                            {post?.place.placeTypeName}
+                                            {type.placeTypeName}
                                         </option>
                                     ))}
                                 </select>
-                            </div>
 
-                            <div className="edit-place">
-                                <select
-                                    // value={selectedPlace}
-                                    onChange={(e) => {
-                                        setSelectedPlace(e.target.value);
-                                    }}
-                                >
-                                    {place?.map((place) => (
-                                        <option key={post?.place.placeSeq} value={post?.placeSeq}>
-                                            {post?.place.placeName}
-                                        </option>
-                                    ))}
-                                </select>
+                                {selectedPlaceType && (
+                                    <div>
+                                        <h2>상세 지역</h2>
+                                        <select onChange={handlePlaceChange}>
+                                            <option value="">상세 지역을 선택해주세요</option>
+                                            {filteredPlaces.map((place) => (
+                                                <option key={place.placeSEQ} value={place.placeSEQ}>
+                                                    {place.placeName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                )}
+
+                                {selectedPlace && (
+                                    <div>
+                                        {/* <h2>Selected Place</h2>
+                                        <p>{selectedPlace}</p> */}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div id="file-update">
@@ -375,12 +390,13 @@ const PostEdit = () => {
                         <div className="cancelButton">
                             <button onClick={handleCancel}>취소 </button>
                         </div>
-                        {/* 
-                            <div className="deleteButton">
-                                <button type="submit" onClick={handleSubmit}>
-                                    삭제
-                                </button>
-                            </div> */}
+
+                        <div className="deleteButton">
+                            {/* <button type="submit" onClick={onDelete}> */}
+                            <button type="submit" onClick={() => handleDelete(post.postSEQ)}>
+                                삭제
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
