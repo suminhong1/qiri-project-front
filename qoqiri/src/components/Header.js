@@ -5,10 +5,11 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { userSave, userLogout } from "../store/userSlice";
 import { useLocation } from "react-router-dom";
 import { asyncChatRooms } from "../store/chatRoomSlice";
+import { asyncSearchResult } from "../store/postSlice";
 
 const StyledHeader = styled.header`
   * {
@@ -95,6 +96,7 @@ const StyledHeader = styled.header`
 const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
+  const [keyword, setKeyword] = useState("");
 
   const user = useSelector((state) => {
     return state.user;
@@ -150,9 +152,18 @@ const Header = () => {
             className="search"
             placeholder="원하는 끼리를 검색해보세요"
             name="search"
+            value={keyword}
+            onChange={(e) => {
+              setKeyword(e.target.value);
+            }}
           />
 
-          <button className="searchBtn">
+          <button
+            className="searchBtn"
+            onClick={() => {
+              dispatch(asyncSearchResult(keyword));
+            }}
+          >
             <FontAwesomeIcon
               icon={faMagnifyingGlass}
               style={{ height: "20px", width: "auto" }}

@@ -30,7 +30,7 @@ const Box = styled.div`
     margin-bottom: 15px;
   }
   .comment-button {
-    background: orange;
+    background: #ff7f38;
     color: white;
     border-radius: 5px;
     padding: 5px 10px;
@@ -84,7 +84,7 @@ const Comment = ({ comment }) => {
   const dispatch = useDispatch();
   const [liked, setLiked] = useState(false);
   const [seq, setSeq] = useState(0);
-  const [likeStatus, setLikeStatus] = useState(false);  
+  const [likeStatus, setLikeStatus] = useState(false);
   const [userInfo, setUserinfo] = useState([]);
 
   const onClick = () => {
@@ -109,7 +109,9 @@ const Comment = ({ comment }) => {
         setLikeStatus(false);
         setLike(like - 1);
         // 사용자의 좋아요 상태를 로컬 스토리지에서 제거
-        localStorage.removeItem(`like_${comment.commentsSEQ}_${userInfo.userInfo}`);
+        localStorage.removeItem(
+          `like_${comment.commentsSEQ}_${userInfo.userInfo}`
+        );
       } else {
         console.error("좋아요 취소 중에 문제가 발생했습니다.");
       }
@@ -129,7 +131,10 @@ const Comment = ({ comment }) => {
           setLikeStatus(true);
           setLike(like + 1);
           // 사용자의 좋아요 상태를 로컬 스토리지에 저장
-          localStorage.setItem(`like_${comment.commentsSEQ}_${userInfo.userInfo}`, 'liked');
+          localStorage.setItem(
+            `like_${comment.commentsSEQ}_${userInfo.userInfo}`,
+            "liked"
+          );
         } else {
           console.error("좋아요 추가 중에 문제가 발생했습니다.");
         }
@@ -138,14 +143,15 @@ const Comment = ({ comment }) => {
       }
     }
   };
-  
 
   useEffect(() => {
     likeAPI();
 
     // 사용자의 좋아요 상태를 로컬 스토리지에서 가져와 설정
-    const userLikeStatus = localStorage.getItem(`like_${comment.commentsSEQ}_${userInfo.userInfo}`);
-    if (userLikeStatus === 'liked') {
+    const userLikeStatus = localStorage.getItem(
+      `like_${comment.commentsSEQ}_${userInfo.userInfo}`
+    );
+    if (userLikeStatus === "liked") {
       setLikeStatus(true);
     }
   }, [comment.commentsSEQ, userInfo.userInfo]);

@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import userSlice from "./userSlice";
 import commentSlice from "./commentSlice";
 import chatRoomSlice from "./chatRoomSlice";
+import postSlice from "./postSlice";
 
 // configureStore 함수를 사용하여 리덕스 스토어 생성
 const store = configureStore({
@@ -10,6 +11,7 @@ const store = configureStore({
     user: userSlice.reducer,
     comment: commentSlice.reducer,
     chatRoom: chatRoomSlice.reducer,
+    post: postSlice.reducer,
   },
 });
 

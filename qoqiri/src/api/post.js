@@ -117,7 +117,11 @@ export const getPostsByCategoryType = async (code) => {
 
 // 모든 게시글 가져오기
 export const getPosts = async () => {
-  return await instance.get("/public/post");
+  return await instance.get("/public/post", {
+    params: {
+      board: 1,
+    },
+  });
 };
 
 // 게시글 검색
