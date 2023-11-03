@@ -80,6 +80,7 @@ const DetailView = ({ selectedPostSEQ }) => {
       if (response.status === 200) {
         console.log("데이터 저장 성공");
         alert("신청 성공 및 채팅방 생성!");
+        window.location.reload();
         return response.data;
       } else {
         console.error("데이터 저장 실패");

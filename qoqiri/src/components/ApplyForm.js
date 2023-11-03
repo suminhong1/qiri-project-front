@@ -58,10 +58,12 @@ const ApplyForm = ({ userId }) => {
   const chatStart = () => {
     alert("내 채팅방에 추가되었습니다!");
     enterChatRoom(ChatDTO);
+    window.location.reload();
   };
 
   const matchingAcceptAPI = () => {
     matchingAccept(ChatDTO);
+    window.location.reload();
   };
 
   const customButtonStyle = {

@@ -100,3 +100,6 @@
   white-space: normal;
   margin-top: 10px;
 }
+.notice-link:hover {
+  cursor: pointer;
+}

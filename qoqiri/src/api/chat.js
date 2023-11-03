@@ -46,3 +46,8 @@ export const joinChatRoom = async (data) => {
 export const enterChatRoom = async (data) => {
   return await instance.post("/chatroom/enter", data);
 };
+
+//특정매칭글 승락한사람이 모두 접속한 채팅방 생성
+export const createGroupChat = async (data) => {
+  return await instance.post("/groupChat", data);
+};

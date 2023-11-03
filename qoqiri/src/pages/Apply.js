@@ -6,6 +6,7 @@ import { getMatchingUserInfoByPostSEQ } from "../api/matching";
 import { useNavigate } from "react-router-dom"; // 추가
 import { useParams } from "react-router-dom"; // useParams 추가
 import { useSelector } from "react-redux";
+import { createGroupChat } from "../api/chat";
 
 const Apply = () => {
   const [userIds, setUserIds] = useState([]);
@@ -33,6 +34,8 @@ const Apply = () => {
 
   const groupChat = () => {
     alert("승락한 사람들이 모두 포함된 채팅방이 생성되었습니다!");
+    createGroupChat(ChatDTO);
+    window.location.reload();
   };
 
   const matchingEnd = () => {
@@ -43,7 +46,6 @@ const Apply = () => {
   const ChatDTO = {
     id: user.id,
     postSEQ: postSEQ,
-    // idList: ㅇㄴ,
   };
 
   return (
