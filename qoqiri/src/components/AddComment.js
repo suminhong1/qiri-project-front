@@ -61,8 +61,8 @@ const AddComment = ({ code, active, parent }) => {
     dispatch(addComment(data));
     setComment("");
 
-    // alert("댓글이 추가되었습니다!");
-    // window.location.reload();
+    alert("댓글이 추가되었습니다!");
+    window.location.reload();
   };
   return (
     <Form onSubmit={onSubmit} className={active ? "active" : ""}>

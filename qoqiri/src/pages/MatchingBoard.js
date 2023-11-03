@@ -3,6 +3,7 @@ import "../css/MatchingBoard.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Date from "../components/Date";
 import {
+  getMatchCategoryInfo,
   getPosts,
   getPostsByCategoryType,
   getSearchResults,
@@ -17,6 +18,7 @@ import { getAttachments } from "../api/post";
 import DetailView from "../components/DetailView";
 import { useParams } from "react-router-dom";
 import { asyncSearchResult } from "../store/postSlice";
+import { getCommentCount, getMatchCate } from "../api/post";
 
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -27,6 +29,8 @@ const MatchingBoard = () => {
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState(""); // 키워드 검색
   const [attachments, setAttachments] = useState([]);
+  const [commentCount, setCommentsCount] = useState(0);
+  const [matchCate, setMatchCate] = useState([]);
   const { id } = useParams();
   const defaultProfileImageUrl = "/path/to/default-image.png";
   const dispatch = useDispatch();
@@ -76,6 +80,21 @@ const MatchingBoard = () => {
     setAttachments(result.data);
   };
 
+  const matchCategoryInfoAPI = async () => {
+    const result = await getMatchCategoryInfo();
+    setMatchCate(result.data);
+  };
+
+  const commentCountAPI = async () => {
+    const counts = [];
+    for (const post of posts) {
+      const result = await getCommentCount(post.postSEQ);
+      counts.push(result.data);
+    }
+
+    setCommentsCount(counts);
+  };
+
   const toggleModal = (postSEQ) => {
     setIsOpen(!isOpen);
   };
@@ -89,12 +108,21 @@ const MatchingBoard = () => {
   }, []);
 
   useEffect(() => {
+    matchCategoryInfoAPI();
+  }, [posts]);
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      commentCountAPI();
+    }
+  }, [posts]);
+
+  useEffect(() => {
     if (id == null) {
       getPostsAPI(); // id가 없을 때는 postsAPI 실행
     } else {
       PostsByCategoryTypeAPI(); // id가 있을 때는 PostsByCategoryTypeAPI 실행
     }
-    console.log(posts);
   }, [id]);
 
   useEffect(() => {
@@ -124,7 +152,7 @@ const MatchingBoard = () => {
             </div>
           </div>
           <section className="section">
-            {posts?.map((po) => (
+            {posts?.map((po, index) => (
               <div
                 onClick={() => {
                   setSelectedPostSEQ(po?.postSEQ);
@@ -166,7 +194,6 @@ const MatchingBoard = () => {
                       {attachments.map((attachments) => (
                         <div className="board-image">
                           {console.log(`${attachments?.attachmentURL}`)}
-                          {/* 이 줄을 추가 */}
                           <img src={`${attachments?.attachmentURL}`} />
                         </div>
                       ))}
@@ -178,11 +205,20 @@ const MatchingBoard = () => {
                     {po.postContent}
                     <a href="#" className="comment-count">
                       <FontAwesomeIcon icon={faMessage} />
-                      <div className="count">0</div>
+                      <div className="count">{commentCount[index]}</div>
                     </a>
                   </div>
                 </div>
                 <div className="board-foot">
+                  <div className="category">
+                    {matchCate
+                      .filter((match) => match.post?.postSEQ === po.postSEQ)
+                      .map((filteredMatch, index) => (
+                        <span key={index}>
+                          {filteredMatch?.category?.categoryName}
+                        </span>
+                      ))}
+                  </div>
                   <div className="foot-place-detail">
                     <p>{po?.place?.placeName}</p>
                     <p>{po?.place?.placeType?.placeTypeName}</p>

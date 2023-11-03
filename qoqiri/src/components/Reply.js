@@ -45,6 +45,8 @@ const Reply = ({ reply }) => {
         commentDelete: "Y",
       })
     );
+    alert("댓글 삭제 완료!");
+    window.location.reload();
   };
   const handleBlur = () => {
     setContent(contentRef.current.innerText);
@@ -55,9 +57,11 @@ const Reply = ({ reply }) => {
         commentsSEQ: reply.commentsSEQ,
         post: reply.post,
         commentDesc: content,
-        commentParentSeq: reply.commentsParentSeq,
+        commentsParentSeq: reply.commentsParentSeq,
       })
     );
+    alert("댓글 수정 완료!");
+    window.location.reload();
   };
   return (
     <Box>

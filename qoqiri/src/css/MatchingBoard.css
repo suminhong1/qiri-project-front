@@ -47,6 +47,7 @@ a {
   justify-content: center;
   width: 1600px;
   min-height: calc(100vh - 400px);
+  margin-bottom: 70px;
 }
 
 .select-bar {
@@ -226,9 +227,12 @@ a {
   height: 90%;
   margin-right: 5px;
 }
+
 .board-foot {
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
 }
 .board-foot-tag {
   display: flex;
@@ -238,6 +242,14 @@ a {
   font-size: 13px;
   color: #b4b4b4;
 }
+
+.board-foot .category {
+  margin-left: 15px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #ff7f38;
+}
+
 .foot-place-detail {
   text-align: center;
   float: right;

@@ -101,6 +101,10 @@ export const getComments = async (id) => {
   return await instance.get("public/post/" + id + "/comments");
 };
 
+export const getCommentCount = async (id) => {
+  return await instance.get("public/post/" + id + "/comment");
+};
+
 export const getSearch = async (keyword) => {
   return await instance.get("public/post/search/" + keyword);
 };
@@ -131,4 +135,9 @@ export const getPosts = async () => {
 // 게시글 검색
 export const getSearchResults = async (keyword) => {
   return await instance.get("/public/post?keyword=" + keyword);
+};
+
+// 모든 매칭카테고리 인포 가져오기
+export const getMatchCategoryInfo = async () => {
+  return await instance.get("/matchingCategoryInfo");
 };

@@ -127,6 +127,8 @@ const Comment = ({ comment }) => {
         setSeq(response.data.clSEQ);
         setUserinfo(response.data);
 
+        console.log(response.data);
+
         if (response.status === 200) {
           setLikeStatus(true);
           setLike(like + 1);
@@ -164,6 +166,8 @@ const Comment = ({ comment }) => {
         commentDesc: content,
       })
     );
+    alert("수정완료!");
+    window.location.reload();
   };
   const onDelete = () => {
     dispatch(
@@ -177,6 +181,8 @@ const Comment = ({ comment }) => {
         commentDelete: "Y",
       })
     );
+    alert("삭제완료!");
+    window.location.reload();
   };
 
   return (
