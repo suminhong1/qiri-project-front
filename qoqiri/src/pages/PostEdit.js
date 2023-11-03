@@ -206,10 +206,6 @@ const PostEdit = () => {
         }
     };
 
-    // const onDelete = () => {
-    //     dispatch(deletePost(post.postSEQ));
-    // };
-
     const handleSubmit = async (e) => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
@@ -318,10 +314,11 @@ const PostEdit = () => {
                                 placeholder="제목"
                                 maxLength="100"
                             />
-                            <div>
+                        </div>
+                            <div className='select-place'>
                                 <h1>지역 선택</h1>
-                                <select onChange={handlePlaceTypeChange}>
-                                    <option value="">지역을 선택해주세요</option>
+                                <select onChange={handlePlaceTypeChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
+                                    <option className= 'place-option'value="">지역을 선택해주세요</option>
                                     {placeType.map((type) => (
                                         <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
                                             {type.placeTypeName}
@@ -330,10 +327,10 @@ const PostEdit = () => {
                                 </select>
 
                                 {selectedPlaceType && (
-                                    <div>
+                                    <div className='select-place'>
                                         <h2>상세 지역</h2>
-                                        <select onChange={handlePlaceChange}>
-                                            <option value="">상세 지역을 선택해주세요</option>
+                                        <select onChange={handlePlaceChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
+                                            <option className= 'place-option' value="">상세 지역을 선택해주세요</option>
                                             {filteredPlaces.map((place) => (
                                                 <option key={place.placeSEQ} value={place.placeSEQ}>
                                                     {place.placeName}
@@ -342,15 +339,7 @@ const PostEdit = () => {
                                         </select>
                                     </div>
                                 )}
-
-                                {selectedPlace && (
-                                    <div>
-                                        {/* <h2>Selected Place</h2>
-                                        <p>{selectedPlace}</p> */}
-                                    </div>
-                                )}
                             </div>
-                        </div>
                         <div id="file-update">
                             <label htmlFor="image-update">
                                 <input
@@ -389,13 +378,6 @@ const PostEdit = () => {
                         </div>
                         <div className="cancelButton">
                             <button onClick={handleCancel}>취소 </button>
-                        </div>
-
-                        <div className="deleteButton">
-                            {/* <button type="submit" onClick={onDelete}> */}
-                            <button type="submit" onClick={() => handleDelete(post.postSEQ)}>
-                                삭제
-                            </button>
                         </div>
                     </form>
                 </div>

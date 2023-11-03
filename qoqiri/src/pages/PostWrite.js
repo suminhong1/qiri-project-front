@@ -309,10 +309,11 @@ const PostWrite = () => {
                                 placeholder="제목"
                                 maxLength="100"
                             />
-                            <div>
+                        </div>
+                            <div className='select-place'>
                                 <h1>지역 선택</h1>
-                                <select onChange={handlePlaceTypeChange}>
-                                    <option value="">지역을 선택해주세요</option>
+                                <select onChange={handlePlaceTypeChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
+                                    <option className= 'place-option'value="">지역을 선택해주세요</option>
                                     {placeType.map((type) => (
                                         <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
                                             {type.placeTypeName}
@@ -321,10 +322,10 @@ const PostWrite = () => {
                                 </select>
 
                                 {selectedPlaceType && (
-                                    <div>
+                                    <div className='select-place'>
                                         <h2>상세 지역</h2>
-                                        <select onChange={handlePlaceChange}>
-                                            <option value="">상세 지역을 선택해주세요</option>
+                                        <select onChange={handlePlaceChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
+                                            <option className= 'place-option' value="">상세 지역을 선택해주세요</option>
                                             {filteredPlaces.map((place) => (
                                                 <option key={place.placeSEQ} value={place.placeSEQ}>
                                                     {place.placeName}
@@ -333,15 +334,8 @@ const PostWrite = () => {
                                         </select>
                                     </div>
                                 )}
-
-                                {selectedPlace && (
-                                    <div>
-                                        {/* <h2>Selected Place</h2>
-                                        <p>{selectedPlace}</p> */}
-                                    </div>
-                                )}
                             </div>
-                        </div>
+                        
                         <div id="file-upload">
                             <label htmlFor="image-upload">
                                 <input
