@@ -156,7 +156,14 @@
     font-weight: bold;
     border: 1px #f88e0d;
 }
-
+.edit-place select {
+    border-radius: 8px;
+    margin-left: 10px;
+    background: antiquewhite;
+    color: #ff9615;
+    font-weight: bold;
+    border: 1px #f88e0d;
+}
 .cancelButton {
     position: relative;
     overflow: hidden;

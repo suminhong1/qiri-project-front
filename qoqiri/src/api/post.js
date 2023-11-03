@@ -34,8 +34,8 @@ export const getAttachments = async (id) => {
 };
 
 // 게시물 수정
-export const editPostAPI = async (id) => {
-  return await instance.put("post", id);
+export const editPostAPI = async (data) => {
+  return await instance.put("post", data);
 };
 
 // 선택한 카테고리 수정
@@ -54,14 +54,18 @@ export const editAttachmentsAPI = async (formData) => {
   return response.data;
 };
 
+export const getPlaceee = async (id) => {
+  return await instance.get("public/place" + id);
+};
+
 export const getMatchCate = async (id) => {
-  // 매칭카테고리인포
+  // MatchingcategoryInfo 불러오는 API
   // return await instance.get('public/post/' + id + '/matchingCategoryInfo');
   return await instance.get("matchingCategoryInfo/" + id);
 };
 
 export const getAttach = async (id) => {
-  // 첨부파일
+  // 첨부파일 불러오는 API
   return await instance.get("postAttachments/" + id);
 };
 
@@ -76,6 +80,10 @@ export const getPostList = async (page, board) => {
   // }
   return await instance.get(url);
 };
+
+// export const savePost = async()=>{
+//   return await instance.get("public/post")
+// }
 
 export const getPost = async (id) => {
   return await instance.get("public/post/" + id);
@@ -117,11 +125,7 @@ export const getPostsByCategoryType = async (code) => {
 
 // 모든 게시글 가져오기
 export const getPosts = async () => {
-  return await instance.get("/public/post", {
-    params: {
-      board: 1,
-    },
-  });
+  return await instance.get("/public/post");
 };
 
 // 게시글 검색
