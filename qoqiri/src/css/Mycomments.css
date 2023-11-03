@@ -1,6 +1,7 @@
 .comments-container {
     font-family: 'Arial', sans-serif;
-    max-width: 80%;  /* 너비를 조절합니다. */
+    max-width: 1200px; 
+    min-width: 800px;
     margin: 20px auto;
     padding: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -33,4 +34,12 @@
 h1 {
     text-align: center;
     margin-bottom: 20px;
+}
+
+.comments-table th:nth-child(1), .comments-table td:nth-child(1) {
+    width: 10%; /* 댓글 번호 칸 너비 */
+}
+
+.comments-table th:nth-child(3), .comments-table td:nth-child(3) {
+    width: 20%; /* 작성 날짜 칸 너비 */
 }
