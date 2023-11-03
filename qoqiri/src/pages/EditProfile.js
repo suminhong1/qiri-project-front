@@ -309,6 +309,9 @@ const EditProfile = () => {
   const handleProfilePictureUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePictureUrl(imageUrl); 
+      
       try {
         const formData = new FormData();
         formData.append("profileImg", file);
@@ -322,9 +325,6 @@ const EditProfile = () => {
             },
           }
         );
-        const imageUrl = URL.createObjectURL(file);
-        console.log(imageUrl);
-        setProfilePictureUrl(imageUrl);
       } catch (error) {
         console.error(error);
         alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
@@ -766,7 +766,7 @@ const EditProfile = () => {
             <br />
             {profilePictureUrl && (
               <img
-                src={'/upload/' + profilePictureUrl}
+              src={profilePictureUrl.startsWith('blob:') ? profilePictureUrl : `/uploadprofile/${profilePictureUrl}`} // 불러온 이미지와 새로 선택한 이미지 둘다 미리보기 기능 구현할려고 쓴 코드 (blob(새로운 미리보기 이미지))
                 alt="미리보기"
                 className="profile-picture-preview"
               />
