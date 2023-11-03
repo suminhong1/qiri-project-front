@@ -39,6 +39,8 @@
 }
 
 .pf-main-image {
+  min-width: 268px;
+  min-height: 278px;
   margin-left: 10px;
   width: 268px;
   height: 268px;
@@ -61,13 +63,17 @@
 }
 
 .pf-card-body h1 {
-  height: 30px;
+  position: relative;
+  top: 25px;
+  left: 7px;
+  height: 50px;
   font-size: 30px;
+  display: flex;
   margin-bottom: 30px;
   font-weight: bold;
 }
 .pf-text {
-  font-size: 18px;
+  font-size: 20px;
   margin-left: 10px;
   overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
   text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
@@ -78,6 +84,9 @@
   line-height: 1.4;
   height: 69px;
   width: 230px;
+  text-align: center;
+  position: relative;
+  top: 30px;
 }
 
 .pf-front-editBtn {

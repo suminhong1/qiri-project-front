@@ -16,8 +16,28 @@ const Apply = () => {
     navigate("/myMatching");
   };
 
+  useEffect(() => {
+    const storedHiddenIds = localStorage.getItem("hiddenUserIds");
+    if (storedHiddenIds) {
+      setHiddenUserIds(JSON.parse(storedHiddenIds));
+    }
+  }, []);
+
+  // 모든 ApplyForm이 숨겨졌는지 여부를 계산하는 함수
+  const isEveryFormHidden = () => {
+    // userIds 배열의 모든 원소가 hiddenUserIds에 포함되어 있는지 검사
+    return (
+      userIds.length > 0 &&
+      userIds.every((userId) => hiddenUserIds.includes(userId))
+    );
+  };
+
   const handleHideSection = (userId) => {
-    setHiddenUserIds((prevIds) => [...prevIds, userId]);
+    setHiddenUserIds((prevIds) => {
+      const updatedIds = [...prevIds, userId];
+      localStorage.setItem("hiddenUserIds", JSON.stringify(updatedIds)); // 로컬 스토리지에 저장
+      return updatedIds;
+    });
   };
 
   useEffect(() => {
@@ -36,7 +56,7 @@ const Apply = () => {
         <button className="backButton" onClick={handleBack}>
           뒤로가기
         </button>
-        {userIds.length === 0 ? (
+        {isEveryFormHidden() ? ( // 모든 ApplyForm이 숨겨진 경우
           <p className="ap-empty-p">터엉...ㅠㅠ</p>
         ) : (
           userIds.map(

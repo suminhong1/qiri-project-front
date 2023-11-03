@@ -16,6 +16,7 @@ const ApplyForm = ({ userId }) => {
         // 유효하지 않은 userId 값 체크
         console.error("Invalid userId:", userId);
         console.log(userData);
+
         return;
       }
 
@@ -56,6 +57,15 @@ const ApplyForm = ({ userId }) => {
     cursor: "pointer",
     borderRadius: "4px",
   };
+  const formatBirthday = (birthday) => {
+    if (!birthday) return "";
+
+    const parts = birthday.split("T");
+    if (parts.length !== 2) return ""; // unexpected format
+
+    // 첫 번째 부분만 반환 (1992년 11월 11일)
+    return parts[0].trim();
+  };
 
   return (
     <div className="ap-container">
@@ -87,7 +97,11 @@ const ApplyForm = ({ userId }) => {
             프로필 정보
           </button>
           <div className="ap-bottomBtn">
-            <button className="ap-front-chatBtn" onClick={"/"}>
+            <button
+              className="ap-front-chatBtn"
+              style={customButtonStyle}
+              onClick={"/"}
+            >
               채팅
             </button>
             <button
@@ -109,12 +123,16 @@ const ApplyForm = ({ userId }) => {
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">성별:</div>
-              <div className="ap-info-value">{userData?.gender}</div>
+              <div className="ap-info-value">
+                {userData?.gender || "비공개"}
+              </div>
             </div>
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">혈액형:</div>
-              <div className="ap-info-value">{userData?.bloodType}</div>
+              <div className="ap-info-value">
+                {userData?.bloodType || "비공개"}
+              </div>
             </div>
             <hr />
             <div className="ap-info-row">
@@ -126,12 +144,14 @@ const ApplyForm = ({ userId }) => {
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">MBTI:</div>
-              <div className="ap-info-value">{userData?.mbti}</div>
+              <div className="ap-info-value">{userData?.mbti || "비공개"}</div>
             </div>
             <hr />
             <div className="ap-info-row">
               <div className="ap-info-label">생일:</div>
-              <div className="ap-info-value">{userData?.birthday}</div>
+              <div className="ap-info-value">
+                {formatBirthday(userData?.birthday) || "비공개"}
+              </div>
             </div>
             <hr />
           </div>

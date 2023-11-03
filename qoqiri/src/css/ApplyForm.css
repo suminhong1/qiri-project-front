@@ -60,7 +60,10 @@
   font-weight: bold;
 }
 .ap-text {
-  font-size: 16px;
+  position: relative;
+  top: 22px;
+  text-align: center;
+  font-size: 20px;
   margin-left: 10px;
   margin-top: 25px;
   overflow: hidden; /* 텍스트를 요소 내에서 숨김 */

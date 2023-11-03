@@ -224,7 +224,7 @@ const ReviewBoard = () => {
 
   return (
     <div className="rv-container">
-      <h1>우리끼리한줄평</h1>
+      <h1>저는 이랬어요</h1>
       <div className="rv-input-area">
         <select
           className="rv-select"

@@ -3,7 +3,7 @@ import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Date from "../components/Date";
-import { getPost } from "../api/post";
+import { getPost, getPosts } from "../api/post";
 import UserRating from "../components/UserRating";
 import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -33,6 +33,10 @@ const DetailView = ({ selectedPostSEQ }) => {
     setIsModalOpen(false);
   };
 
+  const postsAPI = async () => {
+    const result = await getPosts();
+    setPosts(result.data);
+  };
   const getPostAPI = async () => {
     const result = await getPost(selectedPostSEQ);
     setPost(result.data);
@@ -41,7 +45,18 @@ const DetailView = ({ selectedPostSEQ }) => {
   const handleApplyClick = async () => {
     // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
     const currentPost = posts.find((po) => po.postSEQ === selectedPostSEQ);
+
+    if (!user.id || !user.token) {
+      // user.id 또는 user.token이 없다면 로그인되지 않은 것으로 간주
+      alert("로그인해주세요");
+      return;
+    }
     console.log("아이디 가져오기", user.id);
+    console.log("작성자 " + currentPost?.userInfo?.userId);
+    console.log("커랜트" + currentPost);
+    console.log("커랜트유저인포" + currentPost?.userInfo);
+    console.log("posts" + posts.find((po) => po.postSEQ === selectedPostSEQ));
+
     // 작성자의 ID와 로그인한 사용자의 ID가 동일한지 확인
     if (currentPost?.userInfo?.userId === user.id) {
       alert("본인이 작성한 게시물에는 신청할 수 없습니다.");
@@ -84,6 +99,7 @@ const DetailView = ({ selectedPostSEQ }) => {
 
   useEffect(() => {
     getPostAPI();
+    postsAPI();
   }, []);
 
   useEffect(() => {
@@ -135,7 +151,9 @@ const DetailView = ({ selectedPostSEQ }) => {
           <div className="Detail-write">{post?.postContent}</div>
         </div>
         <div className="board-foot">
-          <button className="play">같이놀자!</button>
+          <button className="play" onClick={handleApplyClick}>
+            같이놀자!
+          </button>
           <div className="foot-place-detail">
             <p>{post?.place?.placeName}</p>
             <p>{post?.place?.placeType?.placeTypeName}</p>

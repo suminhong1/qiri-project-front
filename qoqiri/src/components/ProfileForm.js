@@ -46,6 +46,15 @@ const ProfileForm = ({ userId }) => {
     cursor: "pointer",
     borderRadius: "4px",
   };
+  const formatBirthday = (birthday) => {
+    if (!birthday) return "";
+
+    const parts = birthday.split("T");
+    if (parts.length !== 2) return "";
+
+    // 첫 번째 부분만 반환 (1992년 11월 11일)
+    return parts[0].trim();
+  };
 
   return (
     <div className="pf-container">
@@ -56,7 +65,11 @@ const ProfileForm = ({ userId }) => {
           <div>
             <img
               className="pf-main-image"
-              src={userData?.profileImage || defaultimg}
+              src={
+                userData?.profileImg
+                  ? `/upload/${userData?.profileImg}`
+                  : defaultimg
+              }
               alt="User"
               onClick={() => handleImageClick(0)}
             />
@@ -87,31 +100,37 @@ const ProfileForm = ({ userId }) => {
             <hr />
             <div className="pf-info-row">
               <div className="pf-info-label">성별:</div>
-              <div className="pf-info-value">{userData?.gender}</div>
+              <div className="pf-info-value">
+                {userData?.gender || "비공개"}
+              </div>
             </div>
             <hr />
             <div className="pf-info-row">
               <div className="pf-info-label">혈액형:</div>
-              <div className="pf-info-value">{userData?.bloodType}</div>
+              <div className="pf-info-value">
+                {userData?.bloodType || "비공개"}
+              </div>
             </div>
             <hr />
             <div className="pf-info-row">
               <div className="pf-info-label">지역:</div>
               <div className="pf-info-value">
                 {" "}
-                {userData?.placeType?.placeTypeName || "기본값"}
+                {userData?.placeType?.placeTypeName || "비공개"}
                 {}
               </div>
             </div>
             <hr />
             <div className="pf-info-row">
               <div className="pf-info-label">MBTI:</div>
-              <div className="pf-info-value">{userData?.mbti}</div>
+              <div className="pf-info-value">{userData?.mbti || "비공개"}</div>
             </div>
             <hr />
             <div className="pf-info-row">
               <div className="pf-info-label">생일:</div>
-              <div className="pf-info-value">{userData?.birthday}</div>
+              <div className="ap-info-value">
+                {formatBirthday(userData?.birthday) || "비공개"}
+              </div>
             </div>
             <hr />
           </div>
@@ -129,7 +148,11 @@ const ProfileForm = ({ userId }) => {
       </div>
       {isModalOpen && (
         <Imgmodal
-          images={[userData?.profileImage || defaultimg]}
+          images={[
+            userData?.profileImg
+              ? `/upload/${userData?.profileImg}`
+              : defaultimg,
+          ]}
           index={currentImageIndex}
           close={handleModalClose}
         />
