@@ -3,7 +3,7 @@ import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Date from "../components/Date";
-import { getPost, getPosts } from "../api/post";
+import { editPostAPI, getPost, getPosts } from "../api/post";
 import UserRating from "../components/UserRating";
 import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -48,6 +48,10 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
     postSEQ: selectedPostSEQ,
   };
 
+  const deletePost = () => {
+    editPostAPI(selectedPostSEQ);
+    alert("게시물이 삭제됐습니다.");
+  };
   const handleApplyClick = async () => {
     // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
     const currentPost = posts.find((po) => po.postSEQ === selectedPostSEQ);
@@ -115,7 +119,7 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
   }, [dispatch]);
 
   const attachment = attachments.attachmentURL || []; // 이미지 정보를 포함하는 배열
-  // console.log(attachment);
+  console.log(attachment);
   return (
     <>
       <div className="board-detail" key={post?.postSEQ}>
@@ -166,6 +170,12 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
           <div className="foot-place-detail">
             <p>{post?.place?.placeName}</p>
             <p>{post?.place?.placeType?.placeTypeName}</p>
+            {user?.id === post?.userInfo?.userId ? (
+              <>
+                <a href={`/postedit/${selectedPostSEQ}`}>수정</a>
+                <button onClick={deletePost}>삭제</button>
+              </>
+            ) : null}
           </div>
         </div>
         <hr />
