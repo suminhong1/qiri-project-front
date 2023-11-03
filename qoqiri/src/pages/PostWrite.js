@@ -62,7 +62,6 @@ const PostWrite = () => {
             if (file.size <= maxFileSize) {
                 if (newAttachmentImg.length < maxFileCount) {
                     newAttachmentImg.push(file);
-               
                 } else {
                     alert('사진은 3장까지만 업로드 할 수 있습니다.');
                     break;
@@ -74,6 +73,11 @@ const PostWrite = () => {
         setAttachmentImg(newAttachmentImg); // 변경된 첨부 파일 배열을 상태로 설정
     };
 
+    const filterplace = (e) => {
+        setPlace(selectedPlace);
+        setPlaceType(selectedPlaceType);
+    };
+
     // 카테고리 선택 핸들러
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
         // console.log(seq);
@@ -82,10 +86,10 @@ const PostWrite = () => {
 
         if (selectlike.includes(categorySEQ)) {
             setSelectlike(selectlike.filter((item) => item !== categorySEQ)); // selectLike(선택할 주제들) 배열
-            setSelectSEQ(selectSEQ.filter((item) => item !== TypeSEQ)); // 
+            setSelectSEQ(selectSEQ.filter((item) => item !== TypeSEQ)); //
         } else {
             setSelectlike([...selectlike, categorySEQ]); // selectLike(선택할 주제들)
-            setSelectSEQ([...selectSEQ, TypeSEQ]); 
+            setSelectSEQ([...selectSEQ, TypeSEQ]);
         }
     };
 
@@ -203,14 +207,13 @@ const PostWrite = () => {
             formData.append('files', image);
         });
 
-
         console.log(MatchingDTO.categoryList);
         console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
 
         // addPostAPI 호출 이후에 addMatchingAPI를 호출
         const matchingResponse = await addMatchingAPI({
             postSEQ: postResponse.data.postSEQ,
-            categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것 
+            categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
         });
         console.log(matchingResponse);
 
@@ -227,7 +230,6 @@ const PostWrite = () => {
         } else {
             alert('글쓰기 실패');
         }
-       
     };
 
     return (
@@ -314,7 +316,6 @@ const PostWrite = () => {
                                     ))}
                                 </select>
                             </div>
-
                         </div>
                         <div id="file-upload">
                             <label htmlFor="image-upload">
@@ -353,7 +354,6 @@ const PostWrite = () => {
                         <div className="cancelButton">
                             <button onClick={handleCancel}>취소 </button>
                         </div>
-                       
                     </form>
                 </div>
             </div>
