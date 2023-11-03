@@ -20,15 +20,10 @@ export const getMatchingUserInfoByPostSEQ = async (postSEQ) => {
 
 // 매칭승락
 export const matchingAccept = async (data) => {
-  return await instance.put("/matchingAccept", data);
+  return await instance.put("matchingAccept", data);
 };
 
-// // 게시물의 post_title_dropbox 값을 'Y'로 변경하는 API
-// export const updatePostTitleDropbox = async (postSEQ) => {
-//   return await instance.put(`updateDropdownTitle/${postSEQ}`);
-// };
-
-// // 게시물의 post_title_dropbox 값을 'N'으로 변경하는 API
-// export const resetPostTitleDropbox = async (postSEQ) => {
-//   return await instance.put(`resetDropdownTitle/${postSEQ}`);
-// };
+// 매칭 신청자 가리기
+export const hideMachingUser = async (data) => {
+  return await instance.put("hideMachingUser", data);
+};

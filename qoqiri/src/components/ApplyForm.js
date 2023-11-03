@@ -6,7 +6,7 @@ import defaultimg from "../assets/defaultimg.png";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { enterChatRoom } from "../api/chat";
-import { matchingAccept } from "../api/matching";
+import { matchingAccept, hideMachingUser } from "../api/matching";
 
 const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -64,6 +64,11 @@ const ApplyForm = ({ userId }) => {
 
   const matchingAcceptAPI = () => {
     matchingAccept(ChatDTO);
+    window.location.reload();
+  };
+
+  const hideMatchingUser = () => {
+    hideMachingUser(ChatDTO);
     window.location.reload();
   };
 
@@ -181,6 +186,9 @@ const ApplyForm = ({ userId }) => {
         </div>
 
         <div>
+          <button className="closeButton" onClick={hideMatchingUser}>
+            잠깐 가릴게요
+          </button>
           <button
             className="ap-back-infoBtn"
             style={customBackBtn}

@@ -91,11 +91,11 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
       token: user.token, // 토큰 추가
       postSEQ: selectedPostSEQ,
     };
-    console.log(dataToSend);
+    console.log("데이타 보내기" + dataToSend);
 
     try {
       const response = await ApplyUserInfo(dataToSend);
-
+      console.log("정보" + response);
       if (response.status === 200) {
         console.log("데이터 저장 성공");
         alert("신청 성공 및 채팅방 생성!");
