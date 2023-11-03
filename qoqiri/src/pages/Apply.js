@@ -17,11 +17,6 @@ const Apply = () => {
     navigate("/myMatching");
   };
 
-  // 모든 ApplyForm이 숨겨졌는지 여부를 계산하는 함수
-    // userIds 배열의 모든 원소가 hiddenUserIds에 포함되어 있는지 검사
-      userIds.length > 0 &&
-      localStorage.setItem("hiddenUserIds", JSON.stringify(updatedIds)); // 로컬 스토리지에 저장
-      return updatedIds;
   useEffect(() => {
     const fetchAppliedUserIds = async () => {
       const response = await getMatchingUserInfoByPostSEQ(postSEQ);
