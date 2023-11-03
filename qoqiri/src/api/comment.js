@@ -20,3 +20,7 @@ export const putComment = async (data) => {
 export const delComment = async (data) => {
   return await instance.put("post/comments/delete", data);
 };
+
+export const getComment = async (userId) => {
+  return await instance.get(`comments/get/${userId}`);
+};

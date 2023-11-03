@@ -447,7 +447,9 @@ const SignUp = () => {
       <div className="form-container">
         <div className="form">
           <div className="form-el">
-            <h4>* 는 필수 입력 항목입니다</h4>
+          <label htmlFor="notion"> * 는 필수 입력 항목입니다. </label> <br />
+            <br></br>
+            <label htmlFor="notion"> 기입하지 않은 정보는 비공개 표시됩니다. </label> <br />
             <br></br>
             <br></br>
             <label htmlFor="id"> * 아이디 </label> <br />
