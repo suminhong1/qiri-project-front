@@ -26,6 +26,9 @@ const UserInfoPage = () => {
     }
     if (category === "회원정보 변경") {
       navigate("/EditProfile");
+    }
+    if (category === "내가 쓴 댓글") {
+      navigate("/Mycomments");
       return;
     }
 
