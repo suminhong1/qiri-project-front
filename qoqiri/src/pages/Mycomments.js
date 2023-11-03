@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getComment } from "../api/comment";
+import "../css/Mycomments.css";
 
 function MyComments() {
     const [myComments, setMyComments] = useState([]);
@@ -27,20 +28,21 @@ function MyComments() {
     }, []);
 
     return (
-        <div>
-            <h1>내가 쓴 댓글 목록</h1>
-            <table>
+        <div className="comments-container">
+            <table className="comments-table">
                 <thead>
                     <tr>
-                        <th>번호</th>
+                        <th>댓글 번호</th>
                         <th>댓글 내용</th>
+                        <th>작성 날짜</th>
                     </tr>
                 </thead>
                 <tbody>
                     {myComments.map((comment) => (
                         <tr key={comment.commentsSEQ}>
+                            <td>{comment.commentsSEQ}</td>
                             <td>{comment.commentDesc}</td>
-                            <td>{comment.commentText}</td>
+                            <td>{comment.commentDate.split("T")[0]}</td>
                         </tr>
                     ))}
                 </tbody>
