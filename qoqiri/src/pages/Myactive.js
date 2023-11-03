@@ -15,7 +15,9 @@ const Myactive = () => {
         const user = JSON.parse(localStorage.getItem("user"));
 
         if (!user || !user.id) {
-          throw new Error("아이디를 못찾았습니다.");
+          alert("로그인이 필요합니다.");
+          navigate("/"); // 이전 페이지나 홈 페이지로 리다이렉트. 필요한 주소로 변경하세요.
+          return; // 여기서 리턴해주어서 아래 로직을 실행하지 않게 합니다.
         }
 
         const userResponse = await getUser(user.id);
@@ -30,15 +32,11 @@ const Myactive = () => {
     };
 
     fetchUserInfoAndPosts();
-  }, []);
-
-  if (!loggedInUser) {
-    return <div>로그인이 필요합니다.</div>;
-  }
+  }, [navigate]);
 
   return (
     <div className="myactive-container">
-      <h1>내 활동목록!</h1>
+      <h1>글을 썼어요</h1>
       {myPosts
         .filter((post) => post.postDelete !== "Y")
         .map((post) => (
