@@ -733,6 +733,7 @@ const SignUp = () => {
                 src={profilePictureUrl}
                 alt="프로필 사진 미리보기"
                 className="profile-picture-preview"
+                style={{width: "200px"}}
               />
             )}
           </div>

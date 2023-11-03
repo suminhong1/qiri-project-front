@@ -141,3 +141,10 @@ export const getSearchResults = async (keyword) => {
 export const getMatchCategoryInfo = async () => {
   return await instance.get("/matchingCategoryInfo");
 };
+
+// 내가 쓴 게시글 불러오기
+export const getMyPosts = async (userId) => {
+  return await instance.get(`post/get/${userId}`);
+};
+
+

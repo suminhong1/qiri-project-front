@@ -16,6 +16,7 @@ import EditProfile from './pages/EditProfile';
 import SignupInfo from './pages/SignupInfo';
 import Myactive from './pages/Myactive';
 import MyComments from './pages/Mycomments';
+import MyPost from './pages/Mypost';
 
 const router = createBrowserRouter([
     {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
             {
                 path: '/Mycomments',
                 element: <MyComments />,
+            },
+            {
+                path: '/Mypost',
+                element: <MyPost />,
             },
             {
                 path: '/myMatching',

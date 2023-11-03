@@ -769,6 +769,7 @@ const EditProfile = () => {
               src={profilePictureUrl.startsWith('blob:') ? profilePictureUrl : `/uploadprofile/${profilePictureUrl}`} // 불러온 이미지와 새로 선택한 이미지 둘다 미리보기 기능 구현할려고 쓴 코드 (blob(새로운 미리보기 이미지))
                 alt="미리보기"
                 className="profile-picture-preview"
+                style={{width: "200px"}}
               />
             )}
           </div>
