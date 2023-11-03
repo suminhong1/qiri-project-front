@@ -4,7 +4,7 @@
     min-width: 800px;
     margin: 20px auto;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 20px #ff7f38;
 }
 
 .post-table {
@@ -31,15 +31,14 @@
     background-color: #f5f5f5;
 }
 
-/* Adjust the width of the table cells for title, content, and date */
 .post-table th:nth-child(1), .post-table td:nth-child(1) {
-    width: 20%; /* 글 제목 칸 너비 */
+    width: 25%; /* 글 제목 칸 너비 */
 }
 
 .post-table th:nth-child(2), .post-table td:nth-child(2) {
-    width: 50%; /* 글 내용 칸 너비 */
+    width: 60%; /* 글 내용 칸 너비 */
 }
 
 .post-table th:nth-child(3), .post-table td:nth-child(3) {
-    width: 30%; /* 작성 날짜 칸 너비 */
+    width: 15%; /* 작성 날짜 칸 너비 */
 }
