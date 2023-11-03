@@ -13,7 +13,7 @@ const Box = styled.div`
     margin-bottom: 5px;
   }
   button {
-    background: orange;
+    background: #ff7f38;
     border-style: none;
     color: white;
     border-radius: 5px;

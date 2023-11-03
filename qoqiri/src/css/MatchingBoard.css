@@ -58,7 +58,7 @@ a {
   gap: 8px;
   border-radius: 4px;
   margin-bottom: 30px;
-  box-shadow: 0px 0px 1px 1px #ff8800;
+  box-shadow: 0px 0px 1px 1px #ff7f38;
   width: 1548px;
 }
 
@@ -86,7 +86,7 @@ a {
 }
 
 .board {
-  box-shadow: 0px 0px 1px 1px #ff8800;
+  box-shadow: 0px 0px 1px 1px #ff7f38;
   width: 500px;
   box-sizing: border-box; /* 너비를 포함하여 크기를 계산하도록 함 */
   padding: 8px;
@@ -358,11 +358,11 @@ svg:not(:root).svg-inline--fa,
 svg:not(:host).svg-inline--fa {
   overflow: visible;
   box-sizing: content-box;
-  color: orange;
+  color: #ff7f38;
 }
 
 .play {
-  background: orange;
+  background: #ff7f38;
   border-style: none;
   color: white;
   border-radius: 5px;

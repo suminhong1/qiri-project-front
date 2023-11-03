@@ -7,6 +7,7 @@ import {
   getPostsByCategoryType,
   getSearchResults,
 } from "../api/post";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import { getCategoryTypes } from "../api/categoryType";
@@ -15,6 +16,7 @@ import UserRating from "../components/UserRating";
 import { getAttachments } from "../api/post";
 import DetailView from "../components/DetailView";
 import { useParams } from "react-router-dom";
+import { asyncSearchResult } from "../store/postSlice";
 
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -26,6 +28,15 @@ const MatchingBoard = () => {
   const [searchKeyword, setSearchKeyword] = useState(""); // 키워드 검색
   const [attachments, setAttachments] = useState([]);
   const { id } = useParams();
+  const defaultProfileImageUrl = "/path/to/default-image.png";
+  const dispatch = useDispatch();
+  const searchList = useSelector((state) => {
+    return state.post;
+  });
+
+  useEffect(() => {
+    setPosts(searchList);
+  }, [searchList]);
 
   const handleSearchChange = (e) => {
     setSearchKeyword(e.target.value);
@@ -41,17 +52,13 @@ const MatchingBoard = () => {
     setPosts(result.data);
   };
 
-  const getSearchResultsAPI = async () => {
-    const result = await getSearchResults(searchKeyword);
-    setPosts(result.data);
-  };
-
   const handleSearchClick = async () => {
-    try {
-      getSearchResultsAPI();
-    } catch (error) {
-      console.error("검색 중 오류 발생:", error);
-    }
+    dispatch(asyncSearchResult());
+    // try {
+    //   getSearchResultsAPI();
+    // } catch (error) {
+    //   console.error("검색 중 오류 발생:", error);
+    // }
   };
 
   const categoryAPI = async () => {
@@ -139,13 +146,17 @@ const MatchingBoard = () => {
                       <div className="profileFlex">
                         <a href="" className="profileImg">
                           <img
-                            src={`/upload/${po?.userInfo?.profileImg}`}
+                            src={
+                              po?.userInfo?.profileImg
+                                ? `/upload/${po.userInfo.profileImg}`
+                                : defaultProfileImageUrl
+                            }
                             alt="프로필 이미지"
                           />
                         </a>
                       </div>
                       <div>
-                        <UserRating rating={po?.userInfo?.rating} />
+                        {/* <UserRating rating={po?.userInfo?.rating} /> */}
                       </div>
                     </div>
                     <span className="nickname">
@@ -154,9 +165,9 @@ const MatchingBoard = () => {
                     <div className="board-image-main">
                       {attachments.map((attachments) => (
                         <div className="board-image">
-                          <img
-                            src={`http://localhost:8080/qiri/public/upload/${attachments?.attachmentURL}`}
-                          />
+                          {console.log(`${attachments?.attachmentURL}`)}
+                          {/* 이 줄을 추가 */}
+                          <img src={`${attachments?.attachmentURL}`} />
                         </div>
                       ))}
                     </div>
@@ -180,13 +191,13 @@ const MatchingBoard = () => {
               </div>
             ))}
 
-            <input
+            {/* <input
               type="text"
               placeholder="검색어를 입력하세요"
               value={searchKeyword}
               onChange={handleSearchChange}
-            />
-            <button onClick={handleSearchClick}>검색</button>
+            /> */}
+            {/* <button onClick={handleSearchClick}>검색</button> */}
             {isOpen && (
               <div className="Matching-modal-main">
                 <div className="Matching-modal-overlay">
@@ -194,7 +205,10 @@ const MatchingBoard = () => {
                     <div className="close-button" onClick={closeModal}>
                       &times;
                     </div>
-                    <DetailView selectedPostSEQ={selectedPostSEQ} />
+                    <DetailView
+                      selectedPostSEQ={selectedPostSEQ}
+                      attachments={attachments}
+                    />
                   </div>
                 </div>
               </div>

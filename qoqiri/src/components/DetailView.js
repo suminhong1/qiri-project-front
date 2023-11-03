@@ -12,7 +12,8 @@ import Comment from "../components/Comment";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 import { createChatRoom, joinChatRoom } from "../api/chat";
 
-const DetailView = ({ selectedPostSEQ }) => {
+const DetailView = ({ selectedPostSEQ, attachments }) => {
+  console.log("attachments in DetailView:", attachments); // attachments 값을 콘솔에 출력
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -98,7 +99,8 @@ const DetailView = ({ selectedPostSEQ }) => {
     dispatch(viewComments(selectedPostSEQ));
   }, [dispatch]);
 
-  const images = ["", "", ""];
+  const attachment = attachments.attachmentURL || []; // 이미지 정보를 포함하는 배열
+  console.log(attachment);
   return (
     <>
       <div className="board-detail" key={post?.postSEQ}>
@@ -122,15 +124,15 @@ const DetailView = ({ selectedPostSEQ }) => {
                   />
                 </a>
               </div>
-              <UserRating rating={post?.userInfo?.rating} />
+              {/* <UserRating rating={post?.userInfo?.rating} /> */}
             </div>
             <span className="nickname">{post?.userInfo?.userNickname}</span>
             <div className="board-image-main">
               <div className="board-image">
-                {images.map((imageSrc, index) => (
+                {attachments.map((attachment, index) => (
                   <img
                     key={index}
-                    src={imageSrc}
+                    src={attachment.attachmentURL}
                     alt={`이미지 ${index + 1}`}
                     onClick={() => openModal(index)}
                   />
@@ -178,7 +180,7 @@ const DetailView = ({ selectedPostSEQ }) => {
               dynamicHeight={true}
               showThumbs={false}
             >
-              {images.map((imageSrc, index) => (
+              {attachments.map((imageSrc, index) => (
                 <div key={index}>
                   <img src={imageSrc} alt={`이미지 ${index + 1}`} />
                 </div>
@@ -187,7 +189,7 @@ const DetailView = ({ selectedPostSEQ }) => {
 
             <div
               onClick={() => {
-                if (selectedImageIndex < images.length - 1) {
+                if (selectedImageIndex < attachment.length - 1) {
                   setSelectedImageIndex(selectedImageIndex + 1);
                 }
               }}
