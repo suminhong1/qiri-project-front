@@ -132,3 +132,10 @@ export const getPosts = async () => {
 export const getSearchResults = async (keyword) => {
   return await instance.get("/public/post?keyword=" + keyword);
 };
+
+// 내가 쓴 게시글 불러오기
+export const getMyPosts = async (userId) => {
+  return await instance.get(`post/get/${userId}`);
+};
+
+

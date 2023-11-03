@@ -31,6 +31,10 @@ const UserInfoPage = () => {
       navigate("/Mycomments");
       return;
     }
+    if (category === "내가 쓴 글") {
+      navigate("/Mypost");
+      return;
+    }
 
     setSelectedCategory(category);
     setCurrentPage(1);
