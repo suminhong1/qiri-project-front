@@ -204,13 +204,9 @@ const ChatRoom = ({ chatRoomId }) => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await chatRoomInfoAPI();
-      await chatMessageAPI();
-      await userChatRoomInfoAPI();
-    };
-
-    fetchData();
+    chatRoomInfoAPI();
+    chatMessageAPI();
+    userChatRoomInfoAPI();
   }, [chatRoomId]);
 
   useEffect(() => {
@@ -355,7 +351,7 @@ const ChatRoom = ({ chatRoomId }) => {
                   new Date(msg?.sendTime) > new Date(userChatRoomInfo?.joinDate)
               )
               .map((msg) => (
-                <li className="list-group-item" key={msg?.chatMessageSeq}>
+                <li className="list-group-item" key={msg?.chatMessageSEQ}>
                   <div className="msgHeader">
                     <div className="chat">{msg?.userInfo?.userNickname}</div>
                     <div className="sendTime">

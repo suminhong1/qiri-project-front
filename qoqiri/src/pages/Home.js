@@ -57,7 +57,6 @@ const StyledHome = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-
     background: linear-gradient(rgba(0, 0, 0, 0.527), rgba(0, 0, 0, 0.6));
     transition: opacity 0.2s ease;
     z-index: 1;
