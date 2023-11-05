@@ -8,7 +8,7 @@ import { addPostAPI, addMatchingAPI, getBoards, getPlace, getPlaceType, addAttac
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 
-const PostWrite = () => {
+const PostUpdate = () => {
     const [postSEQ, setPostSEQ] = useState();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -69,10 +69,6 @@ const PostWrite = () => {
     const handleUploadImage = async (e) => {
         const files = e.target.files;
 
-        if (files.length === 0) {
-            // 파일이 선택되지 않았을 때 아무 동작도 하지 않음
-            return;
-        }
         console.log(files);
 
         const maxFileSize = 10 * 1024 * 1024;
@@ -94,13 +90,9 @@ const PostWrite = () => {
         }
 
         setAttachmentImg(newAttachmentImg); // 변경된 첨부 파일 배열을 상태로 설정
-        if (newAttachmentImg.length > 0) {
-            updateImagePreviews(newAttachmentImg);
-        }
-    
-        // 파일 업로드 필드 초기화
-        e.target.value = '';
+        updateImagePreviews(newAttachmentImg);
     };
+
     const updateImagePreviews = (newAttachmentImg) => {
         const previews = [];
 
@@ -220,50 +212,50 @@ const PostWrite = () => {
         };
         console.log('MatchingDTO: ', MatchingDTO);
 
-       // 첨부한 사진 저장 경로와 등록한 게시물 Seq를 PostAttachments 테이블로 보냄
+        // 첨부한 사진 저장 경로와 등록한 게시물 Seq를 PostAttachments 테이블로 보냄
 
         // try {
-            console.log(PostDTO);
+        console.log(PostDTO);
 
-            const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
-    
-            console.log(postResponse);
-    if(attachmentImg.length > 0){
-            const formData = new FormData();
-    
-            formData.append('postId', postResponse.data.postSEQ);
-    
-            console.log(attachmentImg);
-            console.log(attachmentImg.length);
-    
-            attachmentImg.forEach((image) => {
-                formData.append('files', image);
-            });
-            const attachmentResponse = await addAttachmentsAPI(formData);
-            console.log(MatchingDTO.categoryList);
-            console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
-    
-            // addPostAPI 호출 이후에 addMatchingAPI를 호출
-            const matchingResponse = await addMatchingAPI({
-                postSEQ: postResponse.data.postSEQ,
-                categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
-            });
-            console.log(matchingResponse);
-    
-            // 여기 마저 작성해라
-    
-           
-            console.log(attachmentResponse);
-            console.log(postResponse.data.postSEQ);
+        const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
+
+        console.log(postResponse);
+
+        const formData = new FormData();
+        // formData.enctype = 'multipart/form-data';
+        formData.append('postId', postResponse.data.postSEQ);
+
+        console.log(attachmentImg);
+        console.log(attachmentImg.length);
+
+        attachmentImg.forEach((image) => {
+            formData.append('files', image);
+        });
+
+        console.log(MatchingDTO.categoryList);
+        console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
+
+        // addPostAPI 호출 이후에 addMatchingAPI를 호출
+        const matchingResponse = await addMatchingAPI({
+            postSEQ: postResponse.data.postSEQ,
+            categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
+        });
+        console.log(matchingResponse);
+
+        // 여기 마저 작성해라
+
+        const attachmentResponse = await addAttachmentsAPI(formData);
+        console.log(attachmentResponse);
+        console.log(postResponse.data.postSEQ);
+
+        if (postResponse.data) {
+            alert('글쓰기 성공');
+
+            navigate('/');
+        } else {
+            alert('글쓰기 실패');
         }
-            if (postResponse.data) {
-                alert('글쓰기 성공');
-    
-                navigate('/');
-            } else {
-                alert('글쓰기 실패');
-            }
-        };
+    };
 
     return (
         <>
@@ -416,4 +408,4 @@ const PostWrite = () => {
         </>
     );
 };
-export default PostWrite;
+export default PostUpdate;

@@ -136,24 +136,37 @@
     margin-left: 10px;
 }
 
-#postTitle input {
+#postTitle #title {
     background: antiquewhite;
     color: #ff9615;
     font-weight: bold;
     border: 1px #f88e0d;
+   padding-right: 10%;
+   display: flex;
+   /* width: 40%; */
+   border-radius: 5px;
+   margin-bottom: 30px;
+   margin-top: 30px;
+   margin-left: 10px;
 }
 
 #postTitle input::placeholder {
     color: #ff9615;
 }
 
-.place-types select {
-    border-radius: 8px;
-    margin-left: 10px;
-    background: antiquewhite;
+.select-place{
+    margin-left: 170px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
     color: #ff9615;
     font-weight: bold;
-    border: 1px #f88e0d;
+    border-radius: 8px; 
+}
+
+.place-option{
+    font-weight: bold;
+    border-radius: 8px;
 }
 
 .cancelButton {

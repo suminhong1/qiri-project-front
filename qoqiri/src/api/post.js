@@ -6,6 +6,9 @@ const instance = axios.create({
 
 // 백단 서버에 요청하는거
 
+export const updatePostAPI = async(data)=>{
+    return await instance.put('post',data)
+}
 // 게시물 추가
 export const addPostAPI = async (data) => {
     //서버 주소와 클라이언트 주소는 다름

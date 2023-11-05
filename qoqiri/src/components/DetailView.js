@@ -170,10 +170,11 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
           <div className="foot-place-detail">
             <p>{post?.place?.placeName}</p>
             <p>{post?.place?.placeType?.placeTypeName}</p>
+            <br/>
             {user?.id === post?.userInfo?.userId ? (
               <>
-                <a href={`/postedit/${selectedPostSEQ}`}>수정</a>
-                <button onClick={deletePost}>삭제</button>
+                <a id="editPost" href={`/postedit/${selectedPostSEQ}`}>수정</a>
+                <button id="deletePost" onClick={deletePost}>삭제</button>
               </>
             ) : null}
           </div>

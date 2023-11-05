@@ -128,21 +128,22 @@
     margin-bottom: 20px;
 }
 
-#postTitle {
+/* #postTitle {
     display: flex;
     width: 100%;
     border-radius: 5px;
     margin-bottom: 30px;
     margin-top: 30px;
     margin-left: 10px;
-}
+    
+} */
 
-#postTitle input {
+/* #postTitle input {
     background: antiquewhite;
     color: #ff9615;
     font-weight: bold;
     border: 1px #f88e0d;
-}
+} */
 
 #postTitle input::placeholder {
     color: #ff9615;
