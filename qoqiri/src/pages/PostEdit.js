@@ -7,16 +7,15 @@ import {
     getPost,
     getMatchCate,
     getAttach,
-    editPostAPI,
+    updatePostAPI,
     editMatchingAPI,
     editAttachmentsAPI,
-    deletePost,
 } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { wait } from '@testing-library/user-event/dist/utils';
+
 
 const PostEdit = () => {
     const { id } = useParams();
@@ -191,79 +190,66 @@ const PostEdit = () => {
         navigate('/');
         alert('글쓰기를 취소했습니다');
     };
-    const handleDelete = async () => {
-        try {
-            const response = await editPostAPI(id); // id는 게시물의 postSeq
 
-            if (response.status === 200) {
-                alert(response);
-                navigate(-1);
-            } else {
-                alert('게시물 삭제에 실패했습니다.');
-            }
-        } catch (error) {
-            alert('게시물 삭제에 실패했습니다.');
-        }
-    };
 
     const handleSubmit = async (e) => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
         }
-        console.log(selectlike);
+        // console.log(selectlike);
 
-        const PostDTO = {
-            token: localStorage.getItem('token'), // 유저 정보
+        const PostDTO = {      
+            token: localStorage.getItem('token'),  
             postTitle: title, // 제목
-            postContent: content, // 내용
-            placeSEQ: selectedPlace, // 선택한 세부 지역
+            postContent: content, // 내용        
         };
-        console.log(localStorage.getItem('token'));
+        // console.log(localStorage.getItem('token'));
         console.log('PostDTO: ', PostDTO);
 
         // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
-        const MatchingDTO = {
-            categoryList: selectlike,
-            categoryTypeList: selectSeq,
-        };
-        console.log('MatchingDTO: ', MatchingDTO);
+        // const MatchingDTO = {
+        //     categoryList: selectlike,
+        //     categoryTypeList: selectSeq,
+        // };
+        // console.log('MatchingDTO: ', MatchingDTO);
 
         console.log(PostDTO);
 
-        const postResponse = await editPostAPI(PostDTO);
+        const postResponse = await updatePostAPI(PostDTO);
 
         console.log(postResponse);
         // 첨부 파일
-        const formData = new FormData();
+        // const formData = new FormData();
 
-        formData.append('postId', postResponse.data.postSEQ);
+        // formData.append('postId', postResponse.data.postSEQ);
 
-        console.log(attachmentImg);
-        console.log(attachmentImg.length);
+        // console.log(attachmentImg);
+        // console.log(attachmentImg.length);
 
-        attachmentImg.forEach((image) => {
-            formData.append('files', image);
-        });
+        // attachmentImg.forEach((image) => {
+        //     formData.append('files', image);
+        // });
 
-        console.log(MatchingDTO.categoryList);
-        console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
+        // console.log(MatchingDTO.categoryList);
+        // console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
 
-        const matchingResponse = await editMatchingAPI({
-            postSEQ: postResponse.data.postSEQ,
-            categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
-        });
-        console.log(matchingResponse);
+        // const matchingResponse = await editMatchingAPI({
+        //     postSEQ: postResponse.data.postSEQ,
+        //     categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
+        // });
+        // console.log(matchingResponse);
 
-        const attachmentResponse = await editAttachmentsAPI(formData);
-        console.log(attachmentResponse);
-        console.log(postResponse.data.postSEQ);
-
+        // const attachmentResponse = await editAttachmentsAPI(formData);
+        // console.log(attachmentResponse);
+        // console.log(postResponse.data.postSEQ);
+        console.log(postResponse);
         if (postResponse.data) {
-            alert('글쓰기 성공');
-
+            alert('수정 성공');
+            console.log(postResponse);
             navigate('/');
         } else {
-            alert('글쓰기 실패');
+            alert('수정 실패');
+            console.log(postResponse);
         }
     };
 
@@ -272,7 +258,7 @@ const PostEdit = () => {
         <>
             <div id="form-container">
                 <div id="form">
-                    <form method="POST">
+                    <form method="PUT">
                         <div id="interest-section">
                             <div className="form-el">
                                 <br />
@@ -315,7 +301,7 @@ const PostEdit = () => {
                                 maxLength="100"
                             />
                         </div>
-                            <div className='select-place'>
+                            {/* <div className='select-place'>
                                 <h1>지역 선택</h1>
                                 <select onChange={handlePlaceTypeChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
                                     <option className= 'place-option'value="">지역을 선택해주세요</option>
@@ -339,8 +325,8 @@ const PostEdit = () => {
                                         </select>
                                     </div>
                                 )}
-                            </div>
-                        <div id="file-update">
+                            </div> */}
+                        {/* <div id="file-update">
                             <label htmlFor="image-update">
                                 <input
                                     type="file"
@@ -349,10 +335,10 @@ const PostEdit = () => {
                                     accept="image/*"
                                     onChange={handleUploadImage}
                                     multiple
-                                />
-                                <span>사진첨부</span>
-                            </label>
-                        </div>
+                                /> */}
+                                {/* <span>사진첨부</span> */}
+                            {/* </label>
+                        </div> */}
 
                         <div className="post-content">
                             <div className="textareaContainer">
