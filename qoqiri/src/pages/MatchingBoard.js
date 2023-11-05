@@ -14,11 +14,12 @@ import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
 import UserRating from "../components/UserRating";
-import { getAttachments } from "../api/post";
+import { getAttachmentsAll } from "../api/post";
 import DetailView from "../components/DetailView";
 import { useParams } from "react-router-dom";
 import { asyncSearchResult } from "../store/postSlice";
-import { getCommentCount, getMatchCate } from "../api/post";
+import { getCommentCount } from "../api/post";
+import { colors } from "@mui/material";
 
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -76,8 +77,9 @@ const MatchingBoard = () => {
   };
 
   const attachmentsAPI = async () => {
-    const result = await getAttachments(selectedPostSEQ);
+    const result = await getAttachmentsAll();
     setAttachments(result.data);
+    // console.log(result.data);
   };
 
   const matchCategoryInfoAPI = async () => {
@@ -109,6 +111,7 @@ const MatchingBoard = () => {
 
   useEffect(() => {
     matchCategoryInfoAPI();
+    attachmentsAPI(selectedPostSEQ);
   }, [posts]);
 
   useEffect(() => {
@@ -128,130 +131,109 @@ const MatchingBoard = () => {
   useEffect(() => {
     categoryTypeAPI();
     categoryAPI();
-    attachmentsAPI(selectedPostSEQ);
   }, [selectedCatSEQ]);
 
   return (
     <div className="real-main">
-      <div className="main-content">
-        <main className="main">
-          <div className="select-bar">
-            <div className="active-button">
-              <a href="/matchingBoard" className="active">
-                전체보기
-              </a>
-              {categoryType.map((cat) => (
-                <a
-                  href={`/matchingBoard/${cat?.ctSEQ}`}
-                  className="active"
-                  key={cat?.ctSEQ}
-                >
-                  {cat?.ctName}
-                </a>
-              ))}
-            </div>
-          </div>
-          <section className="section">
-            {posts?.map((po, index) => (
-              <div
-                onClick={() => {
-                  setSelectedPostSEQ(po?.postSEQ);
-
-                  setIsOpen(!isOpen);
-                }}
-                className="board"
-                key={po?.postSEQ}
+      <main className="main">
+        <div className="select-bar">
+          <div className="active-button">
+            <a href="/matchingBoard" className="active">
+              전체보기
+            </a>
+            {categoryType.map((cat) => (
+              <a
+                href={`/matchingBoard/${cat?.ctSEQ}`}
+                className="active"
+                key={cat?.ctSEQ}
               >
-                <div className="board-header">
-                  <div className="board-header-time">
-                    <Date postDate={po?.postDate} />
-                  </div>
-                  <div className="titleNickname">
-                    <div className="title">{po?.postTitle}</div>
-                  </div>
-                  <div className="board-header-main">
-                    <div className="profile">
-                      <div className="profileFlex">
-                        <a href="" className="profileImg">
-                          <img
-                            src={
-                              po?.userInfo?.profileImg
-                                ? `/upload/${po.userInfo.profileImg}`
-                                : defaultProfileImageUrl
-                            }
-                            alt="프로필 이미지"
-                          />
-                        </a>
-                      </div>
-                      <div>
-                        {/* <UserRating rating={po?.userInfo?.rating} /> */}
-                      </div>
-                    </div>
-                    <span className="nickname">
-                      {po?.userInfo?.userNickname}
-                    </span>
-                    <div className="board-image-main">
-                      {attachments.map((attachments) => (
-                        <div className="board-image">
-                          {console.log(`${attachments?.attachmentURL}`)}
-                          <img src={`${attachments?.attachmentURL}`} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                {cat?.ctName}
+              </a>
+            ))}
+          </div>
+        </div>
+        <section className="section">
+          {posts?.map((po, index) => (
+            <div
+              onClick={() => {
+                setSelectedPostSEQ(po?.postSEQ);
+
+                setIsOpen(!isOpen);
+              }}
+              className="board"
+              key={po?.postSEQ}
+            >
+              <div className="board-header-time">
+                <Date postDate={po?.postDate} />
+              </div>
+              <div className="board-header">
+                <div className="profile">
+                  <img src={`/uploadprofile/${po?.userInfo?.profileImg}`} />
                 </div>
-                <div className="write-board">
-                  <div className="write">
-                    {po.postContent}
-                    <a href="#" className="comment-count">
-                      <FontAwesomeIcon icon={faMessage} />
-                      <div className="count">{commentCount[index]}</div>
-                    </a>
-                  </div>
-                </div>
-                <div className="board-foot">
-                  <div className="category">
-                    {matchCate
-                      .filter((match) => match.post?.postSEQ === po.postSEQ)
-                      .map((filteredMatch, index) => (
-                        <span key={index}>
-                          {filteredMatch?.category?.categoryName}
-                        </span>
-                      ))}
-                  </div>
-                  <div className="foot-place-detail">
-                    <p>{po?.place?.placeName}</p>
-                    <p>{po?.place?.placeType?.placeTypeName}</p>
-                  </div>
+                <div className="titleNickname">
+                  <div className="title">{po?.postTitle}</div>
+                  <span className="nickname">{po?.userInfo?.userNickname}</span>
                 </div>
               </div>
-            ))}
-
-            {/* <input
+              <div className="board-image-main">
+                {attachments
+                  ?.filter(
+                    (attachment) => attachment.post?.postSEQ === po.postSEQ
+                  )
+                  ?.map((filterattachment, index) => (
+                    <div className="board-image" key={index}>
+                      <img src={`/upload/${filterattachment?.attachmentURL}`} />
+                    </div>
+                  ))}
+              </div>
+              <div className="write-board">
+                <div className="write">
+                  {po.postContent}
+                  <a href="#" className="comment-count">
+                    <FontAwesomeIcon icon={faMessage} />
+                    <div className="count">{commentCount[index]}</div>
+                  </a>
+                </div>
+              </div>
+              <div className="category">
+                {matchCate
+                  .filter((match) => match.post?.postSEQ === po.postSEQ)
+                  .map((filteredMatch, index) => (
+                    <span key={index}>
+                      {filteredMatch?.category?.categoryName}
+                    </span>
+                  ))}
+              </div>
+              <div className="foot-place-detail">
+                <p>{po?.place?.placeName}</p>
+                <p>{po?.place?.placeType?.placeTypeName}</p>
+              </div>
+            </div>
+          ))}
+          {/* <input
               type="text"
               placeholder="검색어를 입력하세요"
               value={searchKeyword}
               onChange={handleSearchChange}
             /> */}
-            {/* <button onClick={handleSearchClick}>검색</button> */}
-            {isOpen && (
-              <div className="Matching-modal-main">
-                <div className="Matching-modal-overlay">
-                  <div className="Matching-modal">
-                    <div className="close-button" onClick={closeModal}>
-                      &times;
-                    </div>
-                    <DetailView
-                      selectedPostSEQ={selectedPostSEQ}
-                      attachments={attachments}
-                    />
+          {/* <button onClick={handleSearchClick}>검색</button> */}
+          {isOpen && (
+            <div className="Matching-modal-main">
+              <div className="Matching-modal-overlay">
+                <div className="Matching-modal">
+                  <div className="close-button" onClick={closeModal}>
+                    &times;
                   </div>
+                  <DetailView
+                    selectedPostSEQ={selectedPostSEQ}
+                    attachments={attachments}
+                  />
                 </div>
               </div>
-            )}
-          </section>
-        </main>
-      </div>
+            </div>
+          )}
+        </section>
+      </main>
     </div>
   );
 };

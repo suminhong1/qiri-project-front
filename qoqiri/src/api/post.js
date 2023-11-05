@@ -35,10 +35,15 @@ export const addAttachmentsAPI = async (formData) => {
     return response.data; // 서버에서의 응답을 반환?
 };
 
-// postAttachments 전체 조회
+// 게시물 하나에 대한 전체 postAttachments 조회
 export const getAttachments = async (id) => {
     return await instance.get('postAttachments/' + id);
 };
+
+// postAttachments 전체조회
+export const getAttachmentsAll = async () => {
+    return await instance.get("postAttachments");
+} 
 
 // 게시물 수정
 export const editPostAPI = async (postSeq) => {
