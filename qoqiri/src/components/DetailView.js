@@ -11,6 +11,94 @@ import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 import { createChatRoom, joinChatRoom } from "../api/chat";
+import styled from "styled-components";
+
+const Detail = styled.div`
+
+  border-top: 33px solid #ff7f38;
+
+  .board-detail {
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 60px;
+  }
+
+  .board-header-time {
+    margin-top: 15px;
+    margin-right: 10px;
+  }
+
+  .board-image-main {
+    margin-top: 20px;
+  }
+
+  .board-image img {
+    margin-left : 10px;
+  }
+
+  .write-board {
+    margin-top: 70px;
+    margin-bottom: 20px;
+  }
+
+  .foot-place-detail {
+    top: 200px;
+    flex-direction: column;
+    margin-right: 20px;
+  }
+
+  .foot-place {
+    display: flex;
+    gap: 4px;
+  }
+
+  .foot-post {
+    width: 100%;
+    padding: 5px;
+    background-color: #ff7f38;
+    bottom: 0;
+    margin-top: 10px;
+    position: relative;
+  }
+
+  .footFlex {
+    maring-left: 100px;
+    text-align: right;
+  }
+
+  .post-put {
+    padding: 5.85px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 14px;
+    background-color: #ff7f38;
+    color: #ffffff;
+    border-style: none;
+  }
+  .post-delete {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 14px;
+    background-color: #ff7f38;
+    color: #ffffff;
+    border-style: none;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+
+  .carousel img {
+    height: 500px;
+    padding : 30px;
+  }
+
+`;
 
 const DetailView = ({ selectedPostSEQ, attachments }) => {
   const [posts, setPosts] = useState([]);
@@ -118,64 +206,50 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
     dispatch(viewComments(selectedPostSEQ));
   }, [dispatch]);
 
-  const attachment = attachments.attachmentURL || []; // 이미지 정보를 포함하는 배열
-  console.log(attachment);
   return (
-    <>
+    <Detail>
       <div className="board-detail" key={post?.postSEQ}>
+        <div className="board-header-time">
+          <Date postDate={post?.postDate} />
+        </div>
         <div className="board-header">
-          <div className="board-header-time">
-            <Date postDate={post?.postDate} />
+          <div className="profile">
+            <img
+              src={`/uploadprofile/${post?.userInfo?.profileImg}`}
+              alt="프로필 이미지"
+            />
           </div>
-          <div className="titleNickname" style={{ marginBottom: "70px" }}>
+          <div className="titleNickname">
             <div className="title">{post?.postTitle}</div>
-          </div>
-          <div
-            className="board-header-main"
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <div className="profile">
-              <div className="profileFlex">
-                <a href="" className="profileImg">
-                  <img
-                    src={`/upload/${post?.userInfo?.profileImg}`}
-                    alt="프로필 이미지"
-                  />
-                </a>
-              </div>
-              {/* <UserRating rating={post?.userInfo?.rating} /> */}
-            </div>
             <span className="nickname">{post?.userInfo?.userNickname}</span>
-            <div className="board-image-main">
-              <div className="board-image">
-                {attachments.map((attachment, index) => (
-                  <img
-                    key={index}
-                    src={attachment.attachmentURL}
-                    alt={`이미지 ${index + 1}`}
-                    onClick={() => openModal(index)}
-                  />
-                ))}
-              </div>
-            </div>
           </div>
         </div>
-        <div className="Detail-write-board">
-          <div className="Detail-write">{post?.postContent}</div>
+        <div className="board-image-main">
+          <div className="board-image">
+            {attachments
+              ?.filter(
+                (attachment) => attachment.post?.postSEQ === post.postSEQ
+              )
+              ?.map((filterattachment, index) => (
+                <img
+                  key={index}
+                  src={`/upload/${filterattachment?.attachmentURL}`}
+                  alt={`이미지 ${index + 1}`}
+                  onClick={() => openModal(index)}
+                />
+              ))}
+          </div>
         </div>
-        <div className="board-foot">
-          <button className="play" onClick={handleApplyClick}>
-            같이놀자!
-          </button>
-          <div className="foot-place-detail">
+        <div className="write-board">
+          <div className="write">{post?.postContent}</div>
+        </div>
+        <button className="play" onClick={handleApplyClick}>
+          같이놀자!
+        </button>
+        <div className="foot-place-detail">
+          <div className="foot-place">
             <p>{post?.place?.placeName}</p>
             <p>{post?.place?.placeType?.placeTypeName}</p>
-            {user?.id === post?.userInfo?.userId ? (
-              <>
-                <a href={`/postedit/${selectedPostSEQ}`}>수정</a>
-                <button onClick={deletePost}>삭제</button>
-              </>
-            ) : null}
           </div>
         </div>
         <hr />
@@ -185,6 +259,18 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
           .map((comment) => (
             <Comment key={comment.commentsSEQ} comment={comment} />
           ))}
+      </div>
+      <div className="foot-post">
+        {user?.id === post?.userInfo?.userId ? (
+          <div className="footFlex">
+            <a className="post-put" href={`/postedit/${selectedPostSEQ}`}>
+              수정
+            </a>
+            <button className="post-delete" onClick={deletePost}>
+              삭제
+            </button>
+          </div>
+        ) : null}
       </div>
       {isModalOpen && (
         <div className="Matching-modal-overlay">
@@ -205,16 +291,22 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
               dynamicHeight={true}
               showThumbs={false}
             >
-              {attachments.map((imageSrc, index) => (
-                <div key={index}>
-                  <img src={imageSrc} alt={`이미지 ${index + 1}`} />
-                </div>
-              ))}
+              {attachments
+                ?.filter(
+                  (attachment) => attachment.post?.postSEQ === post.postSEQ
+                )
+                ?.map((filterattachment, index) => (
+                  <div key={index}>
+                    <img
+                      src={`/upload/${filterattachment?.attachmentURL}`}
+                      alt={`이미지 ${index + 1}`}
+                    />
+                  </div>
+                ))}
             </Carousel>
-
             <div
               onClick={() => {
-                if (selectedImageIndex < attachment.length - 1) {
+                if (selectedImageIndex < attachments?.length - 1) {
                   setSelectedImageIndex(selectedImageIndex + 1);
                 }
               }}
@@ -228,7 +320,7 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
           </div>
         </div>
       )}
-    </>
+    </Detail>
   );
 };
 export default DetailView;

@@ -1,66 +1,108 @@
+body {
+  overflow: overlay;
+}
+
 body::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 너비 조절 */
+  width: 10px;
+  height: 10px;
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #ff7f38; /* 스크롤바 색상 조절 */
-  border-radius: 10px; /* 스크롤바 둥글게 만들기 */
-  height: 1%;
+  outline: none;
+  border-radius: 10px;
+  border: 4px solid transparent;
+  background-color: #ff7f38;
 }
 
 body::-webkit-scrollbar-thumb:hover {
-  background-color: #ff7f38; /* 스크롤바 호버 시 색상 변경 */
+  border: 4px solid transparent;
+}
+
+body::-webkit-scrollbar-track {
+  box-shadow: none;
+  background-color: transparent;
+}
+
+
+
+.Matching-modal::-webkit-scrollbar-button:horizontal:single-button:start {
+  position: absolute;
+  content: '';
+  border-bottom: 20px solid transparent;
+  border-right: 42px solid rgba(0,0,0,0);
+  border-left: 20px solid transparent;
+  border-top: 20px solid transparent;
+}
+
+.Matching-modal::-webkit-scrollbar-button:vertical:single-button:start {
+  position: absolute;
+  content: '';
+  border-right: 20px solid transparent;
+  border-bottom: 62px solid rgba(0,0,0,0);;
+  border-left: 20px solid transparent;
+  border-top: 20px solid transparent;
+}
+
+.Matching-modal::-webkit-scrollbar-button:horizontal:single-button:end {
+  position: absolute;
+  overflow: hidden;
+  content: '';
+  border-bottom: 20px solid transparent;
+  border-left: 42px solid rgba(0,0,0,0);;
+  border-right: 20px solid transparent;
+  border-top: 20px solid transparent;
+}
+
+.Matching-modal::-webkit-scrollbar-button:vertical:single-button:end {
+  position: absolute;
+  overflow: hidden;
+  content: '';
+  border-bottom: 20px solid transparent;
+  border-top: 62px solid rgba(0,0,0,0);
+  border-right: 20px solid transparent;
+  border-left: 20px solid transparent;
 }
 
 .Matching-modal::-webkit-scrollbar {
-  width: 8px; /* 스크롤바 너비 조절 */
+  display: none;
 }
 
-.Matching-modal::-webkit-scrollbar-thumb {
-  background-color: #ff7f38; /* 스크롤바 색상 조절 */
-  border-radius: 10px; /* 스크롤바 둥글게 만들기 */
-  height: 1%;
+/* .Matching-modal::-webkit-scrollbar-thumb {
+  background-color: #ff7f38;
+  border-radius: 10px; 
 }
 
 .Matching-modal::-webkit-scrollbar-thumb:hover {
-  background-color: #ff7f38; /* 스크롤바 호버 시 색상 변경 */
+  background-color: #ff7f38; 
+} */
+
+img {
+  width: 50px;
+  height: 50px;
 }
 
-a {
-  text-decoration: none;
-  color: #000;
+.real-main {
+ background-color: #ff7f38;
 }
-.main-content {
+.main {
   position: relative;
   display: flex;
   flex-direction: column;
-  -webkit-box-align: center;
-  align-items: center;
-  min-width: 1200px;
-  margin-left: 80px;
-  padding-top: 50px;
-}
-.main {
-  display: flex;
-  flex-direction: column;
-  -webkit-box-pack: center;
-  justify-content: center;
-  width: 1600px;
-  min-height: calc(100vh - 400px);
-  margin-bottom: 70px;
+  width: 1200px;
+  height: 100%;
+  margin: 0px auto;
+  padding-top: 40px;
 }
 
 .select-bar {
-  background-color: white;
-  /* font-family: "NanumSquareRoundR"; */
-  position: relative;
+  border : 1px solid #ff7f38;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
   border-radius: 4px;
-  margin-bottom: 30px;
-  box-shadow: 0px 0px 1px 1px #ff7f38;
-  width: 1548px;
+  cursor: pointer;
+  width: 1197px;
+  padding: 0px 10px;  
+  margin-bottom: 12px;
+  background-color: #ffffff;
 }
 
 .select-bar a {
@@ -78,100 +120,74 @@ a {
 }
 
 .section {
-  position: relative;
   display: flex;
   flex-wrap: wrap;
-  width: 1600px;
-  min-width: 1600px;
-  gap: 24px;
+  margin: -5px -5px 5px;
+  margin-bottom: 20px;
 }
 
 .board {
-  box-shadow: 0px 0px 1px 1px #ff7f38;
-  width: 500px;
-  box-sizing: border-box; /* 너비를 포함하여 크기를 계산하도록 함 */
-  padding: 8px;
-  border-radius: 4px;
   background-color: #ffffff;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  border : 1px solid #ff7f38;
+  border-radius: 4px;
+  width: 393px;
+  min-height: 270px;
+  padding: 20px;
+  margin: 5px;
 }
 
 .board-header {
-  width: 100%;
+  display: flex;
 }
+
 .board-header-time {
-  float: right;
-  margin-right: 10px;
-  font-size: 11px;
+  font-size: 7px;
   font-weight: 660;
   color: #ff7f38;
-}
-.board-header-main {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  position: absolute;
+  right: 20px;
+  top: 20px;
 }
 
 .profile {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column; /*수직 정렬*/
-}
-.profileFlex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  margin-right: 8px;
 }
 
-.profileImg img {
-  width: 55px;
-  height: 55px;
-  border: 1px solid #fcf8f1;
-  border-radius: 50px;
-}
-.profileLike {
-  width: 70px;
-  height: 10px;
-}
-.board-image {
-  float: right;
-}
-.board-image img {
-  height: 60px;
-  width: 70px;
-}
-.titleNickname {
-  flex-direction: wrap;
-  text-align: center;
-  margin-bottom: 30px;
+.profile img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
 }
 
 .titleNickname .title {
-  font-weight: 1000;
-  color: #000;
-  font-size: 20px;
-  margin-top: 20px;
-  margin-left: 10px;
-  margin-right: 30px;
-  /* font-family: "NanumSquareRoundEB"; */
-  /* 추가된 스타일 */
-  /* max-width: 300px; 허용할 최대 너비 설정 */
-  white-space: nowrap; /* 텍스트 줄 바꿈 방지 */
-  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
-  text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  color:  #000000;
+  font-weight: 800;
+  font-size: 14px;
 }
 
 .nickname {
-  font-weight: 600;
   font-size: 13px;
-  margin: 20px;
-  /* font-family: "NanumSquareRoundB"; */
-  font-weight: bold;
+  font-weight: normal;
+  color:  #ff7f38;
   display: flex;
-  justify-content: center;
+  -webkit-box-align: center;
   align-items: center;
-  color: #ff7f38;
+  width: 100%;
+  margin-top: 4px;
 }
+
 .board-image-main {
   float: right;
 }
@@ -179,86 +195,82 @@ a {
 .board-image {
   display: flex;
   float: right;
-  gap: 10px;
-  padding: 10px;
+}
+
+.board-image img {
+  height: 50px;
+  width: 60px;
+  margin-right: 5px;
+}
+
+.titleNickname {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
 }
 
 .write-board {
-  padding: 30px;
-  width: 90%;
-}
-
-.Detail-write-board {
-  padding: 30px;
-  width: 90%;
+  margin-top: 20px;
+  line-height: 16px;
+  word-break: break-all;
+  height: 48px;
 }
 
 .write {
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 800;
-  color: #000000;
+  color:  #000000;
   line-height: 18px;
-  /* font-family: "NanumSquareRoundL"; */
-  /* 추가된 스타일 */
   max-height: 100px; /* 허용할 최대 높이 설정 */
   overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
   text-overflow: ellipsis; /* 넘치는 텍스트를 ...으로 표시 */
 }
 
-.Detail-write {
-  font-size: 18px;
-  font-weight: 800;
-  color: #000000;
-  line-height: 18px;
-  /* font-family: "NanumSquareRoundL"; */
-  margin-bottom: 70px;
-}
-
 .comment-count {
-  width: 20px;
-  height: 20px;
   display: flex;
   float: right;
-  margin: 20px;
   gap: 5px;
-}
-.comment-count img {
-  width: 90%;
-  height: 90%;
-  margin-right: 5px;
+  justify-content: center;
+  align-items: center;
 }
 
-.board-foot {
-  width: 100%;
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-.board-foot-tag {
-  display: flex;
-  gap: 10px;
-  margin-left: 15px;
-  font-weight: bold;
-  font-size: 13px;
-  color: #b4b4b4;
-}
-
-.board-foot .category {
-  margin-left: 15px;
+.category {
   font-weight: 600;
   font-size: 13px;
-  color: #ff7f38;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 28px;
+}
+
+.category span {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 14px;
+  background: #ff7f38;
+  color: #ffffff;
 }
 
 .foot-place-detail {
-  text-align: center;
-  float: right;
-  margin-right: 10px;
-  font-weight: 600;
-  font-size: 13px;
+  position: absolute;
   display: flex;
-  gap: 5px;
-  color: #ff7f38;
+  -webkit-box-align: center;
+  align-items: center;
+  right: 20px;
+  top: 210px;
+  gap: 6px;
+}
+
+.foot-place-detail p {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 8px;
+  line-height: 14px;
+  background: #ff7f38;
+  color: #ffffff;
 }
 
 /* 모달 스타일 */
@@ -280,10 +292,10 @@ a {
 }
 
 .Matching-modal {
-  background: white;
-  width: 900px; /* 너비 조절 */
-  height: 700px; /* 높이 조절 */
-  padding: 20px;
+  background: #ffffff;
+  width: 700px; /* 너비 조절 */
+  height: 500px; /* 높이 조절 */
+  /* padding: 10px; */
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   overflow: auto;
   position: relative;
@@ -320,15 +332,17 @@ a {
 }
 
 .Matching-modal img {
-  max-width: 500px;
-  max-height: 500px;
+  max-width: 100%;
+  max-height: 100%;
   display: block;
   margin: 0 auto;
 }
 
-/* button {
-  margin-top: 10px;
-} */
+.modal-bar {
+  width: 100%;
+  background-color: #ff7f38;
+  height: 20px;
+}
 
 .close-button {
   position: absolute;
@@ -336,7 +350,7 @@ a {
   right: 10px; /* 수평 위치를 조정하려면 right 값을 조정하세요. */
   font-size: 20px;
   cursor: pointer;
-  color: #333; /* 선택 사항: 필요한대로 색상을 변경하세요. */
+  color: #ffffff; /* 선택 사항: 필요한대로 색상을 변경하세요. */
 }
 
 /* comment */

@@ -2,6 +2,7 @@ import { addComment } from "../store/commentSlice";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { faArrowUpWideShort } from "@fortawesome/free-solid-svg-icons";
 
 const Form = styled.form`
   text-align: center;
@@ -12,10 +13,10 @@ const Form = styled.form`
   }
 
   input[type="text"] {
-    width: 90%;
+    width: 89%;
     border: none;
     border-bottom: 1px solid #ddd;
-    height: 4vh;
+    height: 7vh;
     font-size: 1rem;
     font-weight: 700;
     border-radius: 5px;

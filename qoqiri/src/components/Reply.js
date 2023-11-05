@@ -17,7 +17,6 @@ const Box = styled.div`
     border-style: none;
     color: white;
     border-radius: 5px;
-    margin: 10px;
     padding: 5px 10px;
     height: 25px;
     margin-left: 10px;

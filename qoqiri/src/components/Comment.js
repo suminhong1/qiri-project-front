@@ -10,8 +10,7 @@ import { faThumbsUp as solidThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import Date from "../components/Date";
 import { getLike, postLike, delLike } from "../api/commentLike";
 
-import axios from "axios";
-import { faArrowUpWideShort } from "@fortawesome/free-solid-svg-icons";
+
 
 const Box = styled.div`
   width: 95%;
@@ -103,15 +102,14 @@ const Comment = ({ comment }) => {
   };
 
   const toggleLike = async () => {
-    if (likeStatus) {
+    if (liked) {
       const response = await delLike(seq);
       if (response.status === 200) {
-        setLikeStatus(false);
+        setLiked(false);
         setLike(like - 1);
-        // 사용자의 좋아요 상태를 로컬 스토리지에서 제거
-        localStorage.removeItem(
-          `like_${comment.commentsSEQ}_${userInfo.userInfo}`
-        );
+        // 좋아요를 취소할 때 'seq'를 localStorage에서 제거
+        localStorage.removeItem(`seq_${comment.commentsSEQ}`);
+        setSeq(null); // 'seq' 상태를 null로 설정
       } else {
         console.error("좋아요 취소 중에 문제가 발생했습니다.");
       }
@@ -123,20 +121,12 @@ const Comment = ({ comment }) => {
           comments: comment,
           userInfo: comment.userInfo,
         });
-
         setSeq(response.data.clSEQ);
-        setUserinfo(response.data);
-
-        console.log(response.data);
-
         if (response.status === 200) {
-          setLikeStatus(true);
+          setLiked(true);
           setLike(like + 1);
-          // 사용자의 좋아요 상태를 로컬 스토리지에 저장
-          localStorage.setItem(
-            `like_${comment.commentsSEQ}_${userInfo.userInfo}`,
-            "liked"
-          );
+          // 좋아요를 할 때 'seq'를 localStorage에 저장
+          localStorage.setItem(`seq_${comment.commentsSEQ}`, response.data.clSEQ);
         } else {
           console.error("좋아요 추가 중에 문제가 발생했습니다.");
         }
@@ -149,14 +139,12 @@ const Comment = ({ comment }) => {
   useEffect(() => {
     likeAPI();
 
-    // 사용자의 좋아요 상태를 로컬 스토리지에서 가져와 설정
-    const userLikeStatus = localStorage.getItem(
-      `like_${comment.commentsSEQ}_${userInfo.userInfo}`
-    );
-    if (userLikeStatus === "liked") {
-      setLikeStatus(true);
+    // 댓글마다의 'seq' 값을 localStorage에서 가져와 설정
+    const storedSeq = localStorage.getItem(`seq_${comment.commentsSEQ}`);
+    if (storedSeq) {
+      setSeq(storedSeq);
     }
-  }, [comment.commentsSEQ, userInfo.userInfo]);
+  }, []);
 
   const onUpdate = () => {
     dispatch(
@@ -203,10 +191,10 @@ const Comment = ({ comment }) => {
               <p>답글</p>
             </button>
             <button className="comment-button" onClick={onUpdate}>
-              수정
+              댓글 수정
             </button>
             <button className="comment-button" onClick={onDelete}>
-              삭제
+              댓글 삭제
             </button>
           </div>
         </div>
