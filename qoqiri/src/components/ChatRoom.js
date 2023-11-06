@@ -204,9 +204,12 @@ const ChatRoom = ({ chatRoomId }) => {
   };
 
   useEffect(() => {
-    chatRoomInfoAPI();
-    chatMessageAPI();
-    userChatRoomInfoAPI();
+    const fetchData = async () => {
+      await chatRoomInfoAPI();
+      await chatMessageAPI();
+      await userChatRoomInfoAPI();
+    };
+    fetchData();
   }, [chatRoomId]);
 
   useEffect(() => {
