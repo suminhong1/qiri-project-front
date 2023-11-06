@@ -57,8 +57,6 @@ const AddComment = ({ code, active, parent }) => {
     if (parent !== undefined) {
       data.commentsParentSeq = parent;
     }
-    // console.log("댓글 추가 테스트!");
-    // console.log(data);
     dispatch(addComment(data));
     setComment("");
 

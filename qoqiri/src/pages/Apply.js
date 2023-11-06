@@ -59,7 +59,9 @@ const Apply = () => {
         ) : (
           appliedUsers.map((userInfo) => (
             <section className="ap-section" key={userInfo.id}>
-              <ApplyForm userId={userInfo.id} />
+              <div className=".apply-form">
+                <ApplyForm userId={userInfo.id} />
+              </div>
             </section>
           ))
         )}
@@ -74,4 +76,4 @@ const Apply = () => {
   );
 };
 
-export default Apply;
+export default Apply; 

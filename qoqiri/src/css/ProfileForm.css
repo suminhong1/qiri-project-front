@@ -7,7 +7,6 @@
   border-radius: 3%;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
-
 .pf-header-sign {
   display: flex;
   justify-content: center;
@@ -17,7 +16,6 @@
   padding: 10px;
   text-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-
 .pf-custom-card {
   width: 18rem;
   perspective: 1000px;
@@ -26,18 +24,15 @@
   text-align: left;
   position: relative;
 }
-
 .pf-custom-card.flipped {
   transform: rotateY(180deg);
 }
-
 .pf-card-front {
   width: 288px;
   height: 444px;
   transform-style: preserve-3d;
   position: relative;
 }
-
 .pf-main-image {
   min-width: 268px;
   min-height: 278px;
@@ -57,11 +52,9 @@
   height: 268px;
   border-radius: 100%;
 }
-
 .pf-card-body {
   padding: 1rem;
 }
-
 .pf-card-body h1 {
   position: relative;
   top: 25px;
@@ -75,12 +68,12 @@
 .pf-text {
   font-size: 20px;
   margin-left: 10px;
-  overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
-  text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
-  display: -webkit-box; /* WebKit 기반 브라우저에서 사용 */
-  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 (3줄 이상은 자름) */
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  display: -webkit-box; 
+  -webkit-line-clamp: 3; 
   white-space: normal;
-  -webkit-box-orient: vertical; /* 세로 방향으로 텍스트 배치 */
+  -webkit-box-orient: vertical; 
   line-height: 1.4;
   height: 69px;
   width: 230px;
@@ -88,7 +81,6 @@
   position: relative;
   top: 30px;
 }
-
 .pf-front-editBtn {
   background-color: rgb(6, 6, 165);
   border: none;
@@ -109,31 +101,25 @@
   position: relative;
   transform-style: preserve-3d;
 }
-
 .pf-info-row {
   display: flex;
   margin-bottom: 8px;
   padding: 7px;
 }
-
 .pf-info-label {
   flex: 1;
   font-size: 16px;
 }
-
 .pf-info-value {
   flex: 2;
   font-size: 16px;
 }
-
 .pf-custom-card.flipped .pf-card-front {
   display: none;
 }
-
 .pf-custom-card.flipped .pf-card-back {
   display: block;
 }
-
 .pf-front-applyBtn {
   margin-left: 4px;
   background-color: rgba(25, 107, 25, 0.966);
@@ -144,7 +130,6 @@
   margin-bottom: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-
 .pf-front-infoBtn {
   margin-top: 60px;
   margin-left: 4px;
@@ -155,7 +140,6 @@
   width: 278px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-
 .pf-back-infoBtn {
   background-color: rgb(255, 167, 96);
   border: none;
@@ -166,7 +150,6 @@
   margin-top: 60px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-
 .pf-back-editBtn {
   position: relative;
   bottom: 155px;
@@ -179,17 +162,14 @@
   margin-top: 60px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-
 .pf-container {
   position: relative;
-  /* 기타 스타일 설정 */
+  
 }
-
 .pf-back-upBtn {
   position: absolute;
-  bottom: 50px; /* 원하는 위치에 따라 조절 */
+  bottom: 50px; 
 }
-
 .pf-back-saveBtn {
   position: relative;
   font-weight: bold;
@@ -202,7 +182,6 @@
   background-color: rgb(255, 167, 96);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
 }
-
 .pf-front-saveBtn {
   position: relative;
   font-weight: bold;

@@ -6,20 +6,19 @@ import {
   getMatchCategoryInfo,
   getPosts,
   getPostsByCategoryType,
-  getSearchResults,
 } from "../api/post";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
-import UserRating from "../components/UserRating";
 import { getAttachmentsAll } from "../api/post";
 import DetailView from "../components/DetailView";
 import { useParams } from "react-router-dom";
 import { asyncSearchResult } from "../store/postSlice";
 import { getCommentCount } from "../api/post";
-import { colors } from "@mui/material";
+import defaultimg from "../assets/defaultimg.png";
+
 
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
@@ -28,12 +27,11 @@ const MatchingBoard = () => {
   const [category, setCategory] = useState([]);
   const [categoryType, setCategoryType] = useState([]);
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null);
-  const [searchKeyword, setSearchKeyword] = useState(""); // 키워드 검색
   const [attachments, setAttachments] = useState([]);
   const [commentCount, setCommentsCount] = useState(0);
   const [matchCate, setMatchCate] = useState([]);
   const { id } = useParams();
-  const defaultProfileImageUrl = "/path/to/default-image.png";
+  
   const dispatch = useDispatch();
   const searchList = useSelector((state) => {
     return state.post;
@@ -43,10 +41,6 @@ const MatchingBoard = () => {
     setPosts(searchList);
   }, [searchList]);
 
-  const handleSearchChange = (e) => {
-    setSearchKeyword(e.target.value);
-  };
-
   const PostsByCategoryTypeAPI = async () => {
     const result = await getPostsByCategoryType(id);
     setPosts(result.data);
@@ -55,15 +49,6 @@ const MatchingBoard = () => {
   const getPostsAPI = async () => {
     const result = await getPosts();
     setPosts(result.data);
-  };
-
-  const handleSearchClick = async () => {
-    dispatch(asyncSearchResult());
-    // try {
-    //   getSearchResultsAPI();
-    // } catch (error) {
-    //   console.error("검색 중 오류 발생:", error);
-    // }
   };
 
   const categoryAPI = async () => {
@@ -79,7 +64,6 @@ const MatchingBoard = () => {
   const attachmentsAPI = async () => {
     const result = await getAttachmentsAll();
     setAttachments(result.data);
-    // console.log(result.data);
   };
 
   const matchCategoryInfoAPI = async () => {
@@ -95,10 +79,6 @@ const MatchingBoard = () => {
     }
 
     setCommentsCount(counts);
-  };
-
-  const toggleModal = (postSEQ) => {
-    setIsOpen(!isOpen);
   };
 
   const closeModal = () => {
@@ -168,7 +148,7 @@ const MatchingBoard = () => {
               </div>
               <div className="board-header">
                 <div className="profile">
-                  <img src={`/uploadprofile/${po?.userInfo?.profileImg}`} />
+                  <img src={po?.userInfo?.profileImg ? `/uploadprofile/${po?.userInfo?.profileImg}` : defaultimg} />
                 </div>
                 <div className="titleNickname">
                   <div className="title">{po?.postTitle}</div>
@@ -197,8 +177,8 @@ const MatchingBoard = () => {
               </div>
               <div className="category">
                 {matchCate
-                  .filter((match) => match.post?.postSEQ === po.postSEQ)
-                  .map((filteredMatch, index) => (
+                  .filter((match) => match?.post?.postSEQ === po?.postSEQ)
+                  ?.map((filteredMatch, index) => (
                     <span key={index}>
                       {filteredMatch?.category?.categoryName}
                     </span>
@@ -210,13 +190,6 @@ const MatchingBoard = () => {
               </div>
             </div>
           ))}
-          {/* <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              value={searchKeyword}
-              onChange={handleSearchChange}
-            /> */}
-          {/* <button onClick={handleSearchClick}>검색</button> */}
           {isOpen && (
             <div className="Matching-modal-main">
               <div className="Matching-modal-overlay">

@@ -25,6 +25,7 @@
   margin: 0 auto;
   text-align: left;
   position: relative;
+  right: -45px;
 }
 
 .ap-custom-card.flipped {
@@ -36,9 +37,12 @@
   height: 444px;
   transform-style: preserve-3d;
   position: relative;
+  
 }
 
 .ap-card-front .ap-main-image {
+  position: relative;
+  right: 90px;
   margin-left: 10px;
   width: 268px;
   height: 268px;
@@ -66,12 +70,12 @@
   font-size: 20px;
   margin-left: 10px;
   margin-top: 25px;
-  overflow: hidden; /* 텍스트를 요소 내에서 숨김 */
-  text-overflow: ellipsis; /* 텍스트가 자를 경우 "..."으로 나타냄 */
-  display: -webkit-box; /* WebKit 기반 브라우저에서 사용 */
-  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 (3줄 이상은 자름) */
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  display: -webkit-box; 
+  -webkit-line-clamp: 3; 
   white-space: normal;
-  -webkit-box-orient: vertical; /* 세로 방향으로 텍스트 배치 */
+  -webkit-box-orient: vertical; 
   line-height: 1.4;
 }
 
@@ -110,6 +114,11 @@
   display: block;
 }
 
+.ap-front-Btn {
+  position: relative;
+  right: 90px;
+}
+
 .ap-front-chatBtn {
   font-weight: bold;
   background-color: rgba(238, 160, 43, 0.966);
@@ -135,7 +144,10 @@
   color: white;
   width: 125px;
   margin-bottom: 10px;
+  margin-left: 20px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+  position: relative;
+  left: 90px;
 }
 
 .ap-front-infoBtn {
@@ -169,4 +181,14 @@
   margin-left: 5px;
   margin-top: 60px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.21);
+}
+
+.ap-closeButton {
+  position: relative;
+  border: none;
+  bottom: 600px;
+  left: 130px;
+  background-color: rgba(177, 173, 173, 0.758);
+  font-weight: bold;
+  border-radius: 10%;
 }
