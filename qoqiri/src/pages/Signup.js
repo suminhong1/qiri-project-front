@@ -177,7 +177,7 @@ const SignUp = () => {
     } else {
       setPasswordConfirmMessage("");
       setIsPasswordConfirm(true);
-    }
+    } 
   };
 
   // 비밀번호 보이기 토글 핸들러
@@ -324,7 +324,7 @@ const SignUp = () => {
         setProfilePictureUrl(imageUrl);
       } catch (error) {
         console.error(error);
-        alert("프로필 사진 업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
+        alert("업로드 중 오류가 발생했습니다. 다시 시도해주세요.");
       }
     }
   };
@@ -384,7 +384,6 @@ const SignUp = () => {
     if (e) {
       e.preventDefault(); // 폼 기본 제출 방지
     }
-
     const userInfoDTO = {
       id,
       pwd: password,
@@ -428,7 +427,6 @@ const SignUp = () => {
           },
         }
       );
-      console.log(categoryResponse);
 
       if (userResponse.data) {
         alert("회원가입 성공. 로그인 해주세요");
@@ -521,7 +519,7 @@ const SignUp = () => {
             >
               {showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
             </button>
-            <p className="message">{passwordConfirmMessage}</p>
+            <p className="message">{passwordConfirmMessage}</p> 
           </div>
 
           {/* 이메일 입력 양식 */}
@@ -733,7 +731,7 @@ const SignUp = () => {
                 src={profilePictureUrl}
                 alt="프로필 사진 미리보기"
                 className="profile-picture-preview"
-                style={{width: "200px"}}
+               // style={{width: "200px"}}
               />
             )}
           </div>
