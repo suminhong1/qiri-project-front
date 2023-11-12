@@ -35,6 +35,7 @@ const StyledChatRoom = styled.div`
     width: 850px;
     min-width: 850px;
     overflow-y: scroll;
+    overflow-x: hidden;
     display: flex;
     justify-content: center;
     flex-direction: column;

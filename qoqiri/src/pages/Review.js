@@ -48,10 +48,8 @@ const ReviewBoard = () => {
   }, []);
 
   useEffect(() => {
-    // This will be executed after loggedInUser is set and component re-renders
     if (loggedInUser) {
-      console.log("로그인한 아이디", loggedInUser.id);
-      fetchUserPosts(loggedInUser.id); // This should now work correctly
+      fetchUserPosts(loggedInUser.id); 
       postsAPI();
     }
   }, [loggedInUser]);
@@ -60,8 +58,8 @@ const ReviewBoard = () => {
   const handleEditClick = (postId, content, postTitle) => {
     setIsEditing(true);
     setEditingPostId(postId);
-    setEditingContent(content); // 기존 내용을 수정 상태로 설정
-    setEditingPostTitle(postTitle); // 여기에 postTitle을 저장합니다.
+    setEditingContent(content); 
+    setEditingPostTitle(postTitle); 
   };
 
   // 리뷰 업데이트 확인함수
@@ -94,10 +92,8 @@ const ReviewBoard = () => {
       try {
         await deleteReview(postSEQ, postTitle);
         alert("리뷰가 삭제되었습니다.");
-
         // 드롭박스를 업데이트하기 위해 사용자 글 목록을 다시 가져옴
         fetchUserPosts(loggedInUser.id);
-
         window.location.replace("http://localhost:3000/review");
       } catch (error) {
         alert("리뷰 삭제에 실패하였습니다. 다시 시도해주세요.");
@@ -123,18 +119,14 @@ const ReviewBoard = () => {
           post.postTitleDropbox !== "Y" &&
           post.userInfo.userId == loggedInUser.id
       );
-
-      console.log("필터된 친구들" + filteredPosts);
       setUserPosts(filteredPosts);
     } catch (error) {
-      console.error("Failed to fetch user posts:", error);
     }
   };
 
   // 드롭박스 만들기 및 선택하기
 
   const handleTitleSelect = async (title) => {
-    console.log("타이틀명" + title);
     setSelectedTitle(title);
     const selectedPost = userPosts.find((post) => post.postTitle === title);
 
@@ -143,25 +135,21 @@ const ReviewBoard = () => {
   }; // 드롭박스 만들기 및 선택하기
 
   const handleWriteClick = async () => {
-    console.log();
     // 글 타이틀이 선택되지 않았을 경우 글쓰기 방지
     if (!selectedTitle || selectedTitle === "글 타이틀 선택") {
       alert("글 타이틀을 선택해주세요.");
       return;
     }
-
     // 로그인 확인
     if (!loggedInUser) {
       alert("로그인이 필요합니다.");
       return;
     }
-
     // userId 확인
     if (!loggedInUser.id) {
       alert("유효하지 않은 사용자 정보입니다. 다시 로그인해주세요.");
       return;
     }
-
     if (content.length <= 50) {
       // PostDTO 형식에 맞게 reviewData 객체를 수정
       const reviewData = {
@@ -170,14 +158,10 @@ const ReviewBoard = () => {
         boardSEQ: 2,
         postTitle: selectedTitle, // 드롭박스 만들기 및 선택하기
       };
-      console.log(reviewData);
-
       try {
         // 리뷰 내용을 백엔드로 전송
-        await saveReview(reviewData);
-        console.log("리뷰 저장시 정보" + reviewData);
+        await saveReview(reviewData);     
         alert("리뷰가 저장되었습니다.");
-
         // 선택한 포스트의 postTitleDropbox를 "Y"로 변경
         const selectedPost = userPosts.find(
           (post) => post.postTitle === selectedTitle

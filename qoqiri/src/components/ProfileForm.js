@@ -67,7 +67,7 @@ const ProfileForm = ({ userId }) => {
               className="pf-main-image"
               src={
                 userData?.profileImg
-                  ? `/upload/${userData?.profileImg}`
+                  ? `/uploadprofile/${userData?.profileImg}`
                   : defaultimg
               }
               alt="User"
@@ -150,7 +150,7 @@ const ProfileForm = ({ userId }) => {
         <Imgmodal
           images={[
             userData?.profileImg
-              ? `/upload/${userData?.profileImg}`
+              ? `/uploadprofile/${userData?.profileImg}`
               : defaultimg,
           ]}
           index={currentImageIndex}
