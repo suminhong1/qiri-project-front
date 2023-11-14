@@ -109,20 +109,25 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
     return state.comment;
   });
 
+  // 게시물 카드 오픈 
   const openModal = (imageIndex) => {
     setSelectedImageIndex(imageIndex);
     setIsModalOpen(true);
   };
 
+  // 게시물 카드 클로즈
   const closeModal = () => {
     setSelectedImageIndex(0);
     setIsModalOpen(false);
   };
 
+  // 게시물 리스트 불러오는 API
   const postsAPI = async () => {
     const result = await getPosts();
     setPosts(result.data);
   };
+
+  // 선택한 게시물 불러오는 API
   const getPostAPI = async () => {
     const result = await getPost(selectedPostSEQ);
     setPost(result.data);
@@ -136,6 +141,7 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
   const deletePost = () => {
     editPostAPI(selectedPostSEQ);
     alert("게시물이 삭제됐습니다.");
+    window.location.reload();
   };
   const handleApplyClick = async () => {
     // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)

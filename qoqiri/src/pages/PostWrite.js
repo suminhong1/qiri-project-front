@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef} from 'react';
 import '../css/PostWrite.css';
 import axios from 'axios';
 import { navigate } from 'react-router-dom';
@@ -9,14 +9,12 @@ import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 
 const PostWrite = () => {
-    const [postSEQ, setPostSEQ] = useState();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
     const [attachmentImg, setAttachmentImg] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
-
-    // const [userInfo, setUserInfo] = useState([]);
+    const fileInputRef = useRef(null);
 
     const [place, setPlace] = useState([]);
     const [placeType, setPlaceType] = useState([]);
@@ -39,7 +37,7 @@ const PostWrite = () => {
 
     const navigate = useNavigate();
 
-    const handlePlaceTypeChange = (event) => {
+    const handlePlaceTypeChange = (event) => { // 지역 선택 핸들러
         const selectedType = event.target.value;
         setSelectedPlaceType(selectedType);
 
@@ -49,7 +47,7 @@ const PostWrite = () => {
         setSelectedPlace(null);
     };
 
-    const handlePlaceChange = (event) => {
+    const handlePlaceChange = (event) => { // 세부 지역 선택 핸들러
         const selectedPlace = event.target.value;
         setSelectedPlace(selectedPlace);
     };
@@ -64,6 +62,7 @@ const PostWrite = () => {
         const newContent = event.target.value;
         setContent(newContent);
     };
+
     const maxFileCount = 3;
     // 첨부파일 핸들러
     const handleUploadImage = async (e) => {
@@ -75,10 +74,10 @@ const PostWrite = () => {
         }
         console.log(files);
 
-        const maxFileSize = 10 * 1024 * 1024;
+        const maxFileSize = 10 * 1024 * 1024; // 사진 용량 제한 10mb
         const newAttachmentImg = [];
 
-        for (let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) { // 사진 3장까지만 제한
             const file = files[i];
 
             if (file.size <= maxFileSize) {
@@ -99,17 +98,60 @@ const PostWrite = () => {
         }
     
         // 파일 업로드 필드 초기화
-        e.target.value = '';
+       fileInputRef.current.value = '';
     };
+
+    // 첨부파일 미리보기
     const updateImagePreviews = (newAttachmentImg) => {
         const previews = [];
-
+    
         for (let i = 0; i < newAttachmentImg.length && i < maxFileCount; i++) {
             previews.push(URL.createObjectURL(newAttachmentImg[i]));
         }
-
-        setImagePreviews(previews); // 미리보기 이미지 URL
+        setImagePreviews(previews); // 새로운 미리보기 이미지 URL 설정
     };
+    // 첨부파일 미리보기 중복방지
+    useEffect(() => {
+        setImagePreviews([]);
+    }, [attachmentImg]);
+
+    // 첨부파일 제거
+    const removeImage = (index) => {
+        const newAttachmentImg = [...attachmentImg];
+        newAttachmentImg.splice(index, 1);
+        setAttachmentImg(newAttachmentImg);
+        updateImagePreviews(newAttachmentImg);
+
+         // 이미지 삭제 API 호출
+    // await callImageDeleteAPI(index);
+
+    // // 이미지 삭제 후에 서버에 POST 요청
+    // submitForm();
+    //   };
+
+    //   const callImageDeleteAPI = async (index) => {
+    //     // 가상의 API 호출 (실제로는 서버에 이미지 삭제 API 호출)
+    //     return new Promise((resolve) => {
+    //       setTimeout(() => {
+    //         console.log(`Image at index ${index} deleted.`);
+    //         resolve();
+    //       }, 1000);
+    //     });
+    //   };
+
+  // 서버에 POST 요청을 보내는 함수
+//   const submitForm = () => {
+//     // 실제로는 서버에 POST 요청을 보내는 로직을 구현
+//     console.log('Form submitted to the server.');
+  };
+
+
+      // 컴포넌트가 언마운트 될 때 생성된 URL 해제
+    //   useEffect(() => {
+    //     return () => {
+    //       imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
+    //     };
+    //   }, [imagePreviews]);
 
     // 카테고리 선택 핸들러
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
@@ -148,12 +190,6 @@ const PostWrite = () => {
         return categories.filter((category) => category.categoryType && category.categoryType.ctSEQ === ctSEQ);
     };
 
-    // UserInfo API
-    // const UserInfoAPI = async () => {
-    //     const result = await getUser();
-    //     setUserInfo(result.data);
-    // };
-
     // place 리스트 불러오기
     const placeAPI = async () => {
         const result = await getPlace();
@@ -171,6 +207,7 @@ const PostWrite = () => {
         setBoards(result.data);
     };
 
+    // 지역, 세부지역, 게시판 API
     useEffect(() => {
         placeAPI();
         placeTypeAPI();
@@ -184,10 +221,6 @@ const PostWrite = () => {
     useEffect(() => {
         console.log(selectedPlaceType);
     }, [selectedPlaceType]);
-
-    // useEffect(() => {
-    //     console.log(selectedBoard);
-    // }, [selectedBoard]);
 
     const handleCancel = (e) => {
         navigate('/');
@@ -222,12 +255,12 @@ const PostWrite = () => {
 
        // 첨부한 사진 저장 경로와 등록한 게시물 Seq를 PostAttachments 테이블로 보냄
 
-        // try {
             console.log(PostDTO);
 
             const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
     
             console.log(postResponse);
+
     if(attachmentImg.length > 0){
             const formData = new FormData();
     
@@ -239,7 +272,10 @@ const PostWrite = () => {
             attachmentImg.forEach((image) => {
                 formData.append('files', image);
             });
+
+            // 첨부파일 API
             const attachmentResponse = await addAttachmentsAPI(formData);
+
             console.log(MatchingDTO.categoryList);
             console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
     
@@ -248,10 +284,8 @@ const PostWrite = () => {
                 postSEQ: postResponse.data.postSEQ,
                 categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
             });
+
             console.log(matchingResponse);
-    
-            // 여기 마저 작성해라
-    
            
             console.log(attachmentResponse);
             console.log(postResponse.data.postSEQ);
@@ -271,7 +305,6 @@ const PostWrite = () => {
                 <div id="form">
                     <form method="POST">
                         <div id="interest-section">
-                            {/* <label>관심 주제를 선택하세요</label> */}
                             <div className="form-el">
                                 <br />
                                 <div className="set-categoryLike-box">
@@ -290,13 +323,11 @@ const PostWrite = () => {
                                                         onClick={() =>
                                                             handleInterestClick(
                                                                 // 선택된 카테고리 이름과 seq를 selectLike 배열에 추가하거나 제거하는 이벤트 selectSeq도 마찬가지
-
                                                                 category.categorySEQ,
                                                                 category.categoryType.ctSEQ
                                                             )
                                                         }
                                                     >
-                                                        {/* {console.log(category)} */}
                                                         {category.categoryName}
                                                         {/*페이지에서 직접 보이는 카테고리 이름*/}
                                                     </div>
@@ -328,7 +359,6 @@ const PostWrite = () => {
                                         </option>
                                     ))}
                                 </select>
-
                                 {selectedPlaceType && (
                                     <div className='select-place'>
                                         <h2>상세 지역</h2>
@@ -342,11 +372,9 @@ const PostWrite = () => {
                                         </select>
                                     </div>
                                 )}
-</div>
+                            </div>
                                 {selectedPlace && (
                                     <div>
-                                        {/* <h2>Selected Place</h2>
-                                        <p>{selectedPlace}</p> */}
                                     </div>
                                 )}
                             </div>
@@ -360,6 +388,7 @@ const PostWrite = () => {
                                     accept="image/*"
                                     onChange={handleUploadImage}
                                     multiple
+                                    ref={fileInputRef}
                                 />
                                 <span>사진첨부</span>
                             </label>
@@ -367,15 +396,16 @@ const PostWrite = () => {
                                 <div className="board-image-main">
                                     <div className="board-image">
                                         {attachmentImg.map((attachment, index) => (
-                                            <img
-                                                key={index}
-                                                src={URL.createObjectURL(attachment)}
-                                                alt={`사진 ${index + 1}`}
-                                            />
+                                            <div key={index}>
+                                       <img                                                
+                                            src={URL.createObjectURL(attachment)}
+                                            alt={`사진 ${index + 1}`}
+                                        />
+                                                <button id='remove-image' onClick={() => removeImage(index)}>삭제</button>
+                                            </div>     
                                         ))}
                                     </div>
                                 </div>
-
                                 {imagePreviews.map((preview, index) => (
                                     <img
                                         key={index}
@@ -386,7 +416,6 @@ const PostWrite = () => {
                                 ))}
                             </div>
                         </div>
-                        {/* {console.log('typeof boardSeq', typeof 'boardSeq')}; */}
                         <div className="post-content">
                             <div className="textareaContainer">
                                 <textarea
@@ -401,7 +430,6 @@ const PostWrite = () => {
                                 </div>
                             </div>
                         </div>
-
                         <div className="submitButton">
                             <button type="submit" onClick={handleSubmit}>
                                 등록

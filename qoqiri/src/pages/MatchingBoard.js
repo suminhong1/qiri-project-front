@@ -41,31 +41,37 @@ const MatchingBoard = () => {
     setPosts(searchList);
   }, [searchList]);
 
+  // 카테고리 타입 SEQ받아서 해당하는 POST가져오기
   const PostsByCategoryTypeAPI = async () => {
     const result = await getPostsByCategoryType(id);
     setPosts(result.data);
   };
 
+  // 게시물 리스트 불러오는 API
   const getPostsAPI = async () => {
     const result = await getPosts();
     setPosts(result.data);
   };
 
+  // 카테고리 불러오는 API
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategory(result.data);
   };
 
+  // 카테고리 타입 불러오는 API
   const categoryTypeAPI = async () => {
     const result = await getCategoryTypes();
     setCategoryType(result.data);
   };
 
+  // 첨부한 첨부파일 불러오는 API
   const attachmentsAPI = async () => {
     const result = await getAttachmentsAll();
     setAttachments(result.data);
   };
 
+ // 매칭 카테고리 인포 불러오는 API
   const matchCategoryInfoAPI = async () => {
     const result = await getMatchCategoryInfo();
     setMatchCate(result.data);
@@ -108,6 +114,7 @@ const MatchingBoard = () => {
     }
   }, [id]);
 
+  // 카테고리, 카테고리 타입 PostSEQ로 불러오는 useEffect
   useEffect(() => {
     categoryTypeAPI();
     categoryAPI();
