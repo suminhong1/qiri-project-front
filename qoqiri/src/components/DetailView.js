@@ -12,6 +12,7 @@ import Comment from "../components/Comment";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 import { createChatRoom, joinChatRoom } from "../api/chat";
 import styled from "styled-components";
+import { asyncChatRooms } from "../store/chatRoomSlice";
 
 const Detail = styled.div`
   border-top: 33px solid #ff7f38;
@@ -146,11 +147,6 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
       alert("로그인해주세요");
       return;
     }
-    console.log("아이디 가져오기", user.id);
-    console.log("작성자 " + currentPost?.userInfo?.userId);
-    console.log("커랜트" + currentPost);
-    console.log("커랜트유저인포" + currentPost?.userInfo);
-    console.log("posts" + posts.find((po) => po.postSEQ === selectedPostSEQ));
 
     // 작성자의 ID와 로그인한 사용자의 ID가 동일한지 확인
     if (currentPost?.userInfo?.userId === user.id) {
@@ -160,7 +156,8 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
 
     try {
       const response = await saveData(user, selectedPostSEQ);
-      joinChatRoom(ChatDTO);
+      await joinChatRoom(ChatDTO);
+      await dispatch(asyncChatRooms(user.id));
 
       if (response) {
         console.log("신청 성공 및 채팅방 생성!");
@@ -184,7 +181,6 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
       if (response.status === 200) {
         console.log("데이터 저장 성공");
         alert("신청 성공 및 채팅방 생성!");
-        window.location.reload();
         return response.data;
       } else {
         console.error("데이터 저장 실패");
