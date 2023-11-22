@@ -9,7 +9,7 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
   const chatRoomList = useSelector((state) => state.chatRoom); // 내가 참여중인 채팅방 리스트
 
   const [chatRoomUserList, setChatRoomUserList] = useState([]);
-  const [chatRoomId, setChatRoomId] = useState(null);
+  const [chatRoomSEQ, setChatRoomSEQ] = useState(null);
 
   // 내가 참여중인 채팅방 리스트를 통해 참여중인 채팅방의 참여자 조회
   const chatRoomUserListAPI = async (chatRoomSEQ) => {
@@ -20,13 +20,13 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
   };
 
   // ChatRoom 모달을 열기 위한 함수
-  const handleShowChatRoom = (chatRoomId) => {
-    setChatRoomId(chatRoomId);
+  const handleShowChatRoom = (chatRoomSEQ) => {
+    setChatRoomSEQ(chatRoomSEQ);
   };
 
   // ChatRoom 모달을 닫기 위한 함수
   const handleCloseChatRoom = () => {
-    setChatRoomId(null);
+    setChatRoomSEQ(null);
   };
 
   // 시간 포멧 설정
@@ -48,7 +48,7 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
   }, [show]);
 
   // ChatRoom 모달이 열려 있는지 확인
-  const isChatRoomModalOpen = chatRoomId !== null;
+  const isChatRoomModalOpen = chatRoomSEQ !== null;
 
   return (
     <Offcanvas show={show} onHide={handleClose} {...props}>
@@ -91,7 +91,7 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
           <ChatRoomModal
             show={isChatRoomModalOpen}
             handleClose={handleCloseChatRoom}
-            chatRoomId={chatRoomId}
+            chatRoomSEQ={chatRoomSEQ}
           />
         </div>
       </Offcanvas.Body>

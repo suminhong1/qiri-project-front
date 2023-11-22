@@ -4,14 +4,19 @@ import "../css/ApplyForm.css";
 import { getUser } from "../api/user";
 import defaultimg from "../assets/defaultimg.png";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { enterChatRoom } from "../api/chat";
 import { matchingAccept, hideMachingUser } from "../api/matching";
+import ChatRoomModal from "./ChatRoomModal";
+import { asyncChatRooms } from "../store/chatRoomSlice";
+
 const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userData, setUserData] = useState({ introduction: "" });
+  const [chatRoomSEQ, setChatRoomSEQ] = useState(null);
+  const dispatch = useDispatch();
   const { postSEQ } = useParams();
   const user = useSelector((state) => state.user);
   useEffect(() => {
@@ -41,15 +46,24 @@ const ApplyForm = ({ userId }) => {
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
+
+  // ChatRoom 모달을 닫기 위한 함수
+  const handleCloseChatRoom = () => {
+    setChatRoomSEQ(null);
+  };
+
+  // ChatRoom 모달이 열려 있는지 확인
+  const isChatRoomModalOpen = chatRoomSEQ !== null;
+
   const ChatDTO = {
     id: user.id,
     postSEQ: postSEQ,
     applicantId: userId,
   };
-  const chatStart = () => {
-    alert("내 채팅방에 추가되었습니다!");
-    enterChatRoom(ChatDTO);
-    window.location.reload();
+  const chatStart = async () => {
+    const result = await enterChatRoom(ChatDTO);
+    await setChatRoomSEQ(result.data.chatRoom.chatRoomSEQ);
+    await dispatch(asyncChatRooms(user.id));
   };
   const matchingAcceptAPI = () => {
     matchingAccept(ChatDTO);
@@ -80,6 +94,11 @@ const ApplyForm = ({ userId }) => {
   };
   return (
     <div className="ap-container">
+      <ChatRoomModal
+        show={isChatRoomModalOpen}
+        handleClose={handleCloseChatRoom}
+        chatRoomSEQ={chatRoomSEQ}
+      />
       <div className="ap-header-sign"></div>
       <div className={`ap-custom-card ${isFlipped ? "flipped" : ""}`}>
         <div className="ap-card-front">

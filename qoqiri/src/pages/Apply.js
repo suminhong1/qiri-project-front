@@ -4,13 +4,17 @@ import ApplyForm from "../components/ApplyForm";
 import "../css/Apply.css";
 import { getMatchingUserInfoByPostSEQ } from "../api/matching";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createGroupChat } from "../api/chat";
+import ChatRoomModal from "../components/ChatRoomModal";
+import { asyncChatRooms } from "../store/chatRoomSlice";
 
 const Apply = () => {
   const [appliedUsers, setAppliedUsers] = useState([]);
+  const [chatRoomSEQ, setChatRoomSEQ] = useState(null);
   const navigate = useNavigate();
   const { postSEQ } = useParams();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   const handleBack = () => {
@@ -30,15 +34,24 @@ const Apply = () => {
     }
   }, [postSEQ, user.id]);
 
-  const groupChat = () => {
-    alert("승락한 사람들이 모두 포함된 채팅방이 생성되었습니다!");
-    createGroupChat(ChatDTO);
+  const groupChat = async () => {
+    const result = await createGroupChat(ChatDTO);
+    await setChatRoomSEQ(result.data.chatRoomSEQ);
+    await dispatch(asyncChatRooms(user.id));
   };
 
   const matchingEnd = () => {
-    alert("이제 즐겁게 노시길 바랍니다!");
+    alert("즐겁게 노시길 바랍니다!");
     navigate("/myMatching");
   };
+
+  // ChatRoom 모달을 닫기 위한 함수
+  const handleCloseChatRoom = () => {
+    setChatRoomSEQ(null);
+  };
+
+  // ChatRoom 모달이 열려 있는지 확인
+  const isChatRoomModalOpen = chatRoomSEQ !== null;
 
   const ChatDTO = {
     id: user.id,
@@ -72,8 +85,13 @@ const Apply = () => {
       <button className="ap-right-bottom-button" onClick={matchingEnd}>
         같이 놀 사람을 모두 구했어요! Click!
       </button>
+      <ChatRoomModal
+        show={isChatRoomModalOpen}
+        handleClose={handleCloseChatRoom}
+        chatRoomSEQ={chatRoomSEQ}
+      />
     </div>
   );
 };
 
-export default Apply; 
+export default Apply;

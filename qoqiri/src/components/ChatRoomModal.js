@@ -15,13 +15,13 @@ const CustomModal = styled(Modal)`
   }
 `;
 
-const ChatRoomModal = ({ show, handleClose, chatRoomId }) => {
-  if (show && chatRoomId !== null) {
+const ChatRoomModal = ({ show, handleClose, chatRoomSEQ }) => {
+  if (show && chatRoomSEQ !== null) {
     return (
       <CustomModal show={show} onHide={handleClose}>
         <Modal.Header closeButton></Modal.Header>
         <Modal.Body>
-          <ChatRoom chatRoomId={chatRoomId} />
+          <ChatRoom chatRoomSEQ={chatRoomSEQ} />
         </Modal.Body>
       </CustomModal>
     );
