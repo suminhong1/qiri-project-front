@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import '../css/PostEdit.css';
 import {
     getPlace,
@@ -10,12 +10,14 @@ import {
     updatePostAPI,
     editMatchingAPI,
     editAttachmentsAPI,
+    getSelectPlace,
+    getSelectPlaceType,
+    getSelectAttach
 } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 
 const PostEdit = () => {
     const { id } = useParams();
@@ -27,6 +29,9 @@ const PostEdit = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [attachmentImg, setAttachmentImg] = useState([]);
+    const [imagePreviews, setImagePreviews] = useState([]);
+    const [selectAttach, setSelectAttach] = useState([]);
+    const fileInputRef = useRef(null); // 미리보기
 
     const [place, setPlace] = useState([]);
     const [placeType, setPlaceType] = useState([]);
@@ -36,6 +41,9 @@ const PostEdit = () => {
     const [selectedPlace, setSelectedPlace] = useState();
     const [selectedPlaceType, setSelectedPlaceType] = useState(null);
 
+    const [selectedPlaceName, setSelectedPlaceName] = useState('');
+    const [selectedPlaceTypeName, setSelectedPlaceTypeName] = useState('');
+
     const [categories, setCategories] = useState([]);
     const [categoryTypes, setCategoryTypes] = useState([]);
 
@@ -43,6 +51,7 @@ const PostEdit = () => {
     const [selectlike, setSelectlike] = useState([]);
 
     const maxCharacterCount = 100000;
+
     // 편집에서 필요한건 기존 정보 불러오는 것! 테이블 3개 정보 다
     // 그 중 카테고리 정보 가지고 온 것! <-- 내가 선택한 카테고리들 얘랑 비교!
 
@@ -55,7 +64,17 @@ const PostEdit = () => {
 
         setTitle(postData.postTitle);
         setContent(postData.postContent);
-        setSelectedPlace(postData.place.placeSEQ);
+       
+        // 선택한 상세 지역 정보 불러오기    
+        const selectedPlaceData = await getSelectPlace(postData.place.placeSEQ); 
+        setSelectedPlaceName(selectedPlaceData.data.placeName);
+
+        // 선택한 지역 타입 정보 불러오기
+        const selectedPlaceTypeData = await getSelectPlaceType(postData.place.placeType.placeTypeSEQ);
+        setSelectedPlaceTypeName(selectedPlaceTypeData?.data?.placeTypeName);
+
+        setSelectedPlace(postData?.place?.placeSEQ);
+        setSelectedPlaceType(postData?.place?.placeType?.placeTypeSEQ);
     };
 
     const handlePlaceTypeChange = (event) => {
@@ -83,16 +102,22 @@ const PostEdit = () => {
         setCategoryTypes(selectedCategoryTypesData.data);
     };
 
+    const getSelectAttachAPI = async () =>{
+        const selectedAttachData = await getSelectAttach(id);
+        setSelectAttach(selectedAttachData.data)
+    };
+
     useEffect(() => {
         getPostAPI();
         selectCategoryAPI();
         selectAttachAPI();
+        getSelectAttachAPI();
     }, [id]);
 
     // 첨부파일 불러오기
     const selectAttachAPI = async () => {
         const result = await getAttach(id);
-        setAttachmentImg(result.data);
+        setImagePreviews(result.data);
     };
 
     // 제목 입력 핸들러
@@ -105,17 +130,21 @@ const PostEdit = () => {
         const newContent = event.target.value;
         setContent(newContent);
     };
-    // 첨부 파일 핸들러
+    const maxFileCount = 3;
+    // 첨부파일 핸들러
     const handleUploadImage = async (e) => {
         const files = e.target.files;
 
+        if (files.length === 0) {
+            // 파일이 선택되지 않았을 때 아무 동작도 하지 않음
+            return;
+        }
         console.log(files);
 
-        const maxFileSize = 10 * 1024 * 1024;
-        const maxFileCount = 3;
-        const newAttachmentImg = [...attachmentImg];
+        const maxFileSize = 10 * 1024 * 1024; // 사진 용량 제한 10mb
+        const newAttachmentImg = [];
 
-        for (let i = 0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) { // 사진 3장까지만 제한
             const file = files[i];
 
             if (file.size <= maxFileSize) {
@@ -129,9 +158,37 @@ const PostEdit = () => {
                 alert('사진 용량이 10MB를 초과합니다.');
             }
         }
-        setAttachmentImg(newAttachmentImg);
+
+        setAttachmentImg(newAttachmentImg); // 변경된 첨부 파일 배열을 상태로 설정
+        if (newAttachmentImg.length > 0) {
+            updateImagePreviews(newAttachmentImg);
+        }
+    
+        // 파일 업로드 필드 초기화
+       fileInputRef.current.value = '';
     };
 
+    // 첨부파일 미리보기
+    const updateImagePreviews = (newAttachmentImg) => {
+        const previews = [];
+    
+        for (let i = 0; i < newAttachmentImg.length && i < maxFileCount; i++) {
+            previews.push(URL.createObjectURL(newAttachmentImg[i]));
+        }
+        setImagePreviews(previews); // 새로운 미리보기 이미지 URL 설정
+    };
+    // 첨부파일 미리보기 중복방지
+    useEffect(() => {
+        setImagePreviews([]);
+    }, [attachmentImg]);
+
+    // 첨부파일 제거
+    const removeImage = async (index) => {
+        const newAttachmentImg = [...attachmentImg];
+        newAttachmentImg.splice(index, 1);
+        setAttachmentImg(newAttachmentImg);
+        updateImagePreviews(newAttachmentImg);
+  };
     // 카테고리 선택 핸들러
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
         // console.log(seq);
@@ -190,7 +247,6 @@ const PostEdit = () => {
         navigate('/');
         alert('글쓰기를 취소했습니다');
     };
-
 
     const handleSubmit = async (e) => {
         if (e) {
@@ -266,8 +322,7 @@ const PostEdit = () => {
                                     {categoryTypes.map((categoryType) => (
                                         <div key={categoryType.ctSEQ}>
                                             <h3>{categoryType.ctName}</h3>
-                                            <div className="edit-box-options">
-                                                {/* 여기서 한번에 묶은 카테고리 카테고리 타입을 맵으로 보여줌 */}
+                                            <div className="edit-box-options">                                      
                                                 {getCategoriesByType(categoryType.ctSEQ).map((category) => (
                                                     <div
                                                         key={category.categorySEQ}
@@ -301,10 +356,10 @@ const PostEdit = () => {
                                 maxLength="100"
                             />
                         </div>
-                            {/* <div className='select-place'>
+                            <div className='select-place'>
                                 <h1>지역 선택</h1>
-                                <select onChange={handlePlaceTypeChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
-                                    <option className= 'place-option'value="">지역을 선택해주세요</option>
+                                <select onChange={handlePlaceTypeChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold', borderRadius: '5px', border: 'none', marginLeft:'10px'}} >
+                                    <option className= 'place-option'>{selectedPlaceTypeName}</option>
                                     {placeType.map((type) => (
                                         <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
                                             {type.placeTypeName}
@@ -315,8 +370,8 @@ const PostEdit = () => {
                                 {selectedPlaceType && (
                                     <div className='select-place'>
                                         <h2>상세 지역</h2>
-                                        <select onChange={handlePlaceChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' }}>
-                                            <option className= 'place-option' value="">상세 지역을 선택해주세요</option>
+                                        <select onChange={handlePlaceChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold',  borderRadius: '5px', border: 'none', marginLeft:'10px' }}>
+                                            <option className= 'place-option'>{selectedPlaceName}</option>
                                             {filteredPlaces.map((place) => (
                                                 <option key={place.placeSEQ} value={place.placeSEQ}>
                                                     {place.placeName}
@@ -325,8 +380,8 @@ const PostEdit = () => {
                                         </select>
                                     </div>
                                 )}
-                            </div> */}
-                        {/* <div id="file-update">
+                            </div>
+                        <div id="file-update">
                             <label htmlFor="image-update">
                                 <input
                                     type="file"
@@ -335,11 +390,33 @@ const PostEdit = () => {
                                     accept="image/*"
                                     onChange={handleUploadImage}
                                     multiple
-                                /> */}
-                                {/* <span>사진첨부</span> */}
-                            {/* </label>
-                        </div> */}
-
+                                />
+                                <span>사진첨부</span>
+                            </label>
+                        </div>
+                        <div>
+                                <div className="board-image-main">
+                                    <div className="board-image">
+                                        {attachmentImg.map((attachment, index) => (
+                                            <div key={index}>
+                                       <img                                                
+                                            src={URL.createObjectURL(attachment)}
+                                            alt={`사진 ${index + 1}`}
+                                        />
+                                                <button id='remove-image' onClick={() => removeImage(index)}>삭제</button>
+                                            </div>     
+                                        ))}
+                                    </div>
+                                </div>
+                                {imagePreviews.map((preview, index) => (
+                                    <img
+                                        key={index}
+                                        src={preview}
+                                        alt={`${index + 1}`}
+                                        style={{ width: '150px', height: '150px' }}
+                                    />
+                                ))}
+                            </div>
                         <div className="post-content">
                             <div className="textareaContainer">
                                 <textarea
@@ -347,8 +424,7 @@ const PostEdit = () => {
                                     id="editor"
                                     maxLength={maxCharacterCount}
                                     onChange={handleEditorChange}
-                                    value={content}
-                                    // key={post?.postSEQ}
+                                    value={content}                                  
                                 ></textarea>
                                 <div className="wordCount">
                                     내용:

@@ -14,7 +14,7 @@ const PostWrite = () => {
 
     const [attachmentImg, setAttachmentImg] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
-    const fileInputRef = useRef(null);
+    const fileInputRef = useRef(null); // 미리보기
 
     const [place, setPlace] = useState([]);
     const [placeType, setPlaceType] = useState([]);
@@ -116,42 +116,12 @@ const PostWrite = () => {
     }, [attachmentImg]);
 
     // 첨부파일 제거
-    const removeImage = (index) => {
+    const removeImage = async (index) => {
         const newAttachmentImg = [...attachmentImg];
         newAttachmentImg.splice(index, 1);
         setAttachmentImg(newAttachmentImg);
         updateImagePreviews(newAttachmentImg);
-
-         // 이미지 삭제 API 호출
-    // await callImageDeleteAPI(index);
-
-    // // 이미지 삭제 후에 서버에 POST 요청
-    // submitForm();
-    //   };
-
-    //   const callImageDeleteAPI = async (index) => {
-    //     // 가상의 API 호출 (실제로는 서버에 이미지 삭제 API 호출)
-    //     return new Promise((resolve) => {
-    //       setTimeout(() => {
-    //         console.log(`Image at index ${index} deleted.`);
-    //         resolve();
-    //       }, 1000);
-    //     });
-    //   };
-
-  // 서버에 POST 요청을 보내는 함수
-//   const submitForm = () => {
-//     // 실제로는 서버에 POST 요청을 보내는 로직을 구현
-//     console.log('Form submitted to the server.');
   };
-
-
-      // 컴포넌트가 언마운트 될 때 생성된 URL 해제
-    //   useEffect(() => {
-    //     return () => {
-    //       imagePreviews.forEach((preview) => URL.revokeObjectURL(preview));
-    //     };
-    //   }, [imagePreviews]);
 
     // 카테고리 선택 핸들러
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
@@ -259,9 +229,12 @@ const PostWrite = () => {
 
             const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
     
+            if (postResponse.data) {
+                const formData = new FormData();
+                formData.append('postId', postResponse.data.postSEQ)}
             console.log(postResponse);
 
-    if(attachmentImg.length > 0){
+            if(attachmentImg.length > 0){
             const formData = new FormData();
     
             formData.append('postId', postResponse.data.postSEQ);
@@ -350,8 +323,8 @@ const PostWrite = () => {
                             />
                             <div>
                             <div className='select-place'>
-                                <h1>지역 선택</h1>
-                                <select onChange={handlePlaceTypeChange}>
+                                <div>지역 선택</div>
+                                <select onChange={handlePlaceTypeChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' , borderRadius: '5px', border: 'none', marginLeft:'10px'}}>
                                     <option value="">지역을 선택해주세요</option>
                                     {placeType.map((type) => (
                                         <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
@@ -362,7 +335,7 @@ const PostWrite = () => {
                                 {selectedPlaceType && (
                                     <div className='select-place'>
                                         <h2>상세 지역</h2>
-                                        <select onChange={handlePlaceChange}>
+                                        <select onChange={handlePlaceChange} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold', borderRadius: '5px', border: 'none', marginLeft:'10px'}}>
                                             <option value="">상세 지역을 선택해주세요</option>
                                             {filteredPlaces.map((place) => (
                                                 <option key={place.placeSEQ} value={place.placeSEQ}>

@@ -6,9 +6,7 @@ const instance = axios.create({
 
 // 백단 서버에 요청하는거
 
-export const updatePostAPI = async(data)=>{
-    return await instance.put('post',data)
-}
+
 // 게시물 추가
 export const addPostAPI = async (data) => {
     //서버 주소와 클라이언트 주소는 다름
@@ -50,15 +48,26 @@ export const editPostAPI = async (postSeq) => {
     return await instance.put(`/post/${postSeq}`);
 };
 
+export const updatePostAPI = async (data) => {
+    try {
+        const response = await instance.put('/post', data);
+        console.log(response.config.data); // 확인용 로그
+        return response;
+    } catch (error) {
+        console.error('updatePostAPI 에러 : ', error);
+        throw error; // 에러를 다시 던지기
+    }
+};
+
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
-    return await instance.put('matchingCategoryInfo', data);
+    return await instance.put('/matchingCategoryInfo', data);
 };
 
 // 첨부 파일 수정
 export const editAttachmentsAPI = async (formData) => {
     console.log(formData);
-    const response = await instance.put('postAttachments', formData, {
+    const response = await instance.put('/postAttachments', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -66,9 +75,17 @@ export const editAttachmentsAPI = async (formData) => {
     return response.data;
 };
 
-export const getPlaceee = async (id) => {
-    return await instance.get('public/place' + id);
+export const getSelectAttach = async (id) => {
+    return await instance.get(`/postAttachments/${id}`);
+}
+
+export const getSelectPlace = async (id) => {
+    return await instance.get(`public/place/${id}`);
 };
+
+export const getSelectPlaceType = async (id) => {
+    return await instance.get(`/placeType/${id}`)
+}
 
 export const getMatchCate = async (id) => {
     // MatchingcategoryInfo 불러오는 API
@@ -136,13 +153,25 @@ export const getPostsByCategoryType = async (code) => {
 };
 
 // 모든 게시글 가져오기
-export const getPosts = async () => {
+export const getPosts = async (page) => {
     return await instance.get('/public/post', {
         params : {
             board : 1,
+            page : page,
         }
     });
 };
+
+// 끼리찾기에서 15개씩 보이게 하려는 API
+// export const getMachingPosts = async (page) => {
+//     return await instance.get('/public/post', {
+//       params: {
+//         board: 1,
+//         page: page,
+//       },
+//     });
+//   };
+
 
 // 게시글 검색
 export const getSearchResults = async (keyword) => {
