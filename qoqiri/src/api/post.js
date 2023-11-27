@@ -162,17 +162,6 @@ export const getPosts = async (page) => {
     });
 };
 
-// 끼리찾기에서 15개씩 보이게 하려는 API
-// export const getMachingPosts = async (page) => {
-//     return await instance.get('/public/post', {
-//       params: {
-//         board: 1,
-//         page: page,
-//       },
-//     });
-//   };
-
-
 // 게시글 검색
 export const getSearchResults = async (keyword) => {
     return await instance.get('/public/post?keyword=' + keyword);

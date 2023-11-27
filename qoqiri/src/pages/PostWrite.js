@@ -1,9 +1,7 @@
 import React, { useState, useEffect , useRef} from 'react';
 import '../css/PostWrite.css';
-import axios from 'axios';
 import { navigate } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { getUser } from '../api/user';
 import { addPostAPI, addMatchingAPI, getBoards, getPlace, getPlaceType, addAttachmentsAPI } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
@@ -202,75 +200,68 @@ const PostWrite = () => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
         }
-        console.log(selectlike);
-        console.log(selectSEQ);
-
+    
+        // 필수 입력 필드 확인
+        if (!title || !content || !selectedPlaceType || !selectedPlace || !selectedBoard || selectlike.length === 0) {         
+            alert('모든 필수 항목을 입력해주세요.');
+            return;
+        }
+    
         const PostDTO = {
-            token: localStorage.getItem('token'), // 유저 정보
-            postTitle: title, // 제목
-            postContent: content, // 내용
-            placeSEQ: selectedPlace, // 선택한 세부 지역
-            placeTypeSEQ: selectedPlaceType, // 선택한 지역 앞에가 사용한 dto나 domain의 필드명 이름 뒤에가 사용한 useState이름
-            boardSEQ: selectedBoard, // 선택한 게시판
+            token: localStorage.getItem('token'),
+            postTitle: title,
+            postContent: content,
+            placeSEQ: selectedPlace,
+            placeTypeSEQ: selectedPlaceType,
+            boardSEQ: selectedBoard,
         };
-        console.log(localStorage.getItem('token'));
-        console.log('PostDTO: ', PostDTO);
 
-        // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
+        let postResponse;
+
+        try {
+            // addPostAPI를 이용해 서버로 전달
+            postResponse = await addPostAPI(PostDTO);
+            console.log(postResponse);
+        } catch (error) {
+            console.error('Error adding post:', error);
+            alert('글쓰기 중 오류가 발생했습니다.');
+            return;
+        }
+    
         const MatchingDTO = {
             categoryList: selectlike,
             categoryTypeList: selectSEQ,
         };
-        console.log('MatchingDTO: ', MatchingDTO);
-
-       // 첨부한 사진 저장 경로와 등록한 게시물 Seq를 PostAttachments 테이블로 보냄
-
-            console.log(PostDTO);
-
-            const postResponse = await addPostAPI(PostDTO); //addPostAPI를 이용해 서버로 전달  //api 사용 쓰는 명령어 기억하기
     
-            if (postResponse.data) {
-                const formData = new FormData();
-                formData.append('postId', postResponse.data.postSEQ)}
-            console.log(postResponse);
-
-            if(attachmentImg.length > 0){
+        // 필수 입력 필드 확인 후에 첨부 파일이 없을 때에만 실행
+        if (attachmentImg.length > 0) {
             const formData = new FormData();
     
             formData.append('postId', postResponse.data.postSEQ);
     
-            console.log(attachmentImg);
-            console.log(attachmentImg.length);
-    
             attachmentImg.forEach((image) => {
                 formData.append('files', image);
             });
-
+    
             // 첨부파일 API
             const attachmentResponse = await addAttachmentsAPI(formData);
-
-            console.log(MatchingDTO.categoryList);
-            console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
-    
-            // addPostAPI 호출 이후에 addMatchingAPI를 호출
-            const matchingResponse = await addMatchingAPI({
-                postSEQ: postResponse.data.postSEQ,
-                categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
-            });
-
-            console.log(matchingResponse);
-           
             console.log(attachmentResponse);
-            console.log(postResponse.data.postSEQ);
         }
-            if (postResponse.data) {
-                alert('글쓰기 성공');
     
-                navigate('/');
-            } else {
-                alert('글쓰기 실패');
-            }
-        };
+        // addMatchingAPI 호출 이후에 addMatchingAPI를 호출
+        const matchingResponse = await addMatchingAPI({
+            postSEQ: postResponse.data.postSEQ,
+            categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })),
+        });
+        console.log(matchingResponse);
+    
+        if (postResponse.data) {
+            alert('글쓰기 성공');
+            navigate('/');
+        } else {
+            alert('글쓰기 실패');
+        }
+    };
 
     return (
         <>
