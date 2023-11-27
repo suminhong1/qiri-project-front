@@ -203,7 +203,7 @@ const PostWrite = () => {
     
         // 필수 입력 필드 확인
         if (!title || !content || !selectedPlaceType || !selectedPlace || !selectedBoard || selectlike.length === 0) {         
-            alert('모든 필수 항목을 입력해주세요.');
+            alert('제목, 내용, 카테고리 선택은 필수입니다.');
             return;
         }
     
