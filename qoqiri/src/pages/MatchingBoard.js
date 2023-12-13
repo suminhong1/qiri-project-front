@@ -204,7 +204,6 @@ const MatchingBoard = () => {
                 </div>
               </div>
               
-              {/* 여기 부분 카테고리 나오게 해야함 */}
               <div className="category">
                 {matchCate
                   .filter((match) => match?.post?.postSEQ === po?.postSEQ)

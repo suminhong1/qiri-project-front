@@ -44,24 +44,28 @@ export const getAttachmentsAll = async () => {
 } 
 
 // 게시물 수정
-export const editPostAPI = async (postSeq) => {
-    return await instance.put(`/post/${postSeq}`);
-};
 
-export const updatePostAPI = async (data) => {
+export const editPostAPI = async (data) => {
     try {
         const response = await instance.put('/post', data);
         console.log(response.config.data); // 확인용 로그
         return response;
     } catch (error) {
         console.error('updatePostAPI 에러 : ', error);
-        throw error; // 에러를 다시 던지기
+        throw error; 
     }
 };
 
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
-    return await instance.put('/matchingCategoryInfo', data);
+    try {
+        const response = await instance.put('/matchingCategoryInfo', data);
+        console.log(response.data); // 확인용 로그
+        return response;
+    } catch (error) {
+        console.error('editMatchingAPI 에러:', error);
+        throw error;
+    }
 };
 
 // 첨부 파일 수정

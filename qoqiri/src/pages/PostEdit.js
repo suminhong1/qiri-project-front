@@ -7,7 +7,7 @@ import {
     getPost,
     getMatchCate,
     getAttach,
-    updatePostAPI,
+    editPostAPI,
     editMatchingAPI,
     editAttachmentsAPI,
     getSelectPlace,
@@ -177,6 +177,7 @@ const PostEdit = () => {
         }
         setImagePreviews(previews); // 새로운 미리보기 이미지 URL 설정
     };
+
     // 첨부파일 미리보기 중복방지
     useEffect(() => {
         setImagePreviews([]);
@@ -191,7 +192,6 @@ const PostEdit = () => {
   };
     // 카테고리 선택 핸들러
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
-        // console.log(seq);
         setSelectlike([]);
         setSelectSeq([]);
 
@@ -213,7 +213,6 @@ const PostEdit = () => {
 
         const fetchCategories = async () => {
             const result = await getCategories();
-            // console.log(result.data);
             setCategories(result.data);
         };
 
@@ -252,60 +251,58 @@ const PostEdit = () => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
         }
-        // console.log(selectlike);
-
+    
         const PostDTO = {      
             token: localStorage.getItem('token'),  
-            postTitle: title, // 제목
-            postContent: content, // 내용        
+            postTitle: title, 
+            postContent: content,     
+            placeSEQ: selectedPlace,
+            placeTypeSEQ: selectedPlaceType,   
         };
-        // console.log(localStorage.getItem('token'));
-        console.log('PostDTO: ', PostDTO);
-
-        // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
-        // const MatchingDTO = {
-        //     categoryList: selectlike,
-        //     categoryTypeList: selectSeq,
-        // };
-        // console.log('MatchingDTO: ', MatchingDTO);
-
-        console.log(PostDTO);
-
-        const postResponse = await updatePostAPI(PostDTO);
-
-        console.log(postResponse);
-        // 첨부 파일
-        // const formData = new FormData();
-
-        // formData.append('postId', postResponse.data.postSEQ);
-
-        // console.log(attachmentImg);
-        // console.log(attachmentImg.length);
-
-        // attachmentImg.forEach((image) => {
-        //     formData.append('files', image);
-        // });
-
-        // console.log(MatchingDTO.categoryList);
-        // console.log(MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })));
-
-        // const matchingResponse = await editMatchingAPI({
-        //     postSEQ: postResponse.data.postSEQ,
-        //     categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })), // 이게 map으로 카테고리랑 카테고리 타입 SEQ묶어서 보내는 것
-        // });
-        // console.log(matchingResponse);
-
-        // const attachmentResponse = await editAttachmentsAPI(formData);
-        // console.log(attachmentResponse);
-        // console.log(postResponse.data.postSEQ);
-        console.log(postResponse);
-        if (postResponse.data) {
-            alert('수정 성공');
+    
+        try {
+            // addPostAPI를 이용해 서버로 전달
+            const postResponse = await editPostAPI(PostDTO);
             console.log(postResponse);
-            navigate('/');
-        } else {
-            alert('수정 실패');
-            console.log(postResponse);
+    
+            if (postResponse.data) {
+                // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
+                const MatchingDTO = {
+                    categoryList: selectlike,
+                    categoryTypeList: selectSeq,
+                };
+    
+                // editMatchingAPI 호출
+                const matchingResponse = await editMatchingAPI({
+                    postSEQ: postResponse.data.postSEQ,
+                    categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })),
+                });
+    
+                console.log(matchingResponse);
+    
+                // 첨부파일 업로드 부분 (아직 주석 처리 상태)
+                // if (attachmentImg.length > 0) {
+                //     const formData = new FormData();
+                //     formData.append('postId', postResponse.data.postSEQ);
+                //     attachmentImg.forEach((image) => {
+                //         formData.append('files', image);
+                //     });
+                //     const attachmentResponse = await editAttachmentsAPI(formData);
+                //     console.log(attachmentResponse);
+                // }
+    
+                if (matchingResponse.data) {
+                    alert('글쓰기 성공');
+                    navigate('/');
+                } else {
+                    alert('Matching 정보 업데이트 실패');
+                }
+            } else {
+                alert('글쓰기 중 오류가 발생했습니다.');
+            }
+        } catch (error) {
+            console.error('Error adding/editing post:', error);
+            alert('글쓰기/수정 중 오류가 발생했습니다.');
         }
     };
 
@@ -381,7 +378,7 @@ const PostEdit = () => {
                                     </div>
                                 )}
                             </div>
-                        <div id="file-update">
+                        {/* <div id="file-update">
                             <label htmlFor="image-update">
                                 <input
                                     type="file"
@@ -416,7 +413,7 @@ const PostEdit = () => {
                                         style={{ width: '150px', height: '150px' }}
                                     />
                                 ))}
-                            </div>
+                            </div> */}
                         <div className="post-content">
                             <div className="textareaContainer">
                                 <textarea
