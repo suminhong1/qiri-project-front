@@ -1,7 +1,11 @@
 import logo from "../assets/logo.png";
 import title from "../assets/title.JPG";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBell as solidBell,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
+import { faBell as regularBell } from "@fortawesome/free-regular-svg-icons";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -189,6 +193,18 @@ const Header = () => {
         {/* 로그인이 되어 있는 경우 */}
         {Object.keys(user).length !== 0 && (
           <>
+            <button className="header-user">
+              <div className="notify">
+                <FontAwesomeIcon
+                  icon={regularBell}
+                  style={{
+                    height: "15px",
+                    color: "#000000",
+                  }}
+                />
+                알림
+              </div>
+            </button>
             <button className="header-user">
               <Link to="/myinfo" className="myInfo">
                 내정보
