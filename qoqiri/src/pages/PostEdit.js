@@ -3,7 +3,6 @@ import '../css/PostEdit.css';
 import {
     getPlace,
     getPlaceType,
-    getEditPost,
     getPost,
     getMatchCate,
     getAttach,
@@ -31,6 +30,8 @@ const PostEdit = () => {
     const [attachmentImg, setAttachmentImg] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
     const [selectAttach, setSelectAttach] = useState([]);
+    const [boards, setBoards] = useState([]);
+    const [selectedBoard, setSelectedBoard] = useState(1);
     const fileInputRef = useRef(null); // 미리보기
 
     const [place, setPlace] = useState([]);
@@ -102,6 +103,7 @@ const PostEdit = () => {
         setCategoryTypes(selectedCategoryTypesData.data);
     };
 
+    // 첨부한 첨부파일 불러오기
     const getSelectAttachAPI = async () =>{
         const selectedAttachData = await getSelectAttach(id);
         setSelectAttach(selectedAttachData.data)
@@ -114,7 +116,7 @@ const PostEdit = () => {
         getSelectAttachAPI();
     }, [id]);
 
-    // 첨부파일 불러오기
+    // 불러온 첨부파일 미리보기
     const selectAttachAPI = async () => {
         const result = await getAttach(id);
         setImagePreviews(result.data);
@@ -247,40 +249,37 @@ const PostEdit = () => {
         alert('글쓰기를 취소했습니다');
     };
 
+    const navigate = useNavigate();
+
     const handleSubmit = async (e) => {
         if (e) {
             e.preventDefault(); // 폼 기본 제출 방지
         }
-    
         const PostDTO = {      
             token: localStorage.getItem('token'),  
             postTitle: title, 
             postContent: content,     
             placeSEQ: selectedPlace,
             placeTypeSEQ: selectedPlaceType,   
+            boardSEQ: selectedBoard,
         };
-    
+
+       let postResponse;
+
         try {
-            // addPostAPI를 이용해 서버로 전달
-            const postResponse = await editPostAPI(PostDTO);
-            console.log(postResponse);
-    
-            if (postResponse.data) {
+            postResponse = await editPostAPI(PostDTO);  
+            console.log(postResponse); // 애초에 여기서 부터가 문제임 콘솔창 보면
+            console.log('Server response data:', postResponse.data);
+            console.log('config.data:', postResponse.config.data); 
+            if (postResponse.data) { // 이쪽 건드려보기  if문 지우고 try catch문 확인 해봐야될거같은데 if에 postResponse.data 왜있지?
+
                 // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
                 const MatchingDTO = {
                     categoryList: selectlike,
                     categoryTypeList: selectSeq,
                 };
-    
-                // editMatchingAPI 호출
-                const matchingResponse = await editMatchingAPI({
-                    postSEQ: postResponse.data.postSEQ,
-                    categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })),
-                });
-    
-                console.log(matchingResponse);
-    
-                // 첨부파일 업로드 부분 (아직 주석 처리 상태)
+                // 첨부파일 업로드 부분 
+
                 // if (attachmentImg.length > 0) {
                 //     const formData = new FormData();
                 //     formData.append('postId', postResponse.data.postSEQ);
@@ -290,15 +289,21 @@ const PostEdit = () => {
                 //     const attachmentResponse = await editAttachmentsAPI(formData);
                 //     console.log(attachmentResponse);
                 // }
-    
-                if (matchingResponse.data) {
+
+                // editMatchingAPI 호출
+                const matchingResponse = await editMatchingAPI({
+                    postSEQ: postResponse.data.postSEQ,
+                    categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })),
+                });   
+                console.log(matchingResponse);  
+                console.log(matchingResponse.data);    // 여기도 안찍히고
+                if (postResponse.data) {
                     alert('글쓰기 성공');
                     navigate('/');
-                } else {
-                    alert('Matching 정보 업데이트 실패');
-                }
+                } 
             } else {
-                alert('글쓰기 중 오류가 발생했습니다.');
+                alert('글쓰기/수정 중 오류가 발생했습니다.');
+                console.log('Error response:', postResponse);
             }
         } catch (error) {
             console.error('Error adding/editing post:', error);
@@ -306,7 +311,6 @@ const PostEdit = () => {
         }
     };
 
-    const navigate = useNavigate();
     return (
         <>
             <div id="form-container">

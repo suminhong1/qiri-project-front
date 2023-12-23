@@ -248,7 +248,6 @@ const PostWrite = () => {
             console.log(attachmentResponse);
         }
     
-        // addMatchingAPI 호출 이후에 addMatchingAPI를 호출
         const matchingResponse = await addMatchingAPI({
             postSEQ: postResponse.data.postSEQ,
             categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })),
