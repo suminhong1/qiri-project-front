@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import defaultimg from "../assets/defaultimg.png";
 import "../css/MatchingBoard.css";
-import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 import Date from "../components/Date";
-import { editPostAPI, getPost, getPosts } from "../api/post";
-import UserRating from "../components/UserRating";
-import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { viewComments } from "../store/commentSlice";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
+import { editPostAPI, getPost, getPosts } from "../api/post";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 import { createChatRoom, joinChatRoom } from "../api/chat";
+import { postBlockUser } from "../api/blockuser";
 import styled from "styled-components";
+import { RepeatOneSharp } from "@mui/icons-material";
 
 const Detail = styled.div`
   border-top: 33px solid #ff7f38;
@@ -102,9 +104,40 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [post, setPost] = useState({});
-  const [commentsCount, setCommentsCount] = useState(0);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const [contextMenuVisible, setContextMenuVisible] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+
+    setContextMenuVisible(true);
+    setContextMenuPosition({ x: event.clientX, y: event.clientY });
+  };
+  const closeContextMenu = (event) => {
+    if (
+      !document.getElementById("contextMenu").contains(event.target) &&
+      event.target.id !== "leftClickButton"
+    ) {
+      setContextMenuVisible(false);
+      document.removeEventListener("mousedown", closeContextMenu);
+    }
+  };
+
+  useEffect(() => {
+    if (contextMenuVisible) {
+      document.addEventListener("mousedown", closeContextMenu);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", closeContextMenu);
+    };
+  }, [contextMenuVisible]);
+
   const comments = useSelector((state) => {
     return state.comment;
   });
@@ -194,6 +227,39 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
     }
   }; // 신청버튼테스트용
 
+  const handleBlockUser = async () => {
+    const sendUserInfo = {
+      userInfo: {
+        userId: user.id,
+        userPwd: user.token,
+        userName: user.name,
+        userNickname: user.nickname,
+        age: user.age,
+        gender: user.gender,
+        placeType: user.placeType,
+        phone: user.phone,
+        email: user.email,
+        profileImg: user.profileImg,
+        statusMessage: user.statusMessage,
+        hasPartner: user.hasPartner,
+        bloodType: user.bloodType,
+        mbti: user.mbti,
+        birthday: user.birthday,
+        joinDate: user.joinDate,
+        popularity: user.popularity,
+        rating: user.rating,
+        isAdmin: user.isAdmin,
+        isDeleted: user.isDeleted,
+      },
+      blockInfo: post?.userInfo,
+    };
+
+    const createBlockUser = await postBlockUser(sendUserInfo);
+    alert("차단했습니다.");
+    window.location.reload();
+    return createBlockUser.sendUserInfo;
+  };
+
   useEffect(() => {
     getPostAPI();
     postsAPI();
@@ -212,13 +278,42 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
         <div className="board-header">
           <div className="profile">
             <img
-              src={`/uploadprofile/${post?.userInfo?.profileImg}`}
-              alt="프로필 이미지"
+              src={
+                post?.userInfo?.profileImg
+                  ? `/uploadprofile/${post?.userInfo?.profileImg}`
+                  : defaultimg
+              }
             />
           </div>
           <div className="titleNickname">
             <div className="title">{post?.postTitle}</div>
-            <span className="nickname">{post?.userInfo?.userNickname}</span>
+            <div
+              className="nickname"
+              id="leftClickButton"
+              onMouseDown={handleContextMenu}
+            >
+              {post?.userInfo?.userNickname}
+            </div>
+            {contextMenuVisible && (
+              <div
+                id="contextMenu"
+                style={{
+                  display: "block",
+                  position: "absolute",
+                  backgroundColor: "#fff",
+                  border: "1px solid #ccc",
+                  boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
+                  padding: "10px",
+                  zIndex: 1000,
+                  left: contextMenuPosition.x + "px",
+                  top: contextMenuPosition.y + "px",
+                }}
+              >
+                <div onClick={handleBlockUser} style={{ cursor: "pointer" }}>
+                  유저차단하기
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <div className="board-image-main">
@@ -311,9 +406,9 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
             >
               &gt;
             </div>
-            <div onClick={closeModal} className="close-button">
-              &times;
-            </div>
+          </div>
+          <div onClick={closeModal} className="close-button">
+            &times;
           </div>
         </div>
       )}

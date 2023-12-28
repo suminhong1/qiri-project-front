@@ -7,3 +7,7 @@ const instance = axios.create({
 export const getCategories = async () => {
   return await instance.get("public/category");
 };
+
+export const userCategoryInfo = async () => {
+  return await instance.get("userCategoryInfo")
+}
