@@ -7,13 +7,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell as regularBell } from "@fortawesome/free-regular-svg-icons";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { userSave, userLogout } from "../store/userSlice";
-import { useLocation } from "react-router-dom";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import { asyncSearchResult } from "../store/postSlice";
+import { checkNotify, getUnreadNotify } from "../api/notify";
 
 const StyledHeader = styled.header`
   * {
@@ -81,7 +81,6 @@ const StyledHeader = styled.header`
     height: 35px;
     background-color: transparent;
     border: none;
-    color: gray;
     font-size: 1rem;
   }
 
@@ -101,16 +100,21 @@ const Header = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [keyword, setKeyword] = useState("");
+  const user = useSelector((state) => state.user);
+  const [notify, setNotify] = useState(0);
 
-  const user = useSelector((state) => {
-    return state.user;
-  });
+  const unreadNotifyAPI = async () => {
+    const result = await getUnreadNotify(user.id);
+    setNotify(result.data);
+  };
+  const checkNotifyAPI = async () => {
+    await checkNotify(user.id);
+    window.location.reload();
+  };
 
   useEffect(() => {
     dispatch(asyncChatRooms(user.id));
-  }, [user]);
-
-  useEffect(() => {
+    unreadNotifyAPI();
     const save = localStorage.getItem("user");
     if (Object.keys(user).length === 0 && save !== null) {
       dispatch(userSave(JSON.parse(save)));
@@ -193,16 +197,28 @@ const Header = () => {
         {/* 로그인이 되어 있는 경우 */}
         {Object.keys(user).length !== 0 && (
           <>
-            <button className="header-user">
-              <div className="notify">
-                <FontAwesomeIcon
-                  icon={regularBell}
-                  style={{
-                    height: "15px",
-                    color: "#000000",
-                  }}
-                />
-                알림
+            <button className="header-user" onClick={checkNotifyAPI}>
+              <div className="notify" style={{ pointerEvents: "none" }}>
+                {notify > 0 ? (
+                  <FontAwesomeIcon
+                    icon={solidBell}
+                    style={{
+                      height: "20px",
+                      color: "red",
+                    }}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={regularBell}
+                    style={{
+                      height: "20px",
+                      color: "black",
+                    }}
+                  />
+                )}
+                {notify > 0 && (
+                  <span className="notify-count">&nbsp;{notify}</span>
+                )}
               </div>
             </button>
             <button className="header-user">

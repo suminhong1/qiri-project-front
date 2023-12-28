@@ -35,7 +35,6 @@ const StyledChatRoom = styled.div`
     width: 850px;
     min-width: 850px;
     overflow-y: scroll;
-    overflow-x: hidden;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -169,7 +168,7 @@ const StyledChatRoom = styled.div`
   }
 `;
 
-const ChatRoom = ({ chatRoomSEQ }) => {
+const ChatRoom = ({ chatRoomId }) => {
   const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -178,22 +177,26 @@ const ChatRoom = ({ chatRoomSEQ }) => {
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
 
+  //어느 채팅방인지 받아오기
   const chatRoomInfoAPI = async () => {
-    const result = await getChatRoomInfo(chatRoomSEQ);
+    const result = await getChatRoomInfo(chatRoomId);
     setChatRoomInfo(result.data);
   };
 
+  //현재 채팅방의 메세지들 받아오기
   const chatMessageAPI = async () => {
-    const result = await getChatMessage(chatRoomSEQ);
+    const result = await getChatMessage(chatRoomId);
     setLoadMessage(result.data);
   };
 
+  // 현재 채팅방에 참여한 유저정보중 내 정보 받아오기(최초접속 확인용)
   const userChatRoomInfoAPI = async () => {
-    const result = await getUserChatRoomInfo(user.id, chatRoomSEQ);
+    const result = await getUserChatRoomInfo(user.id, chatRoomId);
     setUserChatRoomInfo(result.data);
     return result.data;
   };
 
+  // 메세지 발송, 채팅방 참여시 스크롤 하단이동(최하단 요소부터 노출)
   const scrollToBottom = () => {
     const chatContainer = document.getElementById("app");
     chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -201,17 +204,14 @@ const ChatRoom = ({ chatRoomSEQ }) => {
 
   const chatDTO = {
     id: user.id,
-    chatRoomSEQ: chatRoomSEQ,
+    chatRoomSEQ: chatRoomId,
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await chatRoomInfoAPI();
-      await chatMessageAPI();
-      await userChatRoomInfoAPI();
-    };
-    fetchData();
-  }, [chatRoomSEQ]);
+    chatRoomInfoAPI();
+    chatMessageAPI();
+    userChatRoomInfoAPI();
+  }, [chatRoomId]);
 
   useEffect(() => {
     scrollToBottom();
@@ -226,16 +226,17 @@ const ChatRoom = ({ chatRoomSEQ }) => {
     stompClient.current = new Client({
       webSocketFactory: () => socket,
       connectHeaders: {},
-      reconnectDelay: 10000,
-      heartbeatIncoming: 5000,
-      heartbeatOutgoing: 5000,
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
     });
 
     // 무조건 유저의 채팅방 정보를 받아온 뒤에 작동해야됨!
+    // 특정 주소 구독처리(채팅방 구현)
     userChatRoomInfoAPI().then((userChatRoomInfo) => {
       stompClient.current.onConnect = (frame) => {
         stompClient.current.subscribe(
-          `/sub/chat/room/${chatRoomSEQ}`,
+          `/sub/chat/room/${chatRoomId}`,
           (message) => {
             const recv = JSON.parse(message.body);
             recvMessage(recv);
@@ -247,7 +248,7 @@ const ChatRoom = ({ chatRoomSEQ }) => {
             destination: "/pub/chat/message",
             body: JSON.stringify({
               nickname: user.nickname,
-              chatRoomSEQ: chatRoomSEQ,
+              chatRoomSEQ: chatRoomId,
               message: user.nickname + "님이 채팅에 참여하였습니다.",
               sendTime: currentTime.toISOString(),
             }),
@@ -264,7 +265,7 @@ const ChatRoom = ({ chatRoomSEQ }) => {
         }
       };
     });
-  }, [user, chatRoomSEQ]);
+  }, [user, chatRoomId]);
 
   //메세지 발송 부분
   const sendMessage = async () => {
@@ -280,7 +281,7 @@ const ChatRoom = ({ chatRoomSEQ }) => {
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
-        chatRoomSEQ: chatRoomSEQ,
+        chatRoomSEQ: chatRoomId,
         message: message,
       }),
     });
@@ -309,7 +310,7 @@ const ChatRoom = ({ chatRoomSEQ }) => {
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
-        chatRoomSEQ: chatRoomSEQ,
+        chatRoomSEQ: chatRoomId,
         message: user.nickname + "님이 채팅방에서 퇴장하였습니다.",
         sendTime: currentTime.toISOString(),
       }),
