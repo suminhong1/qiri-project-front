@@ -79,7 +79,7 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
                     </div>
                   </div>
                   <div className="notice-addr">
-                    {userList.map((user) => (
+                    {userList?.map((user) => (
                       <span key={user?.userChatRoomInfoSeq}>
                         {user?.userInfo?.userNickname}&nbsp;
                       </span>

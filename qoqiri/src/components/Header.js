@@ -14,6 +14,8 @@ import { userSave, userLogout } from "../store/userSlice";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import { asyncSearchResult } from "../store/postSlice";
 import { checkNotify, getUnreadNotify } from "../api/notify";
+import NotifyModal from "./Notify";
+import Notify from "./Notify";
 
 const StyledHeader = styled.header`
   * {
@@ -102,6 +104,10 @@ const Header = () => {
   const [keyword, setKeyword] = useState("");
   const user = useSelector((state) => state.user);
   const [notify, setNotify] = useState(0);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const unreadNotifyAPI = async () => {
     const result = await getUnreadNotify(user.id);
@@ -109,7 +115,6 @@ const Header = () => {
   };
   const checkNotifyAPI = async () => {
     await checkNotify(user.id);
-    window.location.reload();
   };
 
   useEffect(() => {
@@ -197,7 +202,7 @@ const Header = () => {
         {/* 로그인이 되어 있는 경우 */}
         {Object.keys(user).length !== 0 && (
           <>
-            <button className="header-user" onClick={checkNotifyAPI}>
+            <button className="header-user" onClick={handleShow}>
               <div className="notify" style={{ pointerEvents: "none" }}>
                 {notify > 0 ? (
                   <FontAwesomeIcon
@@ -232,6 +237,7 @@ const Header = () => {
           </>
         )}
       </div>
+      <Notify show={show} handleClose={handleClose} placement="end" />
     </StyledHeader>
   );
 };
