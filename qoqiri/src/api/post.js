@@ -59,7 +59,7 @@ export const editPostAPI = async (data) => {
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
     try {
-        const response = await instance.put('/matchingCategoryInfo', data);
+        const response = await instance.put('/matchingCategoryInfo', data); // 여기서 오류
         console.log(response.data); // 확인용 로그
         return response;
     } catch (error) {

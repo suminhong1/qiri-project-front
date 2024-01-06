@@ -268,47 +268,52 @@ const PostEdit = () => {
 
         try {
             postResponse = await editPostAPI(PostDTO);  
-            console.log(postResponse); // 애초에 여기서 부터가 문제임 콘솔창 보면
-            console.log('Server response data:', postResponse.data);
-            console.log('config.data:', postResponse.config.data); 
-            if (postResponse.data) { // 이쪽 건드려보기  if문 지우고 try catch문 확인 해봐야될거같은데 if에 postResponse.data 왜있지?
+            console.log(postResponse); 
+            console.log('Server response data:', postResponse.data);// 빈 문자열 찍힘 형변환 에러 해결하기
+            console.log('config.data:', postResponse.config.data);
+            console.log(selectlike); // 확인용 로그 출력 
+            const MatchingDTO = {
 
-                // 선택한 카테고리 seq MatchingCategoryInfo 테이블로 보냄
-                const MatchingDTO = {
-                    categoryList: selectlike,
-                    categoryTypeList: selectSeq,
-                };
+                // categoryList: selectlike.map(item => isNaN(item) ? 0 : Number(item)), // 얘만 자꾸 Nan이 떠버리네
+                // categoryTypeList: selectSeq.map(Number),
+
+                categoryList: selectlike, // 얘를 문자열에서 정수형으로 바꿔서 데이터를 전송해야함 얘가 카테고리 seq
+                categoryTypeList: selectSeq,
+            };
+                console.log(MatchingDTO);
+
                 // 첨부파일 업로드 부분 
 
-                // if (attachmentImg.length > 0) {
-                //     const formData = new FormData();
-                //     formData.append('postId', postResponse.data.postSEQ);
-                //     attachmentImg.forEach((image) => {
-                //         formData.append('files', image);
-                //     });
-                //     const attachmentResponse = await editAttachmentsAPI(formData);
-                //     console.log(attachmentResponse);
-                // }
+                if (attachmentImg.length > 0) {
+                    const formData = new FormData();
+                    formData.append('postId', postResponse.data.postSEQ);
+                    attachmentImg.forEach((image) => {
+                        formData.append('files', image);
+                    });
+                    const attachmentResponse = await editAttachmentsAPI(formData);
+                    console.log(attachmentResponse);// 여기도 안찍히고
+                }
 
                 // editMatchingAPI 호출
-                const matchingResponse = await editMatchingAPI({
-                    postSEQ: postResponse.data.postSEQ,
-                    categories: MatchingDTO.categoryList.map((categorySEQ) => ({ categorySEQ })),
+                const matchingResponse = await editMatchingAPI({ // 콘솔에 여기 오류 찍힘
+                    postSEQ: postResponse.data.postSEQ, 
+                    categories: MatchingDTO.categoryList.map(categorySEQ => ({ categorySEQ })), 
+                    // 이걸 어떤식으로 보내야 허냐..
                 });   
+               
                 console.log(matchingResponse);  
-                console.log(matchingResponse.data);    // 여기도 안찍히고
+                console.log(matchingResponse.data);    
                 if (postResponse.data) {
                     alert('글쓰기 성공');
                     navigate('/');
-                } 
-            } else {
+                } else {
+                    alert('글쓰기/수정 중 오류가 발생했습니다.');
+                    console.log('Error response:', postResponse); 
+                }
+            } catch (error) {
+                console.error('Error adding/editing post:', error);
                 alert('글쓰기/수정 중 오류가 발생했습니다.');
-                console.log('Error response:', postResponse);
             }
-        } catch (error) {
-            console.error('Error adding/editing post:', error);
-            alert('글쓰기/수정 중 오류가 발생했습니다.');
-        }
     };
 
     return (
@@ -382,7 +387,7 @@ const PostEdit = () => {
                                     </div>
                                 )}
                             </div>
-                        {/* <div id="file-update">
+                        <div id="file-update">
                             <label htmlFor="image-update">
                                 <input
                                     type="file"
@@ -417,7 +422,7 @@ const PostEdit = () => {
                                         style={{ width: '150px', height: '150px' }}
                                     />
                                 ))}
-                            </div> */}
+                            </div>
                         <div className="post-content">
                             <div className="textareaContainer">
                                 <textarea
