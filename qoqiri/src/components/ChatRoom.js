@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
+import { formatSendTime } from "../utils/TimeFormat";
 
 const StyledChatRoom = styled.div`
   display: flex;
@@ -318,19 +319,6 @@ const ChatRoom = ({ chatRoomId }) => {
 
     leaveChatroom(chatDTO);
     window.location.reload();
-  };
-
-  // 시간 포멧 설정
-  const formatSendTime = (sendTime) => {
-    const date = new Date(sendTime);
-    const options = {
-      month: "numeric", // 월
-      day: "numeric", // 일
-      hour: "numeric", // 시간
-      minute: "numeric", // 분
-      hour12: true, // 오전/오후 표시
-    };
-    return date.toLocaleDateString("en-US", options);
   };
 
   return (

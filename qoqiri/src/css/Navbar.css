@@ -35,7 +35,7 @@
   color: #ff7f38;
 }
 
-.navbar-alarm {
+.navbar_chat {
   margin-right: 150px;
   cursor: pointer;
 }
@@ -66,13 +66,13 @@
   background-color: rgb(156, 156, 156); /* 스크롤바 호버 시 색상 변경 */
 }
 
-.notice {
+.chatlist {
   display: flex;
   flex-direction: column; /* 세로로 정렬 */
   gap: 10px; /* 버튼 사이의 간격 조절 */
 }
 
-.notice-link {
+.chat-link {
   background-color: white;
   border-radius: 15px;
   border: 0.5px solid rgb(224, 224, 224);
@@ -80,26 +80,26 @@
   padding: 15px;
 }
 
-.notice-top {
+.chat-top {
   display: flex;
   justify-content: space-between; /* 내부 요소를 양옆 끝으로 정렬 */
 }
 
-.notice-link .notice-exp {
+.chat-link .chat-exp {
   font-weight: bold;
   font-size: 1.2rem;
 }
 
-.notice-link .notice-time {
+.chat-link .chat-time {
   font-size: 0.8rem;
   margin-right: 5px;
 }
 
-.notice-link .notice-addr {
+.chat-link .chat-addr {
   font-size: 1rem;
   white-space: normal;
   margin-top: 10px;
 }
-.notice-link:hover {
+.chat-link:hover {
   cursor: pointer;
 }

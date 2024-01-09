@@ -3,8 +3,9 @@ import { getChatRoomUserList } from "../api/chat";
 import ChatRoomModal from "./ChatRoomModal";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { formatSendTimeBasedOnDate } from "../utils/TimeFormat";
 
-const OffCanvas = ({ show, handleClose, ...props }) => {
+const ChatList = ({ show, handleClose, ...props }) => {
   const user = useSelector((state) => state.user); // 내정보
   const chatRoomList = useSelector((state) => state.chatRoom); // 내가 참여중인 채팅방 리스트
 
@@ -29,16 +30,6 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
     setChatRoomSEQ(null);
   };
 
-  // 시간 포멧 설정
-  const formatSendTime = (sendTime) => {
-    const date = new Date(sendTime);
-    const options = {
-      month: "numeric", // 월
-      day: "numeric", // 일
-    };
-    return date.toLocaleDateString("en-US", options);
-  };
-
   useEffect(() => {
     if (show) {
       chatRoomList.forEach(async (chatRoom) => {
@@ -58,7 +49,7 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <div className="notice">
+        <div className="chatlist">
           {user &&
             Array.isArray(chatRoomList) &&
             chatRoomList.map((chatRoom) => {
@@ -66,19 +57,21 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
               const userList = chatRoomUserList[chatRoomSEQ] || [];
               return (
                 <div
-                  className="notice-link"
+                  className="chat-link"
                   key={chatRoom?.userChatRoomInfoSeq}
                   onClick={() => handleShowChatRoom(chatRoomSEQ)}
                 >
-                  <div className="notice-top">
-                    <div className="notice-exp">
+                  <div className="chat-top">
+                    <div className="chat-exp">
                       {chatRoom?.chatRoom?.post?.postTitle}
                     </div>
-                    <div className="notice-time">
-                      {formatSendTime(chatRoom?.chatRoom?.createdTime)}
+                    <div className="chat-time">
+                      {formatSendTimeBasedOnDate(
+                        chatRoom?.chatRoom?.createdTime
+                      )}
                     </div>
                   </div>
-                  <div className="notice-addr">
+                  <div className="chat-addr">
                     {userList?.map((user) => (
                       <span key={user?.userChatRoomInfoSeq}>
                         {user?.userInfo?.userNickname}&nbsp;
@@ -99,4 +92,4 @@ const OffCanvas = ({ show, handleClose, ...props }) => {
   );
 };
 
-export default OffCanvas;
+export default ChatList;

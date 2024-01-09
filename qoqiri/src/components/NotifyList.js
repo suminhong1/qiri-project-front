@@ -3,8 +3,12 @@ import { useSelector } from "react-redux";
 import ChatRoomModal from "./ChatRoomModal";
 import { useEffect, useState } from "react";
 import { getNotifyList } from "../api/notify";
+import { formatSendTimeBasedOnDate } from "../utils/TimeFormat";
+import styled from "styled-components";
 
-const Notify = ({ show, handleClose, ...props }) => {
+const StyledNotifyList = styled.div``;
+
+const NotifyList = ({ show, handleClose, ...props }) => {
   const user = useSelector((state) => state.user);
   const [notifyList, setNotifyList] = useState([]);
   const [chatRoomSEQ, setChatRoomSEQ] = useState(null);
@@ -32,16 +36,6 @@ const Notify = ({ show, handleClose, ...props }) => {
     }
   }, [show]);
 
-  // 시간 포멧 설정
-  const formatSendTime = (sendTime) => {
-    const date = new Date(sendTime);
-    const options = {
-      month: "numeric", // 월
-      day: "numeric", // 일
-    };
-    return date.toLocaleDateString("en-US", options);
-  };
-
   // ChatRoom 모달이 열려 있는지 확인
   const isChatRoomModalOpen = chatRoomSEQ !== null;
 
@@ -54,9 +48,12 @@ const Notify = ({ show, handleClose, ...props }) => {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div className="notify_list">
-          {notifyList?.map((notify) => (
-            <div className="notify" key={notify?.notificationMessageSEQ}>
-              {notify.messege}
+          {notifyList.map((notify) => (
+            <div key={notify?.notificationMessageSEQ}>
+              <div className="notify_message">{notify?.message}</div>
+              <div className="notify_time">
+                {formatSendTimeBasedOnDate(notify?.sentTime)}
+              </div>
             </div>
           ))}
         </div>
@@ -70,4 +67,4 @@ const Notify = ({ show, handleClose, ...props }) => {
   );
 };
 
-export default Notify;
+export default NotifyList;
