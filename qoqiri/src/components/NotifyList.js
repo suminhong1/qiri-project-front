@@ -3,10 +3,7 @@ import { useSelector } from "react-redux";
 import ChatRoomModal from "./ChatRoomModal";
 import { useEffect, useState } from "react";
 import { getNotifyList } from "../api/notify";
-import { formatSendTimeBasedOnDate } from "../utils/TimeFormat";
-import styled from "styled-components";
-
-const StyledNotifyList = styled.div``;
+import { formatSendTime, formatSendTimeBasedOnDate } from "../utils/TimeFormat";
 
 const NotifyList = ({ show, handleClose, ...props }) => {
   const user = useSelector((state) => state.user);
@@ -47,16 +44,16 @@ const NotifyList = ({ show, handleClose, ...props }) => {
         </Offcanvas.Title>
       </Offcanvas.Header>
       <Offcanvas.Body>
-        <div className="notify_list">
-          {notifyList.map((notify) => (
+        {notifyList.map((notify) => (
+          <div className="notify_list">
             <div key={notify?.notificationMessageSEQ}>
               <div className="notify_message">{notify?.message}</div>
               <div className="notify_time">
-                {formatSendTimeBasedOnDate(notify?.sentTime)}
+                {formatSendTime(notify?.sentTime)}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
         <ChatRoomModal
           show={isChatRoomModalOpen}
           handleClose={handleCloseChatRoom}

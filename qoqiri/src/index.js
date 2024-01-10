@@ -6,6 +6,8 @@ import "./assets/reset.css";
 import { Provider } from "react-redux";
 import store from "./store";
 import "../src/assets/fonts/Font.css";
+import "./css/NotifyList.css";
+import "./css/Navbar.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

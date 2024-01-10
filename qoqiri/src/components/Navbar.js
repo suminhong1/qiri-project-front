@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../css/Navbar.css";
+
 import { GrHomeRounded } from "react-icons/gr";
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";

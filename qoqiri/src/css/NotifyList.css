@@ -1,0 +1,28 @@
+.notify_list {
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
+  gap: 10px; /* 버튼 사이의 간격 조절 */
+  background-color: white;
+  border-radius: 15px;
+  border: 0.5px solid rgb(224, 224, 224);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin-bottom: 10px;
+}
+
+.notify_message {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.notify_time {
+  font-size: 0.8rem;
+  margin-right: 5px;
+  color: #808080;
+  display: flex;
+  justify-content: end;
+}
+
+.notify_list:hover {
+  cursor: pointer;
+}
