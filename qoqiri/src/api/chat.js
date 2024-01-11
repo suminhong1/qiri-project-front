@@ -37,14 +37,9 @@ export const joinMessage = async (data) => {
   return await instance.put("/chatroom/user/join", data);
 };
 
-//내가 참여한 생팅방 생성(매칭 신청시 생성됨)
+//매칭 신청시 채팅방 생성 및 접속
 export const joinChatRoom = async (data) => {
   return await instance.post("/chatroom/join", data);
-};
-
-//매칭신청자의 채팅방 접속
-export const enterChatRoom = async (data) => {
-  return await instance.post("/chatroom/enter", data);
 };
 
 //특정매칭글 승락한사람이 모두 접속한 채팅방 생성

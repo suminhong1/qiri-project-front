@@ -5,10 +5,8 @@ import { getUser } from "../api/user";
 import defaultimg from "../assets/defaultimg.png";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { enterChatRoom } from "../api/chat";
 import { matchingAccept, hideMachingUser } from "../api/matching";
 import ChatRoomModal from "./ChatRoomModal";
-import { asyncChatRooms } from "../store/chatRoomSlice";
 
 const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -60,11 +58,7 @@ const ApplyForm = ({ userId }) => {
     postSEQ: postSEQ,
     applicantId: userId,
   };
-  const chatStart = async () => {
-    const result = await enterChatRoom(ChatDTO);
-    await setChatRoomSEQ(result.data.chatRoom.chatRoomSEQ);
-    await dispatch(asyncChatRooms(user.id));
-  };
+
   const matchingAcceptAPI = () => {
     matchingAccept(ChatDTO);
     window.location.reload();
@@ -128,13 +122,6 @@ const ApplyForm = ({ userId }) => {
             프로필 정보
           </button>
           <div className="ap-bottomBtn">
-            <button
-              className="ap-front-chatBtn"
-              onClick={chatStart}
-              style={customButtonStyle}
-            >
-              채팅
-            </button>
             <button
               className="ap-front-applyBtn"
               style={customButtonStyle}

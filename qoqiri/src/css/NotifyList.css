@@ -15,6 +15,11 @@
   font-size: 0.9rem;
 }
 
+.notify_list.read .notify_message {
+  color: #959595;
+  font-weight: normal;
+}
+
 .notify_time {
   font-size: 0.8rem;
   margin-right: 5px;

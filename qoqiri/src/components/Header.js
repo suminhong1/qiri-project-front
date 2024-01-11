@@ -115,13 +115,18 @@ const Header = () => {
   };
 
   // 알림확인처리 API
-  const checkNotifyAPI = () => {
-    checkNotify(user.id);
+  const checkNotifyAPI = async () => {
+    // 미확인 알림 구분을 위해 1초 딜레이 후 확인처리
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await checkNotify(user.id);
   };
 
   useEffect(() => {
-    dispatch(asyncChatRooms(user.id));
-    unreadNotifyAPI();
+    if (Object.keys(user).length !== 0) {
+      dispatch(asyncChatRooms(user.id));
+      unreadNotifyAPI();
+    }
+
     const save = localStorage.getItem("user");
     if (Object.keys(user).length === 0 && save !== null) {
       dispatch(userSave(JSON.parse(save)));

@@ -98,7 +98,7 @@ const Detail = styled.div`
   }
 `;
 
-const DetailView = ({ selectedPostSEQ, attachments }) => {
+const DetailView = ({ show, handleClose, selectedPostSEQ, attachments }) => {
   const [posts, setPosts] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -189,121 +189,124 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
     dispatch(viewComments(selectedPostSEQ));
   }, [dispatch]);
 
-  return (
-    <Detail>
-      <div className="board-detail" key={post?.postSEQ}>
-        <div className="board-header-time">
-          <Date postDate={post?.postDate} />
-        </div>
-        <div className="board-header">
-          <div className="profile">
-            <img
-              src={`/uploadprofile/${post?.userInfo?.profileImg}`}
-              alt="프로필 이미지"
-            />
+  if (show && selectedPostSEQ !== null) {
+    return (
+      <Detail show={show} onHide={handleClose}>
+        <div className="board-detail" key={post?.postSEQ}>
+          <div className="board-header-time">
+            <Date postDate={post?.postDate} />
           </div>
-          <div className="titleNickname">
-            <div className="title">{post?.postTitle}</div>
-            <span className="nickname">{post?.userInfo?.userNickname}</span>
-          </div>
-        </div>
-        <div className="board-image-main">
-          <div className="board-image">
-            {attachments
-              ?.filter(
-                (attachment) => attachment.post?.postSEQ === post.postSEQ
-              )
-              ?.map((filterattachment, index) => (
-                <img
-                  key={index}
-                  src={`/upload/${filterattachment?.attachmentURL}`}
-                  alt={`이미지 ${index + 1}`}
-                  onClick={() => openModal(index)}
-                />
-              ))}
-          </div>
-        </div>
-        <div className="write-board">
-          <div className="write">{post?.postContent}</div>
-        </div>
-        <button className="play" onClick={handleApplyClick}>
-          같이놀자!
-        </button>
-        <div className="foot-place-detail">
-          <div className="foot-place">
-            <p>{post?.place?.placeName}</p>
-            <p>{post?.place?.placeType?.placeTypeName}</p>
-          </div>
-        </div>
-        <hr />
-        <AddComment code={post !== null ? post.postSEQ : null} />
-        {comments
-          .filter((comment) => comment.commentDelete === "N")
-          .map((comment) => (
-            <Comment key={comment.commentsSEQ} comment={comment} />
-          ))}
-      </div>
-      <div className="foot-post">
-        {user?.id === post?.userInfo?.userId ? (
-          <div className="footFlex">
-            <a className="post-put" href={`/postedit/${selectedPostSEQ}`}>
-              수정
-            </a>
-            <button className="post-delete" onClick={deletePost}>
-              삭제
-            </button>
-          </div>
-        ) : null}
-      </div>
-      {isModalOpen && (
-        <div className="Matching-modal-overlay">
-          <div className="Matching-modal">
-            <div
-              onClick={() => {
-                if (selectedImageIndex > 0) {
-                  setSelectedImageIndex(selectedImageIndex - 1);
-                }
-              }}
-              className="arrow-button left-arrow"
-            >
-              &lt;
+          <div className="board-header">
+            <div className="profile">
+              <img
+                src={`/uploadprofile/${post?.userInfo?.profileImg}`}
+                alt="프로필 이미지"
+              />
             </div>
-            <Carousel
-              showArrows={false}
-              selectedItem={selectedImageIndex}
-              dynamicHeight={true}
-              showThumbs={false}
-            >
+            <div className="titleNickname">
+              <div className="title">{post?.postTitle}</div>
+              <span className="nickname">{post?.userInfo?.userNickname}</span>
+            </div>
+          </div>
+          <div className="board-image-main">
+            <div className="board-image">
               {attachments
                 ?.filter(
                   (attachment) => attachment.post?.postSEQ === post.postSEQ
                 )
                 ?.map((filterattachment, index) => (
-                  <div key={index}>
-                    <img
-                      src={`/upload/${filterattachment?.attachmentURL}`}
-                      alt={`이미지 ${index + 1}`}
-                    />
-                  </div>
+                  <img
+                    key={index}
+                    src={`/upload/${filterattachment?.attachmentURL}`}
+                    alt={`이미지 ${index + 1}`}
+                    onClick={() => openModal(index)}
+                  />
                 ))}
-            </Carousel>
-            <div
-              onClick={() => {
-                if (selectedImageIndex < attachments?.length - 1) {
-                  setSelectedImageIndex(selectedImageIndex + 1);
-                }
-              }}
-              className="arrow-button right-arrow"
-            >
-              &gt;
-            </div>
-            <div onClick={closeModal} className="close-button">
-              &times;
             </div>
           </div>
+          <div className="write-board">
+            <div className="write">{post?.postContent}</div>
+          </div>
+          <button className="play" onClick={handleApplyClick}>
+            같이놀자!
+          </button>
+          <div className="foot-place-detail">
+            <div className="foot-place">
+              <p>{post?.place?.placeName}</p>
+              <p>{post?.place?.placeType?.placeTypeName}</p>
+            </div>
+          </div>
+          <hr />
+          <AddComment code={post !== null ? post.postSEQ : null} />
+          {comments
+            .filter((comment) => comment.commentDelete === "N")
+            .map((comment) => (
+              <Comment key={comment.commentsSEQ} comment={comment} />
+            ))}
         </div>
-      )}
-    </Detail>
-  );
+        <div className="foot-post">
+          {user?.id === post?.userInfo?.userId ? (
+            <div className="footFlex">
+              <a className="post-put" href={`/postedit/${selectedPostSEQ}`}>
+                수정
+              </a>
+              <button className="post-delete" onClick={deletePost}>
+                삭제
+              </button>
+            </div>
+          ) : null}
+        </div>
+        {isModalOpen && (
+          <div className="Matching-modal-overlay">
+            <div className="Matching-modal">
+              <div
+                onClick={() => {
+                  if (selectedImageIndex > 0) {
+                    setSelectedImageIndex(selectedImageIndex - 1);
+                  }
+                }}
+                className="arrow-button left-arrow"
+              >
+                &lt;
+              </div>
+              <Carousel
+                showArrows={false}
+                selectedItem={selectedImageIndex}
+                dynamicHeight={true}
+                showThumbs={false}
+              >
+                {attachments
+                  ?.filter(
+                    (attachment) => attachment.post?.postSEQ === post.postSEQ
+                  )
+                  ?.map((filterattachment, index) => (
+                    <div key={index}>
+                      <img
+                        src={`/upload/${filterattachment?.attachmentURL}`}
+                        alt={`이미지 ${index + 1}`}
+                      />
+                    </div>
+                  ))}
+              </Carousel>
+              <div
+                onClick={() => {
+                  if (selectedImageIndex < attachments?.length - 1) {
+                    setSelectedImageIndex(selectedImageIndex + 1);
+                  }
+                }}
+                className="arrow-button right-arrow"
+              >
+                &gt;
+              </div>
+              <div onClick={closeModal} className="close-button">
+                &times;
+              </div>
+            </div>
+          </div>
+        )}
+      </Detail>
+    );
+  }
+  return null;
 };
 export default DetailView;
