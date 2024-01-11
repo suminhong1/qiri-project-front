@@ -169,7 +169,7 @@ const StyledChatRoom = styled.div`
   }
 `;
 
-const ChatRoom = ({ chatRoomId }) => {
+const ChatRoom = ({ chatRoomSEQ }) => {
   const [chatRoomInfo, setChatRoomInfo] = useState({});
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -180,19 +180,19 @@ const ChatRoom = ({ chatRoomId }) => {
 
   //어느 채팅방인지 받아오기
   const chatRoomInfoAPI = async () => {
-    const result = await getChatRoomInfo(chatRoomId);
+    const result = await getChatRoomInfo(chatRoomSEQ);
     setChatRoomInfo(result.data);
   };
 
   //현재 채팅방의 메세지들 받아오기
   const chatMessageAPI = async () => {
-    const result = await getChatMessage(chatRoomId);
+    const result = await getChatMessage(chatRoomSEQ);
     setLoadMessage(result.data);
   };
 
   // 현재 채팅방에 참여한 유저정보중 내 정보 받아오기(최초접속 확인용)
   const userChatRoomInfoAPI = async () => {
-    const result = await getUserChatRoomInfo(user.id, chatRoomId);
+    const result = await getUserChatRoomInfo(user.id, chatRoomSEQ);
     setUserChatRoomInfo(result.data);
     return result.data;
   };
@@ -205,14 +205,14 @@ const ChatRoom = ({ chatRoomId }) => {
 
   const chatDTO = {
     id: user.id,
-    chatRoomSEQ: chatRoomId,
+    chatRoomSEQ: chatRoomSEQ,
   };
 
   useEffect(() => {
     chatRoomInfoAPI();
     chatMessageAPI();
     userChatRoomInfoAPI();
-  }, [chatRoomId]);
+  }, [chatRoomSEQ]);
 
   useEffect(() => {
     scrollToBottom();
@@ -237,7 +237,7 @@ const ChatRoom = ({ chatRoomId }) => {
     userChatRoomInfoAPI().then((userChatRoomInfo) => {
       stompClient.current.onConnect = (frame) => {
         stompClient.current.subscribe(
-          `/sub/chat/room/${chatRoomId}`,
+          `/sub/chat/room/${chatRoomSEQ}`,
           (message) => {
             const recv = JSON.parse(message.body);
             recvMessage(recv);
@@ -249,7 +249,7 @@ const ChatRoom = ({ chatRoomId }) => {
             destination: "/pub/chat/message",
             body: JSON.stringify({
               nickname: user.nickname,
-              chatRoomSEQ: chatRoomId,
+              chatRoomSEQ: chatRoomSEQ,
               message: user.nickname + "님이 채팅에 참여하였습니다.",
               sendTime: currentTime.toISOString(),
             }),
@@ -266,9 +266,9 @@ const ChatRoom = ({ chatRoomId }) => {
         }
       };
     });
-  }, [user, chatRoomId]);
+  }, [user, chatRoomSEQ]);
 
-  //메세지 발송 부분
+  //메세지정보 서버로 전송
   const sendMessage = async () => {
     // 입력한 메시지의 양 끝 공백 제거
     const trimmedMessage = message.trim();
@@ -282,7 +282,7 @@ const ChatRoom = ({ chatRoomId }) => {
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
-        chatRoomSEQ: chatRoomId,
+        chatRoomSEQ: chatRoomSEQ,
         message: message,
       }),
     });
@@ -290,7 +290,7 @@ const ChatRoom = ({ chatRoomId }) => {
     setMessage("");
   };
 
-  // 현재 채팅방에 메세지 발송시 프론트에 표시
+  // 서버에서 메세지정보 받기
   const recvMessage = (recv) => {
     const currentTime = new Date();
     setMessages((prevMessages) => [
@@ -311,7 +311,7 @@ const ChatRoom = ({ chatRoomId }) => {
       destination: "/pub/chat/message",
       body: JSON.stringify({
         nickname: user.nickname,
-        chatRoomSEQ: chatRoomId,
+        chatRoomSEQ: chatRoomSEQ,
         message: user.nickname + "님이 채팅방에서 퇴장하였습니다.",
         sendTime: currentTime.toISOString(),
       }),

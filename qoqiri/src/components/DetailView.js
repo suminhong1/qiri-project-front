@@ -9,7 +9,7 @@ import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
-import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
+import { MatchingApply } from "../api/matching"; // 신청버튼테스트용
 import { createChatRoom, joinChatRoom } from "../api/chat";
 import styled from "styled-components";
 import { asyncChatRooms } from "../store/chatRoomSlice";
@@ -138,57 +138,47 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
     editPostAPI(selectedPostSEQ);
     alert("게시물이 삭제됐습니다.");
   };
+
+  // 매칭신청
   const handleApplyClick = async () => {
-    // 현재 선택한 게시물을 찾기. (게시물 정보 가져오기)
     const currentPost = posts.find((po) => po.postSEQ === selectedPostSEQ);
 
     if (!user.id || !user.token) {
-      // user.id 또는 user.token이 없다면 로그인되지 않은 것으로 간주
       alert("로그인해주세요");
       return;
     }
 
-    // 작성자의 ID와 로그인한 사용자의 ID가 동일한지 확인
     if (currentPost?.userInfo?.userId === user.id) {
       alert("본인이 작성한 게시물에는 신청할 수 없습니다.");
       return;
     }
-
-    try {
-      const response = await saveData(user, selectedPostSEQ);
-      await joinChatRoom(ChatDTO);
-      await dispatch(asyncChatRooms(user.id));
-
-      if (response) {
-        console.log("신청 성공 및 채팅방 생성!");
-      }
-    } catch (error) {
-      console.error("신청 중 오류 발생:", error);
-    }
+    await saveData();
   };
 
+  // 매칭신청 상세
   const saveData = async () => {
-    // 토큰 가져오기
-    const dataToSend = {
-      token: user.token, // 토큰 추가
+    const MatchingUserInfoDTO = {
+      token: user.token,
       postSEQ: selectedPostSEQ,
     };
-    console.log("데이타 보내기" + dataToSend);
 
     try {
-      const response = await ApplyUserInfo(dataToSend);
-      console.log("정보" + response);
+      const response = await MatchingApply(MatchingUserInfoDTO);
+      // 성공시 메세지 출력, 채팅방 생성 접속
       if (response.status === 200) {
-        console.log("데이터 저장 성공");
         alert("신청 성공 및 채팅방 생성!");
-        return response.data;
-      } else {
-        console.error("데이터 저장 실패");
+        await joinChatRoom(ChatDTO);
+        await dispatch(asyncChatRooms(user.id));
       }
     } catch (error) {
-      alert("이미 신청한 게시물입니다.", error);
+      // 반환값에 따라 신청한 게시물 확인 처리
+      if (error.response && error.response.status === 409) {
+        alert("이미 신청한 게시물입니다.");
+      } else {
+        console.error("오류 발생", error);
+      }
     }
-  }; // 신청버튼테스트용
+  };
 
   useEffect(() => {
     getPostAPI();
