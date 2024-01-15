@@ -19,7 +19,6 @@ import { asyncSearchResult } from "../store/postSlice";
 import { getCommentCount } from "../api/post";
 import defaultimg from "../assets/defaultimg.png";
 
-
 const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -31,7 +30,7 @@ const MatchingBoard = () => {
   const [commentCount, setCommentsCount] = useState(0);
   const [matchCate, setMatchCate] = useState([]);
   const { id } = useParams();
-  
+
   const dispatch = useDispatch();
   const searchList = useSelector((state) => {
     return state.post;
@@ -148,7 +147,13 @@ const MatchingBoard = () => {
               </div>
               <div className="board-header">
                 <div className="profile">
-                  <img src={po?.userInfo?.profileImg ? `/uploadprofile/${po?.userInfo?.profileImg}` : defaultimg} />
+                  <img
+                    src={
+                      po?.userInfo?.profileImg
+                        ? `/uploadprofile/${po?.userInfo?.profileImg}`
+                        : defaultimg
+                    }
+                  />
                 </div>
                 <div className="titleNickname">
                   <div className="title">{po?.postTitle}</div>
@@ -197,10 +202,7 @@ const MatchingBoard = () => {
                   <div className="close-button" onClick={closeModal}>
                     &times;
                   </div>
-                  <DetailView
-                    selectedPostSEQ={selectedPostSEQ}
-                    attachments={attachments}
-                  />
+                  <DetailView selectedPostSEQ={selectedPostSEQ} />
                 </div>
               </div>
             </div>
