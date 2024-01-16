@@ -8,10 +8,12 @@ import store from "./store";
 import "../src/assets/fonts/Font.css";
 import "./css/NotifyList.css";
 import "./css/Navbar.css";
+import NotifyMessage from "./components/NotifyMessage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <RouterProvider router={Router} />
+    <NotifyMessage />
   </Provider>
 );

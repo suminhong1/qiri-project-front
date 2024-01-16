@@ -337,23 +337,17 @@ const ChatRoom = ({ chatRoomSEQ }) => {
 
         <div className="container" id="app">
           <ul className="list-group">
-            {loadMessage
-              ?.sort((a, b) => a.chatMessageSeq - b.chatMessageSeq)
-              .filter(
-                (msg) =>
-                  new Date(msg?.sendTime) > new Date(userChatRoomInfo?.joinDate)
-              )
-              .map((msg) => (
-                <li className="list-group-item" key={msg?.chatMessageSEQ}>
-                  <div className="msgHeader">
-                    <div className="chat">{msg?.userInfo?.userNickname}</div>
-                    <div className="sendTime">
-                      {formatSendTime(msg?.sendTime)}
-                    </div>
+            {loadMessage.map((msg) => (
+              <li className="list-group-item" key={msg?.chatMessageSEQ}>
+                <div className="msgHeader">
+                  <div className="chat">{msg?.userInfo?.userNickname}</div>
+                  <div className="sendTime">
+                    {formatSendTime(msg?.sendTime)}
                   </div>
-                  {msg?.message}
-                </li>
-              ))}
+                </div>
+                {msg?.message}
+              </li>
+            ))}
             {messages.map((msg, index) => (
               <li className="list-group-item" key={index}>
                 <div className="msgHeader">
