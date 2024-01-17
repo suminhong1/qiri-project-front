@@ -109,11 +109,13 @@ const DetailView = ({ selectedPostSEQ }) => {
     return state.comment;
   });
 
+  // 게시물 카드 오픈
   const openModal = (imageIndex) => {
     setSelectedImageIndex(imageIndex);
     setIsModalOpen(true);
   };
 
+  // 게시물 카드 클로즈
   const closeModal = () => {
     setSelectedImageIndex(0);
     setIsModalOpen(false);
@@ -132,6 +134,7 @@ const DetailView = ({ selectedPostSEQ }) => {
   const deletePost = () => {
     editPostAPI(selectedPostSEQ);
     alert("게시물이 삭제됐습니다.");
+    window.location.reload();
   };
 
   const getAttachmentsAPI = async () => {

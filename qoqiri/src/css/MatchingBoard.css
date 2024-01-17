@@ -68,7 +68,7 @@ body::-webkit-scrollbar-track {
 }
 
 .real-main {
- background-color: #ff7f38;
+  background-color: rgb(220, 245, 255);
 }
 .main {
   position: relative;
@@ -117,7 +117,7 @@ body::-webkit-scrollbar-track {
   display: flex;
   position: relative;
   flex-direction: column;
-  border : 1px solid #ff7f38;
+  /* border : 1px solid #ff7f38; */
   border-radius: 4px;
   width: 393px;
   min-height: 270px;

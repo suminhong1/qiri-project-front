@@ -6,9 +6,7 @@ const instance = axios.create({
 
 // 백단 서버에 요청하는거
 
-export const updatePostAPI = async(data)=>{
-    return await instance.put('post',data)
-}
+
 // 게시물 추가
 export const addPostAPI = async (data) => {
     //서버 주소와 클라이언트 주소는 다름
@@ -46,19 +44,34 @@ export const getAttachmentsAll = async () => {
 } 
 
 // 게시물 수정
-export const editPostAPI = async (postSeq) => {
-    return await instance.put(`/post/${postSeq}`);
+
+export const editPostAPI = async (data) => {
+    try {
+        const response = await instance.put('/post', data);
+        console.log(response.config.data); // 확인용 로그
+        return response;
+    } catch (error) {
+        console.error('updatePostAPI 에러 : ', error);
+        throw error; 
+    }
 };
 
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
-    return await instance.put('matchingCategoryInfo', data);
+    try {
+        const response = await instance.put('/matchingCategoryInfo', data); // 여기서 오류
+        console.log(response.data); // 확인용 로그
+        return response;
+    } catch (error) {
+        console.error('editMatchingAPI 에러:', error);
+        throw error;
+    }
 };
 
 // 첨부 파일 수정
 export const editAttachmentsAPI = async (formData) => {
     console.log(formData);
-    const response = await instance.put('postAttachments', formData, {
+    const response = await instance.put('/postAttachments', formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
         },
@@ -66,9 +79,17 @@ export const editAttachmentsAPI = async (formData) => {
     return response.data;
 };
 
-export const getPlaceee = async (id) => {
-    return await instance.get('public/place' + id);
+export const getSelectAttach = async (id) => {
+    return await instance.get(`/postAttachments/${id}`);
+}
+
+export const getSelectPlace = async (id) => {
+    return await instance.get(`public/place/${id}`);
 };
+
+export const getSelectPlaceType = async (id) => {
+    return await instance.get(`/placeType/${id}`)
+}
 
 export const getMatchCate = async (id) => {
     // MatchingcategoryInfo 불러오는 API
@@ -136,10 +157,11 @@ export const getPostsByCategoryType = async (code) => {
 };
 
 // 모든 게시글 가져오기
-export const getPosts = async () => {
+export const getPosts = async (page) => {
     return await instance.get('/public/post', {
         params : {
             board : 1,
+            page : page,
         }
     });
 };
@@ -159,4 +181,12 @@ export const getMyPosts = async (userId) => {
   return await instance.get(`post/get/${userId}`);
 };
 
-
+export const deleteMatchingCategoryAPI = async (id) => {
+    try {
+        const response = await instance.delete(`/matchingCategoryInfo` + id);
+        console.log('매칭 카테고리 정보 삭제 성공:', response.data);
+    } catch (error) {
+        console.error('매칭 카테고리 정보 삭제 중 오류 발생:', error);
+        throw error; 
+    }
+};

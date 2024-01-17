@@ -29,42 +29,52 @@ const MatchingBoard = () => {
   const [attachments, setAttachments] = useState([]);
   const [commentCount, setCommentsCount] = useState(0);
   const [matchCate, setMatchCate] = useState([]);
+  const [page, setPage] = useState(1); // 페이지 번호 추가
+  const [loading, setLoading] = useState(false); // 로딩 상태 추가
   const { id } = useParams();
 
   const dispatch = useDispatch();
   const searchList = useSelector((state) => {
     return state.post;
   });
+  
+
 
   useEffect(() => {
     setPosts(searchList);
   }, [searchList]);
 
+  // 카테고리 타입 SEQ받아서 해당하는 POST가져오기
   const PostsByCategoryTypeAPI = async () => {
     const result = await getPostsByCategoryType(id);
     setPosts(result.data);
   };
 
+  // 게시물 리스트 불러오는 API
   const getPostsAPI = async () => {
     const result = await getPosts();
     setPosts(result.data);
   };
 
+  // 카테고리 불러오는 API
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategory(result.data);
   };
 
+  // 카테고리 타입 불러오는 API
   const categoryTypeAPI = async () => {
     const result = await getCategoryTypes();
     setCategoryType(result.data);
   };
 
+  // 첨부한 첨부파일 불러오는 API
   const attachmentsAPI = async () => {
     const result = await getAttachmentsAll();
     setAttachments(result.data);
   };
 
+ // 매칭 카테고리 인포 불러오는 API
   const matchCategoryInfoAPI = async () => {
     const result = await getMatchCategoryInfo();
     setMatchCate(result.data);
@@ -107,11 +117,29 @@ const MatchingBoard = () => {
     }
   }, [id]);
 
+  // 카테고리, 카테고리 타입 PostSEQ로 불러오는 useEffect
   useEffect(() => {
     categoryTypeAPI();
     categoryAPI();
   }, [selectedCatSEQ]);
 
+  const loadMorePosts = async () => {
+    setLoading(true);
+
+    const nextPage = page + 1;
+    const result = await getPosts(nextPage);
+
+    if (result.data.length > 0) {
+      // 새로운 페이지에 게시물이 있을 경우
+      setPosts([...posts, ...result.data]);
+      setPage(nextPage);
+    } else {
+      // 마지막 페이지인 경우, 모든 게시물을 가져옴
+      setPosts([...posts, ...result.data]);
+    }
+
+    setLoading(false);
+  }
   return (
     <div className="real-main">
       <main className="main">
@@ -180,6 +208,7 @@ const MatchingBoard = () => {
                   </a>
                 </div>
               </div>
+              
               <div className="category">
                 {matchCate
                   .filter((match) => match?.post?.postSEQ === po?.postSEQ)
@@ -195,6 +224,13 @@ const MatchingBoard = () => {
               </div>
             </div>
           ))}
+    
+    {loading && <p>Loading...</p>}
+
+{!loading && posts.length > 0 && (
+  <button onClick={loadMorePosts} style={{ background: 'antiquewhite', color: '#ff9615', fontWeight: 'bold' , borderRadius: '5px', border: 'none', marginLeft:'10px'}}>더 보기</button>
+)}
+
           {isOpen && (
             <div className="Matching-modal-main">
               <div className="Matching-modal-overlay">
