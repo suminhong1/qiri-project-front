@@ -8,7 +8,6 @@ import { editPostAPI, getAttachments, getPost } from "../api/post";
 import UserRating from "../components/UserRating";
 import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { viewComments } from "../store/commentSlice";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
 import { MatchingApply } from "../api/matching"; // 신청버튼테스트용
