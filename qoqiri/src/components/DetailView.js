@@ -11,7 +11,7 @@ import Comment from "../components/Comment";
 import { editPostAPI, getPost, getPosts } from "../api/post";
 import { ApplyUserInfo } from "../api/matching"; // 신청버튼테스트용
 import { createChatRoom, joinChatRoom } from "../api/chat";
-import { postBlockUser } from "../api/blockuser";
+import { postBlockUser, getBlockUser } from "../api/blockuser";
 import styled from "styled-components";
 import { RepeatOneSharp } from "@mui/icons-material";
 
@@ -30,6 +30,7 @@ const Detail = styled.div`
   .board-header-time {
     margin-top: 15px;
     margin-right: 10px;
+    font-size: 9px;
   }
 
   .board-image-main {

@@ -8,6 +8,6 @@ export const getCategories = async () => {
   return await instance.get("public/category");
 };
 
-export const userCategoryInfo = async () => {
-  return await instance.get("userCategoryInfo")
-}
+export const getUserCategory = async (id) => {
+  return await instance.get(`userCategoryInfo/${id}`);
+};

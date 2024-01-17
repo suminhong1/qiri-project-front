@@ -7,7 +7,7 @@ import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
 import { getAttachmentsAll } from "../api/post";
 import { getCommentCount, getPlace, getPlaceType } from "../api/post";
-import { userCategoryInfo } from "../api/category";
+import { getUserCategory } from "../api/category";
 import { getBlockUser } from "../api/blockuser";
 import {
   getMatchCategoryInfo,
@@ -24,6 +24,7 @@ const MatchingBoard = () => {
   const [posts, setPosts] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPostSEQ, setSelectedPostSEQ] = useState(0);
+  const [userCategory, setUserCategory] = useState([]);
   const [category, setCategory] = useState([]);
   const [categoryType, setCategoryType] = useState([]);
   const [selectedCatSEQ, setSelectedCatSEQ] = useState(null);
@@ -34,31 +35,66 @@ const MatchingBoard = () => {
   const [place, setPlace] = useState([]);
   const [placeType, setPlaceType] = useState([]);
   const [filteredPlaces, setFilteredPlaces] = useState([]);
-
   const [selectedPlace, setSelectedPlace] = useState();
   const [selectedPlaceType, setSelectedPlaceType] = useState(null);
   const [filteredPosts, setFilteredPosts] = useState([]);
-
-  const [userCategories, setUserCategories] = useState([]);
-
   const user = useSelector((state) => state.user);
-
   const [blockUser, setBlockUser] = useState([]);
+  const [blockUserFetched, setBlockUserFetched] = useState(false); // 계속 가져와서 한번만 가져오도록 조건 걸음
+
+  const viewCategory = () => {
+    // Filter posts based on user and matching categories
+    const filteredPosts = posts.filter((post) => {
+      // Check if there is a matching category for the post
+      const matchingCategory = matchCate.find(
+        (match) => match.post.postSEQ === post.postSEQ
+      );
+
+      // Check if the matching category belongs to the user's categories
+      return (
+        matchingCategory &&
+        userCategory.some(
+          (userCat) =>
+            userCat.category.categorySEQ ===
+            matchingCategory.category.categorySEQ
+        )
+      );
+    });
+
+    setFilteredPosts(filteredPosts);
+  };
 
   const blockUserAPI = async () => {
-    const result = await getBlockUser(user.id);
-    setBlockUser(result.data);
+    try {
+      if (!blockUserFetched) {
+        const result = await getBlockUser(user.id);
+        setBlockUser(result.data);
+        setBlockUserFetched(true);
+      }
+    } catch (error) {
+      // 에러 처리
+    }
+  };
+
+  const blockUserPost = () => {
+    // blockUser가 배열인 것으로 가정하며, 차단된 사용자가 있는지 확인합니다.
+    if (blockUser.length > 0) {
+      const filteredBlock = posts.filter(
+        (post) =>
+          !blockUser.some(
+            (blockedUser) =>
+              post.userInfo.userId === blockedUser.blockInfo.userId &&
+              blockedUser.unblock !== "N"
+          )
+      );
+      setPosts(filteredBlock);
+    }
   };
 
   useEffect(() => {
     blockUserAPI();
     blockUserPost();
-  }, [user]);
-
-  const userCategoryAPI = async () => {
-    const result = await userCategoryInfo();
-    setUserCategories(result.data);
-  };
+  }, [user, blockUserFetched]);
 
   const searchList = useSelector((state) => {
     return state.post;
@@ -73,25 +109,9 @@ const MatchingBoard = () => {
     setPosts(result.data);
   };
 
-  const handleShowOnlyUserCategories = () => {
-    // 사용자 카테고리를 기반으로 게시물 필터링
-    const filtered = posts.filter((post) => {
-      return userCategories.some((category) =>
-        post.categories.some(
-          (postCategory) =>
-            postCategory.categoryType.ctSEQ === category.categoryType.ctSEQ
-        )
-      );
-    });
-
-    setFilteredPosts(filtered);
-  };
-
-  const blockUserPost = () => {
-    const filteredBlock = posts.filter(
-      (post) => post?.userInfo?.userId !== blockUser?.blockInfo?.userId
-    );
-    setPosts(filteredBlock);
+  const getUserCategoryAPI = async () => {
+    const result = await getUserCategory(user.id);
+    setUserCategory(result.data);
   };
 
   const getPostsAPI = async () => {
@@ -183,10 +203,6 @@ const MatchingBoard = () => {
     }
   };
 
-  const handleSearch = () => {
-    filterPosts(selectedPlaceType, selectedPlace);
-  };
-
   const closeModal = () => {
     setIsOpen(false);
   };
@@ -199,13 +215,15 @@ const MatchingBoard = () => {
   useEffect(() => {
     placeAPI();
     placeTypeAPI();
-    userCategoryAPI();
   }, []);
+
+  useEffect(() => {
+    getUserCategoryAPI();
+  }, [user]); // 'user'가 변경될 때만 효과를 발생시키도록 함
 
   useEffect(() => {
     matchCategoryInfoAPI();
     attachmentsAPI(selectedPostSEQ);
-    console.log(blockUser);
   }, [posts]);
 
   useEffect(() => {
@@ -246,40 +264,38 @@ const MatchingBoard = () => {
             ))}
           </div>
         </div>
-        <div className="place-box">
-          <h1>지역 선택</h1>
-          <select onChange={handlePlaceTypeChange}>
-            <option value="">지역을 선택해주세요</option>
-            {placeType.map((type) => (
-              <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
-                {type.placeTypeName}
-              </option>
-            ))}
-          </select>
-
-          {selectedPlaceType && (
-            <div className="place-box">
-              <h2>상세 지역</h2>
-              <select onChange={handlePlaceChange}>
-                <option value="">상세 지역을 선택해주세요</option>
-                {filteredPlaces.map((place) => (
-                  <option key={place.placeSEQ} value={place.placeSEQ}>
-                    {place.placeName}
-                  </option>
-                ))}
-              </select>
-            </div>
-          )}
-          {/* <button onClick={handleSearch}>검색하기</button> */}
-        </div>
-        <div className="userCategory">
-          <button onClick={handleShowOnlyUserCategories}>
-            내 관심사만 보기
-          </button>
+        <div className="search-box">
+          <div className="place-box">
+            <h1>지역 선택</h1>
+            <select onChange={handlePlaceTypeChange}>
+              <option value="">지역을 선택해주세요</option>
+              {placeType.map((type) => (
+                <option key={type.placeTypeSEQ} value={type.placeTypeSEQ}>
+                  {type.placeTypeName}
+                </option>
+              ))}
+            </select>
+            {selectedPlaceType && (
+              <div className="place-box">
+                <h1>상세 지역</h1>
+                <select onChange={handlePlaceChange}>
+                  <option value="">상세 지역을 선택해주세요</option>
+                  {filteredPlaces.map((place) => (
+                    <option key={place.placeSEQ} value={place.placeSEQ}>
+                      {place.placeName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
+          <div className="userCategory">
+            <button onClick={viewCategory}>내 관심사만 보기</button>
+          </div>
         </div>
         <section className="section">
           {filteredPosts.length === 0 ? (
-            <p>검색 결과가 없습니다.</p>
+            <p className="noContent">검색 결과가 없습니다.</p>
           ) : (
             filteredPosts?.map((po, index) => (
               <div

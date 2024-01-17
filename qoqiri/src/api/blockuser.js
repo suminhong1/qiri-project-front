@@ -11,3 +11,7 @@ export const postBlockUser = async (sendUserInfo) => {
 export const getBlockUser = async (id) => {
   return await instance.get(`blockUsers/${id}`);
 };
+
+export const putBlockUser = async (id) => {
+  return await instance.put(`blockUsers/${id}`);
+};
