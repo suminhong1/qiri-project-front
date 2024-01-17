@@ -11,7 +11,9 @@ import {
     editAttachmentsAPI,
     getSelectPlace,
     getSelectPlaceType,
-    getSelectAttach
+    getSelectAttach,
+    deleteMatchingCategoryAPI,
+    addMatchingAPI
 } from '../api/post';
 import { getCategories } from '../api/category';
 import { getCategoryTypes } from '../api/categoryType';
@@ -49,7 +51,10 @@ const PostEdit = () => {
     const [categoryTypes, setCategoryTypes] = useState([]);
 
     const [selectSeq, setSelectSeq] = useState([]);
-    const [selectlike, setSelectlike] = useState([]);
+    const [selectLike, setSelectLike] = useState([]);
+
+    const [editLike, setEditLike] = useState([]);
+    const [editSeq, setEditSeq] = useState([]);
 
     const maxCharacterCount = 100000;
 
@@ -96,12 +101,14 @@ const PostEdit = () => {
     // 선택한 category 리스트 불러오기
     const selectCategoryAPI = async () => {
         const selectedCategoriesData = await getMatchCate(id);
+        console.log(selectedCategoriesData);
         const selectedCategorySEQs = selectedCategoriesData.data.map((item) => item.category.categorySEQ);
-        setSelectSeq(selectedCategorySEQs);
+        setEditSeq(selectedCategorySEQs);
 
         const selectedCategoryTypesData = await getCategoryTypes(selectedCategorySEQs);
         setCategoryTypes(selectedCategoryTypesData.data);
     };
+    // console.log(selectCategoryAPI)
 
     // 첨부한 첨부파일 불러오기
     const getSelectAttachAPI = async () =>{
@@ -192,21 +199,23 @@ const PostEdit = () => {
         setAttachmentImg(newAttachmentImg);
         updateImagePreviews(newAttachmentImg);
   };
-    // 카테고리 선택 핸들러
-    const handleInterestClick = (categorySEQ, TypeSEQ) => {
-        setSelectlike([]);
-        setSelectSeq([]);
+ 
+    // 카테고리 선택, 제거 핸들러
 
-        if (selectlike.includes(categorySEQ)) {
-            setSelectlike(selectlike.filter((item) => item !== categorySEQ));
-            setSelectSeq(selectSeq.filter((item) => item !== TypeSEQ));
+    const handleInterestClick = (categorySEQ, TypeSEQ) => {
+        setEditLike([...editLike, categorySEQ]);
+        if (editLike.includes(categorySEQ)) {
+            // 이미 선택된 카테고리인 경우 선택 해제
+            setEditLike(editLike.filter((item) => item !== categorySEQ));
+            setEditSeq(editSeq.filter((item) => item !== TypeSEQ));
         } else {
-            setSelectlike([...selectlike, categorySEQ]);
-            setSelectSeq([...selectSeq, TypeSEQ]);
+            // 선택되지 않은 카테고리인 경우 선택
+            setEditLike([...editLike, categorySEQ]);
+            setEditSeq([...editSeq, TypeSEQ]);
         }
     };
 
-    // 카테고리, 카테고리 타입
+       // 글 수정 시 상단에 선택할 수 있는 카테고리, 카테고리 타입
     useEffect(() => {
         const fetchCategoryTypes = async () => {
             const result = await getCategoryTypes();
@@ -239,6 +248,7 @@ const PostEdit = () => {
         setPlaceType(result.data);
     };
 
+  
     useEffect(() => {
         placeAPI();
         placeTypeAPI();
@@ -257,7 +267,7 @@ const PostEdit = () => {
         }
         const PostDTO = {      
             token: localStorage.getItem('token'),  
-            postTitle: title, 
+            postTitle: title,
             postContent: content,     
             placeSEQ: selectedPlace,
             placeTypeSEQ: selectedPlaceType,   
@@ -266,39 +276,43 @@ const PostEdit = () => {
 
        let postResponse;
 
+
         try {
             postResponse = await editPostAPI(PostDTO);  
-            console.log(postResponse); 
-            console.log('Server response data:', postResponse.data);// 빈 문자열 찍힘 형변환 에러 해결하기
+            console.log(postResponse);            
             console.log('config.data:', postResponse.config.data);
-            console.log(selectlike); // 확인용 로그 출력 
-            const MatchingDTO = {
 
-                // categoryList: selectlike.map(item => isNaN(item) ? 0 : Number(item)), // 얘만 자꾸 Nan이 떠버리네
-                // categoryTypeList: selectSeq.map(Number),
+             //  기존의 매칭 카테고리 정보 삭제
+            // await deleteMatchingCategoryAPI(/*{ 여기에 뭐 넣어야되지 }*/);
+            // console.log('매칭 카테고리 정보 삭제 완료');
 
-                categoryList: selectlike, // 얘를 문자열에서 정수형으로 바꿔서 데이터를 전송해야함 얘가 카테고리 seq
-                categoryTypeList: selectSeq,
+            // await deleteMatchingCategoryAPI(postResponse.data.postSEQ);
+            // console.log('매칭 카테고리 정보 삭제 완료'); // 이 부분만 잘 생각해서 짜면 될거같은데
+
+            const MatchingDTO = {            
+              categoryList: editLike,
+              categoryTypeList: editSeq,
             };
+
                 console.log(MatchingDTO);
 
                 // 첨부파일 업로드 부분 
 
-                if (attachmentImg.length > 0) {
-                    const formData = new FormData();
-                    formData.append('postId', postResponse.data.postSEQ);
-                    attachmentImg.forEach((image) => {
-                        formData.append('files', image);
-                    });
-                    const attachmentResponse = await editAttachmentsAPI(formData);
-                    console.log(attachmentResponse);// 여기도 안찍히고
-                }
+                // if (attachmentImg.length > 0) {
+                //     const formData = new FormData();
+                //     formData.append('postId', postResponse.data.postSEQ);
+                //     attachmentImg.forEach((image) => {
+                //         formData.append('files', image);
+                //     });
+                //     const attachmentResponse = await editAttachmentsAPI(formData);
+                //     console.log(attachmentResponse);// 여기도 안찍히고
+                // }
 
                 // editMatchingAPI 호출
-                const matchingResponse = await editMatchingAPI({ // 콘솔에 여기 오류 찍힘
-                    postSEQ: postResponse.data.postSEQ, 
-                    categories: MatchingDTO.categoryList.map(categorySEQ => ({ categorySEQ })), 
-                    // 이걸 어떤식으로 보내야 허냐..
+                const matchingResponse = await editMatchingAPI({                 
+                    postSEQ: id, 
+                    categories: MatchingDTO.categoryList,
+                   
                 });   
                
                 console.log(matchingResponse);  
@@ -333,7 +347,7 @@ const PostEdit = () => {
                                                     <div
                                                         key={category.categorySEQ}
                                                         className={`edit-categoryLike-box-item ${
-                                                            selectSeq.includes(category.categorySEQ) ? 'selected' : ''
+                                                            editSeq.includes(category.categorySEQ) ? 'selected' : ''
                                                         }`}
                                                         onClick={() =>
                                                             handleInterestClick(
@@ -387,7 +401,7 @@ const PostEdit = () => {
                                     </div>
                                 )}
                             </div>
-                        <div id="file-update">
+                        {/* <div id="file-update">
                             <label htmlFor="image-update">
                                 <input
                                     type="file"
@@ -422,7 +436,7 @@ const PostEdit = () => {
                                         style={{ width: '150px', height: '150px' }}
                                     />
                                 ))}
-                            </div>
+                            </div> */}
                         <div className="post-content">
                             <div className="textareaContainer">
                                 <textarea

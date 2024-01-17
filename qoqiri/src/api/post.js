@@ -181,4 +181,12 @@ export const getMyPosts = async (userId) => {
   return await instance.get(`post/get/${userId}`);
 };
 
-
+export const deleteMatchingCategoryAPI = async (id) => {
+    try {
+        const response = await instance.delete(`/matchingCategoryInfo` + id);
+        console.log('매칭 카테고리 정보 삭제 성공:', response.data);
+    } catch (error) {
+        console.error('매칭 카테고리 정보 삭제 중 오류 발생:', error);
+        throw error; 
+    }
+};
