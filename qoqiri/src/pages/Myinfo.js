@@ -35,6 +35,10 @@ const UserInfoPage = () => {
       navigate("/Mypost");
       return;
     }
+    if (category === "차단한 사용자") {
+      navigate("/BlockUserInfo");
+      return;
+    }
 
     setSelectedCategory(category);
     setCurrentPage(1);

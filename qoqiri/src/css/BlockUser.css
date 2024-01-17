@@ -1,0 +1,53 @@
+.blockUser-container {
+  font-family: "Arial", sans-serif;
+  max-width: 1200px;
+  min-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(255, 127, 56, 0.5);
+  border-radius: 10px;
+}
+
+.blockUser-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.blockUser-table th,
+.blockUser-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: center;
+}
+
+.blockUser-table th {
+  background-color: #f2f2f2;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.blockUser-table td {
+  font-size: 15px;
+}
+
+.blockUser-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.blockUser-table th:nth-child(1),
+.blockUser-table td:nth-child(1) {
+  width: 25%;
+  /* 글 제목 칸 너비 */
+}
+
+.blockUser-table th:nth-child(2),
+.blockUser-table td:nth-child(2) {
+  width: 60%;
+  /* 글 내용 칸 너비 */
+}
+
+.blockUser-table th:nth-child(3),
+.blockUser-table td:nth-child(3) {
+  width: 15%;
+  /* 작성 날짜 칸 너비 */
+}

@@ -17,6 +17,7 @@ import SignupInfo from "./pages/SignupInfo";
 import Myactive from "./pages/Myactive";
 import MyComments from "./pages/Mycomments";
 import MyPost from "./pages/Mypost";
+import BlockUserInfo from "./pages/BlockUser";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +80,10 @@ const router = createBrowserRouter([
       {
         path: "/myMatching",
         element: <Myactive />,
+      },
+      {
+        path: "/BlockUserInfo",
+        element: <BlockUserInfo />,
       },
       {
         path: "apply/:postSEQ",
