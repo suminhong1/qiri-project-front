@@ -10,8 +10,6 @@ import { faThumbsUp as solidThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import Date from "../components/Date";
 import { getLike, postLike, delLike } from "../api/commentLike";
 
-
-
 const Box = styled.div`
   width: 95%;
   margin: 10px auto;
@@ -126,7 +124,10 @@ const Comment = ({ comment }) => {
           setLiked(true);
           setLike(like + 1);
           // 좋아요를 할 때 'seq'를 localStorage에 저장
-          localStorage.setItem(`seq_${comment.commentsSEQ}`, response.data.clSEQ);
+          localStorage.setItem(
+            `seq_${comment.commentsSEQ}`,
+            response.data.clSEQ
+          );
         } else {
           console.error("좋아요 추가 중에 문제가 발생했습니다.");
         }

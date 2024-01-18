@@ -3,9 +3,8 @@ import { useSelector } from "react-redux";
 import ChatRoomModal from "./ChatRoomModal";
 import { useEffect, useState } from "react";
 import { getNotifyList } from "../api/notify";
-
-import Date from "../components/Date";
 import DetailView from "./DetailView";
+import { formatDate24Hours } from "../utils/TimeFormat";
 
 const NotifyList = ({ show, handleClose, ...props }) => {
   const user = useSelector((state) => state.user);
@@ -71,7 +70,7 @@ const NotifyList = ({ show, handleClose, ...props }) => {
           >
             <div className="notify_message">{notify?.message}</div>
             <div className="notify_time">
-              <Date postDate={notify?.sentTime} />
+              {formatDate24Hours(notify?.sentTime)}
             </div>
           </div>
         ))}

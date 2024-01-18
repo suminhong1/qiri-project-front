@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 import styled, { keyframes } from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell as solidBell } from "@fortawesome/free-solid-svg-icons";
 
 const rollAnimation = keyframes`
   0% {
@@ -19,7 +21,6 @@ const StyledDiv = styled.div`
     position: fixed; /* 고정 위치 */
     width: 350px;
     max-width: 100%;
-
     white-space: nowrap;
     font-weight: bold;
     bottom: 10%; /* 원하는 상단 여백 조정 */
@@ -34,11 +35,14 @@ const StyledDiv = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     background-color: #ffffff; /* 배경색 */
-    padding: 10px; /* 패딩 조정 */
-    border: 1px solid #ccc; /* 테두리 스타일 설정 */
-    border-radius: 5px; /* 둥근 테두리 설정 */
+    margin-top: 15px;
+    padding-top: 10px;
+    background-color: white;
+    border-radius: 15px;
+    border: 0.5px solid rgb(224, 224, 224);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
     position: relative;
-    display: flex; /* 내부 요소를 가로로 나열하기 위해 추가 */
+    display: flex;
     overflow: hidden; /* 내부의 긴 콘텐츠를 잘라내도록 수정 */
     z-index: 9999; /* 다른 요소들 위로 표시하기 위한 z-index 설정 */
   }
@@ -111,6 +115,20 @@ const NotifyMessage = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    // 메시지가 추가될 때마다 타이머를 설정하여 5초 후에 메시지 삭제
+    const timer = setTimeout(() => {
+      if (message.length > 0) {
+        setMessage((prevMessages) => prevMessages.slice(1));
+        setAnimations((prevAnimations) => prevAnimations.slice(1));
+      }
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [message]);
+
   const recvMessage = (recv) => {
     // 받은 메시지 처리
     setMessage((prevMessages) => [
@@ -129,11 +147,20 @@ const NotifyMessage = () => {
           <div
             className="realTime_notify"
             key={msg?.notificationMessageSEQ}
-            onMouseEnter={onRun(index)}
-            onMouseLeave={onStop(index)}
+            onMouseEnter={() => onRun(index)}
+            onMouseLeave={() => onStop(index)}
           >
             <div className={`notify_msg ${animations[index] ? "" : "stop"}`}>
-              dassadadsdsa알림테스트dsadsadasdasdsadsads
+              &nbsp;&nbsp;
+              <FontAwesomeIcon
+                icon={solidBell}
+                style={{
+                  height: "15px",
+                  color: "red",
+                }}
+              />
+              &nbsp;&nbsp;
+              {msg?.message}
             </div>
           </div>
         ))}
