@@ -19,12 +19,11 @@ const StyledDiv = styled.div`
     position: fixed; /* 고정 위치 */
     width: 350px;
     max-width: 100%;
-    height: 400px;
+
     white-space: nowrap;
     font-weight: bold;
     bottom: 10%; /* 원하는 상단 여백 조정 */
     left: 80%; /* 원하는 우측 여백 조정 */
-    z-index: 9999; /* 다른 요소들 위로 표시하기 위한 z-index 설정 */
     display: flex;
     flex-direction: column-reverse; /* 아래서부터 위로 쌓이도록 설정 */
   }
@@ -41,6 +40,7 @@ const StyledDiv = styled.div`
     position: relative;
     display: flex; /* 내부 요소를 가로로 나열하기 위해 추가 */
     overflow: hidden; /* 내부의 긴 콘텐츠를 잘라내도록 수정 */
+    z-index: 9999; /* 다른 요소들 위로 표시하기 위한 z-index 설정 */
   }
 
   .notify_msg {
@@ -59,10 +59,25 @@ const NotifyMessage = () => {
   const stompClient = useRef(null);
   const user = useSelector((state) => state.user);
   const [message, setMessage] = useState([]);
-  const [animate, setAnimate] = useState(false);
+  const [animations, setAnimations] = useState(
+    Array(message.length).fill(false)
+  );
 
-  const onStop = () => setAnimate(false);
-  const onRun = () => setAnimate(true);
+  const onStop = (index) => {
+    setAnimations((prevAnimations) => {
+      const newAnimations = [...prevAnimations];
+      newAnimations[index] = false;
+      return newAnimations;
+    });
+  };
+
+  const onRun = (index) => {
+    setAnimations((prevAnimations) => {
+      const newAnimations = [...prevAnimations];
+      newAnimations[index] = true;
+      return newAnimations;
+    });
+  };
 
   useEffect(() => {
     if (user !== null) {
@@ -110,18 +125,18 @@ const NotifyMessage = () => {
   return ReactDOM.createPortal(
     <StyledDiv>
       <div className="realTime_notifyList">
-        {/* {message.map((msg) => ( */}
-        <div
-          className="realTime_notify"
-          //   key={msg?.notificationMessageSEQ}
-          onMouseEnter={onRun}
-          onMouseLeave={onStop}
-        >
-          <div className={`notify_msg ${animate ? "" : "stop"}`}>
-            dassadadsdsa알림테스트dsadsadasdasdsadsads
+        {message.map((msg, index) => (
+          <div
+            className="realTime_notify"
+            key={msg?.notificationMessageSEQ}
+            onMouseEnter={onRun(index)}
+            onMouseLeave={onStop(index)}
+          >
+            <div className={`notify_msg ${animations[index] ? "" : "stop"}`}>
+              dassadadsdsa알림테스트dsadsadasdasdsadsads
+            </div>
           </div>
-        </div>
-        {/* ))} */}
+        ))}
       </div>
     </StyledDiv>,
     document.body
