@@ -11,8 +11,8 @@ import {
     editAttachmentsAPI,
     getSelectPlace,
     getSelectPlaceType,
-    getSelectAttach,
-    deleteMatchingCategoryAPI,
+    getSelectAttach,  
+    deleteMatchingAPI,
     addMatchingAPI
 } from '../api/post';
 import { getCategories } from '../api/category';
@@ -102,8 +102,9 @@ const PostEdit = () => {
     const selectCategoryAPI = async () => {
         const selectedCategoriesData = await getMatchCate(id);
         console.log(selectedCategoriesData);
+
         const selectedCategorySEQs = selectedCategoriesData.data.map((item) => item.category.categorySEQ);
-        setEditSeq(selectedCategorySEQs);
+        setEditLike(selectedCategorySEQs);
 
         const selectedCategoryTypesData = await getCategoryTypes(selectedCategorySEQs);
         setCategoryTypes(selectedCategoryTypesData.data);
@@ -122,6 +123,16 @@ const PostEdit = () => {
         selectAttachAPI();
         getSelectAttachAPI();
     }, [id]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         await getPostAPI();
+    //         await selectCategoryAPI();
+    //         await selectAttachAPI();
+    //         await getSelectAttachAPI();
+    //     };
+    
+    //     fetchData();
+    // }, [id]);
 
     // 불러온 첨부파일 미리보기
     const selectAttachAPI = async () => {
@@ -203,6 +214,7 @@ const PostEdit = () => {
     // 카테고리 선택, 제거 핸들러
 
     const handleInterestClick = (categorySEQ, TypeSEQ) => {
+        
         setEditLike([...editLike, categorySEQ]);
         if (editLike.includes(categorySEQ)) {
             // 이미 선택된 카테고리인 경우 선택 해제
@@ -213,6 +225,8 @@ const PostEdit = () => {
             setEditLike([...editLike, categorySEQ]);
             setEditSeq([...editSeq, TypeSEQ]);
         }
+        console.log('클릭 후 - editLike:', editLike);
+        console.log('클릭 후 - editSeq:', editSeq);
     };
 
        // 글 수정 시 상단에 선택할 수 있는 카테고리, 카테고리 타입
@@ -247,7 +261,6 @@ const PostEdit = () => {
         const result = await getPlaceType();
         setPlaceType(result.data);
     };
-
   
     useEffect(() => {
         placeAPI();
@@ -267,6 +280,7 @@ const PostEdit = () => {
         }
         const PostDTO = {      
             token: localStorage.getItem('token'),  
+            postSEQ: id, 
             postTitle: title,
             postContent: content,     
             placeSEQ: selectedPlace,
@@ -276,7 +290,6 @@ const PostEdit = () => {
 
        let postResponse;
 
-
         try {
             postResponse = await editPostAPI(PostDTO);  
             console.log(postResponse);            
@@ -284,10 +297,10 @@ const PostEdit = () => {
 
              //  기존의 매칭 카테고리 정보 삭제
             // await deleteMatchingCategoryAPI(/*{ 여기에 뭐 넣어야되지 }*/);
-            // console.log('매칭 카테고리 정보 삭제 완료');
-
             // await deleteMatchingCategoryAPI(postResponse.data.postSEQ);
             // console.log('매칭 카테고리 정보 삭제 완료'); // 이 부분만 잘 생각해서 짜면 될거같은데
+
+            await deleteMatchingAPI(postResponse.data.postSEQ);
 
             const MatchingDTO = {            
               categoryList: editLike,
@@ -309,11 +322,13 @@ const PostEdit = () => {
                 // }
 
                 // editMatchingAPI 호출
-                const matchingResponse = await editMatchingAPI({                 
-                    postSEQ: id, 
-                    categories: MatchingDTO.categoryList,
-                   
-                });   
+                const matchingResponse = await addMatchingAPI({                 
+                    postSEQ: postResponse.data.postSEQ,
+                    categories: MatchingDTO.categoryList.map(categorySEQ => ({ categorySEQ })),
+
+                    // postSEQ: id, 
+                    // categories: MatchingDTO.categoryList,
+                }); 
                
                 console.log(matchingResponse);  
                 console.log(matchingResponse.data);    
@@ -347,12 +362,12 @@ const PostEdit = () => {
                                                     <div
                                                         key={category.categorySEQ}
                                                         className={`edit-categoryLike-box-item ${
-                                                            editSeq.includes(category.categorySEQ) ? 'selected' : ''
+                                                            editLike.includes(category.categorySEQ) ? 'selected' : ''
                                                         }`}
                                                         onClick={() =>
                                                             handleInterestClick(
-                                                                category.categoryName,
-                                                                category.categorySEQ
+                                                                category.categorySEQ,
+                                                               
                                                             )
                                                         }
                                                     >

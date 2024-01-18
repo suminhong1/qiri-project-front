@@ -181,12 +181,18 @@ export const getMyPosts = async (userId) => {
   return await instance.get(`post/get/${userId}`);
 };
 
-export const deleteMatchingCategoryAPI = async (id) => {
+// PUT 방식으로 delete 
+export const deletePostAPI = async (postSeq) => {
     try {
-        const response = await instance.delete(`/matchingCategoryInfo` + id);
-        console.log('매칭 카테고리 정보 삭제 성공:', response.data);
+        const response = await instance.put(`/post/${postSeq}`);
+        console.log(response.config.url); // 확인용 로그
+        return response;
     } catch (error) {
-        console.error('매칭 카테고리 정보 삭제 중 오류 발생:', error);
+        console.error('editPostAPI 에러 : ', error);
         throw error; 
     }
 };
+
+export const deleteMatchingAPI = async (id) => {
+    return await instance.delete(`/matchingCategoryInfo/deleteAll/${id}`);
+}

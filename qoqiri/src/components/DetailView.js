@@ -3,7 +3,7 @@ import "../css/MatchingBoard.css";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import Date from "../components/Date";
-import { editPostAPI, getPost, getPosts } from "../api/post";
+import { editPostAPI, getPost, getPosts, deletePostAPI } from "../api/post";
 import UserRating from "../components/UserRating";
 import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
@@ -139,7 +139,7 @@ const DetailView = ({ selectedPostSEQ, attachments }) => {
   };
 
   const deletePost = () => {
-    editPostAPI(selectedPostSEQ);
+    deletePostAPI(selectedPostSEQ);
     alert("게시물이 삭제됐습니다.");
     window.location.reload();
   };
