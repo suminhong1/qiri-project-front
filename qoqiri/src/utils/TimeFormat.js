@@ -20,9 +20,10 @@ const formatSendTime2 = (sendTime) => {
 
 const formatSendTime3 = (sendTime) => {
   const now = new Date();
-  const timeDiff = now - sendTime;
+  const date = new Date(sendTime);
+  const timeDiff = now - date;
 
-  const seconds = Math.floor(timeDiff / 1000);
+  const seconds = Math.floor(Math.abs(timeDiff) / 1000);
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
