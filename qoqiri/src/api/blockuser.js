@@ -13,5 +13,9 @@ export const getBlockUser = async (id) => {
 };
 
 export const putBlockUser = async (id) => {
-  return await instance.put(`blockUsers/${id}`);
+  return await instance.put(`blockUsers/update/${id}`);
+};
+
+export const delBlockUser = async (id) => {
+  return await instance.put(`blockUsers/delete/${id}`);
 };

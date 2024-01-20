@@ -44,60 +44,13 @@ const MatchingBoard = () => {
   const [blockUser, setBlockUser] = useState([]);
   const [blockUserFetched, setBlockUserFetched] = useState(false); // 계속 가져와서 한번만 가져오도록 조건 걸음
 
-  const viewCategory = () => {
-    // Filter posts based on user and matching categories
-    const filteredPosts = posts.filter((post) => {
-      // Check if there is a matching category for the post
-      const matchingCategory = matchCate.find(
-        (match) => match.post.postSEQ === post.postSEQ
-      );
-
-      // Check if the matching category belongs to the user's categories
-      return (
-        matchingCategory &&
-        userCategory.some(
-          (userCat) =>
-            userCat.category.categorySEQ ===
-            matchingCategory.category.categorySEQ
-        )
-      );
-    });
-
-    setFilteredPosts(filteredPosts);
+  // 게시물 불러오는 API
+  const getPostsAPI = async () => {
+    const result = await getPosts();
+    setPosts(result.data);
   };
 
-  const blockUserAPI = async () => {
-    try {
-      if (!blockUserFetched) {
-        const result = await getBlockUser(user.id);
-        setBlockUser(result.data);
-        setBlockUserFetched(true);
-      }
-    } catch (error) {
-      // 에러 처리
-    }
-  };
-
-  const blockUserPost = () => {
-    // blockUser가 배열인 것으로 가정하며, 차단된 사용자가 있는지 확인합니다.
-    if (blockUser.length > 0) {
-      const filteredBlock = posts.filter(
-        (post) =>
-          !blockUser.some(
-            (blockedUser) =>
-              post.userInfo.userId === blockedUser.blockInfo.userId &&
-              blockedUser.unblock !== "N"
-          )
-      );
-      setPosts(filteredBlock);
-    }
-  };
-
-  useEffect(() => {
-    blockUserAPI();
-    blockUserPost();
-  }, [user, blockUserFetched]);
-
+  // 검색기능
   const searchList = useSelector((state) => {
     return state.post;
   });
@@ -109,16 +62,6 @@ const MatchingBoard = () => {
   // 카테고리 타입 SEQ받아서 해당하는 POST가져오기
   const PostsByCategoryTypeAPI = async () => {
     const result = await getPostsByCategoryType(id);
-    setPosts(result.data);
-  };
-
-  const getUserCategoryAPI = async () => {
-    const result = await getUserCategory(user.id);
-    setUserCategory(result.data);
-  };
-
-  const getPostsAPI = async () => {
-    const result = await getPosts();
     setPosts(result.data);
   };
 
@@ -134,17 +77,28 @@ const MatchingBoard = () => {
     setCategoryType(result.data);
   };
 
-  // 첨부한 첨부파일 불러오는 API
-  const attachmentsAPI = async () => {
-    const result = await getAttachmentsAll();
-    setAttachments(result.data);
-  };
+  // 카테고리, 카테고리 타입 PostSEQ로 불러오는 useEffect
+  useEffect(() => {
+    categoryTypeAPI();
+    categoryAPI();
+  }, [selectedCatSEQ]);
 
   // 매칭 카테고리 인포 불러오는 API
   const matchCategoryInfoAPI = async () => {
     const result = await getMatchCategoryInfo();
     setMatchCate(result.data);
   };
+
+  // 첨부한 첨부파일 불러오는 API
+  const attachmentsAPI = async () => {
+    const result = await getAttachmentsAll();
+    setAttachments(result.data);
+  };
+
+  useEffect(() => {
+    matchCategoryInfoAPI();
+    attachmentsAPI(selectedPostSEQ);
+  }, [posts]);
 
   const commentCountAPI = async () => {
     const counts = [];
@@ -156,7 +110,71 @@ const MatchingBoard = () => {
     setCommentsCount(counts);
   };
 
-  // 지역으로 게시물 검색하기
+  useEffect(() => {
+    if (posts.length > 0) {
+      commentCountAPI();
+    }
+  }, [posts]);
+
+  // 내가 선택한 관심사 불러오는 API
+  const getUserCategoryAPI = async () => {
+    const result = await getUserCategory(user.id);
+    setUserCategory(result.data);
+  };
+
+  useEffect(() => {
+    getUserCategoryAPI();
+  }, [user]);
+
+  // 내 관심사 만 보기
+  const viewCategory = () => {
+    const filteredPosts = posts.filter((post) => {
+      const matchingCategory = matchCate.find(
+        (match) => match.post.postSEQ === post.postSEQ
+      );
+      return (
+        matchingCategory &&
+        userCategory.some(
+          (userCat) =>
+            userCat.category.categorySEQ ===
+            matchingCategory.category.categorySEQ
+        )
+      );
+    });
+
+    setFilteredPosts(filteredPosts);
+  };
+
+  // 차단유저
+  const blockUserAPI = async () => {
+    try {
+      if (!blockUserFetched) {
+        const result = await getBlockUser(user.id);
+        setBlockUser(result.data);
+        setBlockUserFetched(true);
+      }
+    } catch (error) {}
+  };
+
+  const blockUserPost = () => {
+    // 차단 유저 필터링
+    // if (blockUser.length > 0) {
+    const filteredBlock = posts.filter(
+      (post) =>
+        !blockUser.some(
+          (blockedUser) =>
+            post.userInfo.userId === blockedUser.blockInfo.userId &&
+            blockedUser.unblock !== "N"
+        )
+    );
+    setPosts(filteredBlock);
+    // }
+  };
+
+  useEffect(() => {
+    blockUserAPI();
+    blockUserPost();
+  }, [user, blockUserFetched]);
 
   // place 리스트 불러오기
   const placeAPI = async () => {
@@ -170,6 +188,12 @@ const MatchingBoard = () => {
     setPlaceType(result.data);
   };
 
+  useEffect(() => {
+    placeAPI();
+    placeTypeAPI();
+  }, []);
+
+  // 지역으로 게시물 검색하기
   const handlePlaceTypeChange = (event) => {
     const selectedType = event.target.value;
     setSelectedPlaceType(selectedType);
@@ -210,34 +234,9 @@ const MatchingBoard = () => {
     }
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
   useEffect(() => {
-    // 선택한 장소 및 장소 유형에 따라 게시물을 가져옵니다.
     filterPosts(selectedPlaceType, selectedPlace);
   }, [selectedPlaceType, selectedPlace, posts]);
-
-  useEffect(() => {
-    placeAPI();
-    placeTypeAPI();
-  }, []);
-
-  useEffect(() => {
-    getUserCategoryAPI();
-  }, [user]); // 'user'가 변경될 때만 효과를 발생시키도록 함
-
-  useEffect(() => {
-    matchCategoryInfoAPI();
-    attachmentsAPI(selectedPostSEQ);
-  }, [posts]);
-
-  useEffect(() => {
-    if (posts.length > 0) {
-      commentCountAPI();
-    }
-  }, [posts]);
 
   useEffect(() => {
     if (id == null) {
@@ -246,12 +245,6 @@ const MatchingBoard = () => {
       PostsByCategoryTypeAPI(); // id가 있을 때는 PostsByCategoryTypeAPI 실행
     }
   }, [id]);
-
-  // 카테고리, 카테고리 타입 PostSEQ로 불러오는 useEffect
-  useEffect(() => {
-    categoryTypeAPI();
-    categoryAPI();
-  }, [selectedCatSEQ]);
 
   const loadMorePosts = async () => {
     setLoading(true);
@@ -270,6 +263,11 @@ const MatchingBoard = () => {
 
     setLoading(false);
   };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+
   return (
     <div className="real-main">
       <main className="main">
