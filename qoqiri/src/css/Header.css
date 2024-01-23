@@ -1,0 +1,183 @@
+.header {
+  white-space: nowrap;
+  position: sticky;
+  top: 0px;
+  background-color: white;
+  width: 100%;
+  z-index: 10;
+  display: flex;
+  height: 70px;
+  justify-content: space-between;
+  min-width: 1250px;
+  border-bottom: 1px solid #cccccc;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.4);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 250px;
+}
+
+.header-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-search input {
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: block;
+  width: 350px;
+  height: 50px;
+  padding-left: 15px;
+  border-bottom: 3px solid #ff7f38;
+  border-top: 3px solid #ff7f38;
+  border-left: 3px solid #ff7f38;
+  border-right: none;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  outline: none;
+}
+
+.header-search button {
+  padding-right: 15px;
+  height: 50px;
+  border-bottom: 3px solid #ff7f38;
+  border-top: 3px solid #ff7f38;
+  border-left: none;
+  border-right: 3px solid #ff7f38;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  background-color: white;
+  outline: none;
+}
+
+.header-right_item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.header-matching {
+  padding: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  font-weight: bold;
+  font-size: 1.6rem;
+  margin-left: 20px;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.header-matching:hover {
+  background-color: #efefef; /* hover 시 배경색 변경 */
+}
+
+.header-user {
+  display: flex;
+  margin-left: 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 1rem;
+}
+
+.header-user .login,
+.header-user .join {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: gray;
+}
+.header-user .myInfo,
+.header-user .logout {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.header-flex {
+  height: 20px;
+  border-left: 2px solid #cccccc;
+  margin-left: 10px;
+}
+
+.header-icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
+}
+
+.notify-count {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: red;
+}
+
+.open_chatlist :hover {
+  cursor: pointer;
+}
+
+.offcanvas-body {
+  white-space: normal;
+  overflow-y: auto;
+  max-height: 100vh;
+  line-height: 1.4;
+  background-color: #eeeeee;
+  border-top: 1px solid rgb(189, 189, 189);
+}
+
+.offcanvas-body::-webkit-scrollbar {
+  width: 6px; /* 스크롤바 너비 조절 */
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb {
+  background-color: rgb(199, 199, 199); /* 스크롤바 색상 조절 */
+  border-radius: 10px; /* 스크롤바 둥글게 만들기 */
+}
+
+.offcanvas-body::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(156, 156, 156); /* 스크롤바 호버 시 색상 변경 */
+}
+
+.chatlist {
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
+  gap: 10px; /* 버튼 사이의 간격 조절 */
+}
+
+.chat-link {
+  background-color: white;
+  border-radius: 15px;
+  border: 0.5px solid rgb(224, 224, 224);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.chat-top {
+  display: flex;
+  justify-content: space-between; /* 내부 요소를 양옆 끝으로 정렬 */
+}
+
+.chat-link .chat-exp {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.chat-link .chat-time {
+  font-size: 0.8rem;
+  margin-right: 5px;
+}
+
+.chat-link .chat-addr {
+  font-size: 1rem;
+  white-space: normal;
+  margin-top: 10px;
+}
+.chat-link:hover {
+  cursor: pointer;
+}

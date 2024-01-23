@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import { getNotifyList } from "../api/notify";
 import DetailView from "./DetailView";
 import { formatDate24Hours } from "../utils/TimeFormat";
+import { useNavigate } from "react-router-dom";
 
 const NotifyList = ({ show, handleClose, ...props }) => {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(false);
   const [notifyList, setNotifyList] = useState([]);
@@ -42,8 +44,6 @@ const NotifyList = ({ show, handleClose, ...props }) => {
 
   // ChatRoom 모달이 열려 있는지 확인
   const isChatRoomModalOpen = chatRoomSEQ !== null;
-  // DetailView모달이 열려 있는지 확인
-  const isDetailViewModalOpen = postSEQ !== null;
 
   return (
     <Offcanvas show={show} onHide={handleClose} {...props}>
@@ -59,7 +59,9 @@ const NotifyList = ({ show, handleClose, ...props }) => {
               notify?.isRead === "Y" ? "read" : "unread"
             }`}
             onClick={() => {
-              if (notify?.chatRoom !== null) {
+              if (notify?.message?.includes("끼리 신청이 있습니다.")) {
+                navigate(`/apply/${notify?.post?.postSEQ}`);
+              } else if (notify?.chatRoom !== null) {
                 handleShowChatRoom(notify?.chatRoom?.chatRoomSEQ);
               } else if (notify?.post !== null && notify?.chatRoom == null) {
                 setPostSEQ(notify?.post?.postSEQ);

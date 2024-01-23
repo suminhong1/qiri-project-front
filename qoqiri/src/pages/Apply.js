@@ -8,6 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { createGroupChat } from "../api/chat";
 import ChatRoomModal from "../components/ChatRoomModal";
 import { asyncChatRooms } from "../store/chatRoomSlice";
+import styled from "styled-components";
+
+const StyledApply = styled.div`
+  .ApplyMain {
+    margin-left: 240px;
+  }
+`;
 
 const Apply = () => {
   const [appliedUsers, setAppliedUsers] = useState([]);
@@ -59,38 +66,40 @@ const Apply = () => {
   };
 
   return (
-    <div className="ApplyMain">
-      <div className="AC">
-        <div className="Applytag">궁금해요</div>
-        <button className="ap-backButton" onClick={handleBack}>
-          뒤로가기
-        </button>
-        {console.log("보이니?" + appliedUsers)}
+    <StyledApply>
+      <div className="ApplyMain">
+        <div className="AC">
+          <div className="Applytag">궁금해요</div>
+          <button className="ap-backButton" onClick={handleBack}>
+            뒤로가기
+          </button>
+          {console.log("보이니?" + appliedUsers)}
 
-        {appliedUsers.length === 0 ? (
-          <p className="ap-empty-p">터엉...ㅠㅠ</p>
-        ) : (
-          appliedUsers.map((userInfo) => (
-            <section className="ap-section" key={userInfo.id}>
-              <div className=".apply-form">
-                <ApplyForm userId={userInfo.id} />
-              </div>
-            </section>
-          ))
-        )}
+          {appliedUsers.length === 0 ? (
+            <p className="ap-empty-p">터엉...ㅠㅠ</p>
+          ) : (
+            appliedUsers.map((userInfo) => (
+              <section className="ap-section" key={userInfo.id}>
+                <div className=".apply-form">
+                  <ApplyForm userId={userInfo.id} />
+                </div>
+              </section>
+            ))
+          )}
+        </div>
+        <button className="ap-left-bottom-button" onClick={groupChat}>
+          승락한 사람 모두와 떠들기! Click!
+        </button>
+        <button className="ap-right-bottom-button" onClick={matchingEnd}>
+          같이 놀 사람을 모두 구했어요! Click!
+        </button>
+        <ChatRoomModal
+          show={isChatRoomModalOpen}
+          handleClose={handleCloseChatRoom}
+          chatRoomSEQ={chatRoomSEQ}
+        />
       </div>
-      <button className="ap-left-bottom-button" onClick={groupChat}>
-        승락한 사람 모두와 떠들기! Click!
-      </button>
-      <button className="ap-right-bottom-button" onClick={matchingEnd}>
-        같이 놀 사람을 모두 구했어요! Click!
-      </button>
-      <ChatRoomModal
-        show={isChatRoomModalOpen}
-        handleClose={handleCloseChatRoom}
-        chatRoomSEQ={chatRoomSEQ}
-      />
-    </div>
+    </StyledApply>
   );
 };
 

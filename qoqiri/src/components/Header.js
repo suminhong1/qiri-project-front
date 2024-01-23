@@ -5,8 +5,10 @@ import {
   faBell as solidBell,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { faBell as regularBell } from "@fortawesome/free-regular-svg-icons";
-import styled from "styled-components";
+import {
+  faBell as regularBell,
+  faComment,
+} from "@fortawesome/free-regular-svg-icons";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -15,87 +17,7 @@ import { asyncChatRooms } from "../store/chatRoomSlice";
 import { asyncSearchResult } from "../store/postSlice";
 import { checkNotify, getUnreadNotify } from "../api/notify";
 import NotifyList from "./NotifyList";
-
-const StyledHeader = styled.header`
-  * {
-    white-space: nowrap;
-  }
-
-  .header {
-    background-color: white;
-    width: 100%;
-    z-index: 1;
-    display: flex;
-    height: 130px;
-    justify-content: space-between;
-    min-width: 1250px;
-  }
-
-  .header-logo {
-    display: flex;
-    align-items: center;
-    margin: 10px;
-    margin-left: 150px;
-  }
-
-  .header-search {
-    flex: 1;
-    display: flex;
-    align-items: end;
-    justify-content: start;
-    padding: 10px;
-    margin-bottom: 15px;
-    margin-left: 20px;
-  }
-
-  .header-search input {
-    font-weight: bold;
-    font-size: 1.2rem;
-    display: block;
-    width: 80%;
-    max-width: 1000px;
-    height: 50px;
-    padding: 10px;
-    border-bottom: 3px solid #ff7f38;
-    border-top: 3px solid #ff7f38;
-    border-left: 3px solid #ff7f38;
-    border-right: none;
-    outline: none;
-  }
-
-  .header-search button {
-    padding: 10px;
-    height: 50px;
-    border-bottom: 3px solid #ff7f38;
-    border-top: 3px solid #ff7f38;
-    border-left: none;
-    border-right: 3px solid #ff7f38;
-    background-color: white;
-    outline: none;
-  }
-
-  .header-user {
-    display: flex;
-    justify-content: center;
-    margin-right: 30px;
-    margin-top: 15px;
-    height: 35px;
-    background-color: transparent;
-    border: none;
-    font-size: 1rem;
-  }
-
-  .header-user .login,
-  .header-user .join,
-  .header-user .myInfo,
-  .header-user .logout {
-    color: gray;
-  }
-
-  .header-user :hover {
-    color: black;
-  }
-`;
+import ChatList from "./ChatList";
 
 const Header = () => {
   const location = useLocation();
@@ -104,9 +26,12 @@ const Header = () => {
   const user = useSelector((state) => state.user);
   const [notify, setNotify] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [notifyListShow, setNotifyListShow] = useState(false);
+  const [chatRoomListShow, setChatRoomListShow] = useState(false);
+  const notifyClose = () => setNotifyListShow(false);
+  const notifyShow = () => setNotifyListShow(true);
+  const chatListClose = () => setChatRoomListShow(false);
+  const chatListShow = () => setChatRoomListShow(true);
 
   // 미확인 알림개수 API
   const unreadNotifyAPI = async () => {
@@ -146,7 +71,7 @@ const Header = () => {
   };
 
   return (
-    <StyledHeader>
+    <>
       <div className="header">
         <div className="header-logo">
           <a href="/" className="logo">
@@ -154,13 +79,13 @@ const Header = () => {
               src={logo}
               className="App-logo"
               alt="logo"
-              style={{ height: "80px", width: "auto" }}
+              style={{ height: "50px", width: "auto" }}
             />
             <img
               src={title}
               className="App-title"
               alt="title"
-              style={{ height: "50px", width: "auto" }}
+              style={{ height: "40px", width: "auto" }}
             />
           </a>
         </div>
@@ -190,68 +115,102 @@ const Header = () => {
             />
           </button>
         </div>
-        {/* 로그인이 되어 있지 않은 경우 */}
-        {Object.keys(user).length === 0 && (
-          <>
-            <button className="header-user">
-              <Link to="/Login" className="login">
-                로그인
-              </Link>
-            </button>
-            <button className="header-user">
-              <Link to="/signup" className="join">
-                회원가입
-              </Link>
-            </button>
-          </>
-        )}
+        <div className="header-right_item">
+          <div className="header-matching_container">
+            <Link to="/postWrite" className="header-matching">
+              모집
+            </Link>
+            <Link to="/matchingBoard" className="header-matching">
+              찾기
+            </Link>
+            <Link to="/review" className="header-matching">
+              후기
+            </Link>
+          </div>
+          <div className="header-flex"></div>
 
-        {/* 로그인이 되어 있는 경우 */}
-        {Object.keys(user).length !== 0 && (
-          <>
-            <button
-              className="header-user"
-              onClick={() => {
-                handleShow();
-                checkNotifyAPI();
-              }}
-            >
-              <div className="notify" style={{ pointerEvents: "none" }}>
-                {notify > 0 ? (
+          {/* 로그인이 되어 있지 않은 경우 */}
+          {Object.keys(user).length === 0 && (
+            <>
+              <button className="header-user">
+                <Link to="/Login" className="login">
+                  로그인
+                </Link>
+              </button>
+              <button className="header-user">
+                <Link to="/signup" className="join">
+                  회원가입
+                </Link>
+              </button>
+            </>
+          )}
+
+          {/* 로그인이 되어 있는 경우 */}
+          {Object.keys(user).length !== 0 && (
+            <>
+              <button className="header-user">
+                <Link to="/myinfo" className="myInfo">
+                  {user.nickname}
+                </Link>
+              </button>
+              <button onClick={logout} className="header-user">
+                <div className="logout">로그아웃</div>
+              </button>
+              <div className="header-icon">
+                <div
+                  className="header-user open_chatlist"
+                  onClick={chatListShow}
+                >
                   <FontAwesomeIcon
-                    icon={solidBell}
-                    style={{
-                      height: "20px",
-                      color: "red",
-                    }}
+                    icon={faComment}
+                    size={"2xl"}
+                    style={{ color: "black" }}
                   />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={regularBell}
-                    style={{
-                      height: "20px",
-                      color: "black",
-                    }}
-                  />
-                )}
-                {notify > 0 && (
-                  <span className="notify-count">&nbsp;{notify}</span>
-                )}
+                </div>
+                <button
+                  className="header-user"
+                  onClick={() => {
+                    notifyShow();
+                    checkNotifyAPI();
+                  }}
+                >
+                  <div className="notify-icon">
+                    {notify > 0 ? (
+                      <FontAwesomeIcon
+                        icon={solidBell}
+                        style={{
+                          height: "30px",
+                          color: "red",
+                        }}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={regularBell}
+                        style={{
+                          height: "30px",
+                          color: "black",
+                        }}
+                      />
+                    )}
+                  </div>
+                  {notify > 0 && <div className="notify-count">{notify}</div>}
+                </button>
               </div>
-            </button>
-            <button className="header-user">
-              <Link to="/myinfo" className="myInfo">
-                내정보
-              </Link>
-            </button>
-            <button onClick={logout} className="header-user">
-              <div className="logout">로그아웃</div>
-            </button>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
-      <NotifyList show={show} handleClose={handleClose} placement="end" />
-    </StyledHeader>
+      <NotifyList
+        show={notifyListShow}
+        handleClose={notifyClose}
+        placement="end"
+      />
+      <ChatList
+        show={chatRoomListShow}
+        handleClose={chatListClose}
+        placement="end"
+      />
+    </>
   );
 };
 export default Header;

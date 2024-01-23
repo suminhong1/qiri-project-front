@@ -4,7 +4,6 @@ import NotFound from "./pages/NotFound";
 import Home from "./pages/Home";
 import Mini from "./pages/Mini";
 import Apply from "./pages/Apply";
-import MatchingBoard from "./pages/MatchingBoard";
 import Login from "./pages/Login";
 import SignUp from "./pages/Signup";
 import UserInfoPage from "./pages/Myinfo";
@@ -14,10 +13,10 @@ import PostWrite from "./pages/PostWrite";
 import PostEdit from "./pages/PostEdit";
 import EditProfile from "./pages/EditProfile";
 import SignupInfo from "./pages/SignupInfo";
-import Myactive from "./pages/Myactive";
 import MyComments from "./pages/Mycomments";
 import MyPost from "./pages/Mypost";
 import BlockUserInfo from "./pages/BlockUser";
+import MatchingBoard from "./pages/MatchingBoard";
 
 const router = createBrowserRouter([
   {
@@ -39,10 +38,6 @@ const router = createBrowserRouter([
       },
       {
         path: "matchingBoard",
-        element: <MatchingBoard />,
-      },
-      {
-        path: "matchingBoard/:id",
         element: <MatchingBoard />,
       },
       {
@@ -76,10 +71,6 @@ const router = createBrowserRouter([
       {
         path: "/Mypost",
         element: <MyPost />,
-      },
-      {
-        path: "/myMatching",
-        element: <Myactive />,
       },
       {
         path: "/BlockUserInfo",

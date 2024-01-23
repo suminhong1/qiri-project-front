@@ -171,6 +171,11 @@ export const getMyPosts = async (userId) => {
   return await instance.get(`post/get/${userId}`);
 };
 
+// 내가 쓴 매칭글 중 매칭중인 글만 불러오기
+export const getMyPostsNotMatched = async (userId) => {
+  return await instance.get(`post_not_matched/${userId}`);
+};
+
 export const deleteMatchingCategoryAPI = async (id) => {
   try {
     const response = await instance.delete(`/matchingCategoryInfo` + id);

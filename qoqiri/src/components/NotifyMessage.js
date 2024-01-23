@@ -16,17 +16,26 @@ const rollAnimation = keyframes`
   }
 `;
 
+const fadeOutAnimation = keyframes`
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+`;
+
 const StyledDiv = styled.div`
   .realTime_notifyList {
     position: fixed; /* 고정 위치 */
-    width: 350px;
+    width: 300px;
     max-width: 100%;
     white-space: nowrap;
     font-weight: bold;
     bottom: 10%; /* 원하는 상단 여백 조정 */
-    left: 80%; /* 원하는 우측 여백 조정 */
+    left: 75%; /* 원하는 우측 여백 조정 */
     display: flex;
-    flex-direction: column-reverse; /* 아래서부터 위로 쌓이도록 설정 */
+    flex-direction: column; /* 아래서부터 위로 쌓이도록 설정 */
   }
   .realTime_notify {
     width: 100%;
@@ -36,7 +45,7 @@ const StyledDiv = styled.div`
     text-overflow: ellipsis;
     background-color: #ffffff; /* 배경색 */
     margin-top: 15px;
-    padding-top: 10px;
+    padding: 10px;
     background-color: white;
     border-radius: 15px;
     border: 0.5px solid rgb(224, 224, 224);
@@ -45,6 +54,7 @@ const StyledDiv = styled.div`
     display: flex;
     overflow: hidden; /* 내부의 긴 콘텐츠를 잘라내도록 수정 */
     z-index: 9999; /* 다른 요소들 위로 표시하기 위한 z-index 설정 */
+    animation: ${fadeOutAnimation} 2s ease-out 3s forwards;
   }
 
   .notify_msg {
@@ -151,7 +161,7 @@ const NotifyMessage = () => {
             onMouseLeave={() => onStop(index)}
           >
             <div className={`notify_msg ${animations[index] ? "" : "stop"}`}>
-              &nbsp;&nbsp;
+              &nbsp;
               <FontAwesomeIcon
                 icon={solidBell}
                 style={{
