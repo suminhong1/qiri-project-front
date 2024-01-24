@@ -1,15 +1,209 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import '../css/Signup.css';
-import { getCategoryTypes } from '../api/categoryType';
-import { getCategories } from '../api/category';
-import { getPlaceTypes } from '../api/placeType';
-import { useNavigate } from 'react-router-dom';
-import { editProfile } from '../api/user';
-// import { useContext } from 'react';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { getCategoryTypes } from "../api/categoryType";
+import { getCategories } from "../api/category";
+import { getPlaceTypes } from "../api/placeType";
+import { useNavigate } from "react-router-dom";
+import { editProfile } from "../api/user";
 import { useDispatch } from "react-redux";
-import { userLogout } from '../store/userSlice';
+import { userLogout } from "../store/userSlice";
 import { asyncEditProfile } from "../store/userSlice";
+import styled from "styled-components";
+
+const StyledSignup = styled.div`
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  .form {
+    max-width: 35vw;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .form h3 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #262626;
+    margin-bottom: 20px;
+  }
+
+  .form-el {
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-el label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #262626;
+  }
+
+  .form-el input {
+    width: 75%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
+  }
+
+  .form-el input:focus {
+    border: 1px solid #ff7f38;
+  }
+
+  .message {
+    font-size: 15px;
+    color: #ef0000;
+    margin-top: 4px;
+  }
+
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .signup-form button[type="submit"] {
+    width: 500%;
+    height: 48px;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #ff7f38;
+    color: white;
+    margin-top: 16px;
+    cursor: pointer;
+  }
+
+  .signup-form button[type="submit"]:disabled {
+    background-color: #ff7f38;
+    color: white;
+  }
+
+  .show-password-button {
+    border: 2px solid #e2e0e0;
+    margin-bottom: 5px;
+  }
+
+  .form img {
+    width: 5%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .form-el.label-for-gender {
+    margin-top: 16px; /* 간격 조절 */
+  }
+
+  .gender-options {
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* 남자 여자 글자 사이의 간격 조절 */
+  }
+
+  .gender-option {
+    display: flex;
+    align-items: center;
+  }
+
+  .gender-option input[type="radio"] {
+    margin-right: 2px; /* 라디오 버튼 간격 조절 */
+  }
+
+  .form-el.label-for-bloodType {
+    margin-top: 16px; /* 간격 조절 */
+  }
+
+  /* 혈액형 선택창 스타일 */
+  .form-el select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
+  }
+
+  /* 지역 선택창 조정 */
+  .form-el select#place {
+    width: 30%;
+  }
+
+  .form-el select#mbti {
+    width: 30%;
+  }
+
+  /* 관심사 선택 부분 */
+  .interest-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 16px;
+  }
+
+  .interest-section .form-el label {
+    font-size: 25px; /* 관심 주제를 선택해주세요 글자 부분 */
+  }
+
+  .selectlike-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 8px;
+  }
+
+  .box-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 16px;
+  }
+
+  .selectlike-box-item {
+    font-style: inherit;
+    margin: 5px;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 13px;
+  }
+
+  .selectlike-box-item.selected {
+    background-color: #ff9615;
+    color: white;
+    border: 1px solid #ff9615;
+  }
+
+  .selectlike-box h3 {
+    font-size: 17px;
+    color: #ff9615;
+  }
+
+  /* 프로필 사진 부분 */
+  .profile-picture-preview {
+    width: 150px;
+    height: 150px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+`;
 
 const EditProfile = () => {
   // 상태 변수들
@@ -29,11 +223,11 @@ const EditProfile = () => {
   const [phone, setPhone] = useState("");
   const [birth, setBirth] = useState("");
   const [age, setAge] = useState("");
-  const [selectedGender, setSelectedGender] = useState('');
+  const [selectedGender, setSelectedGender] = useState("");
   const [hasPartner, setHasPartner] = useState("없음");
-  const [selectedBloodType, setSelectedBloodType] = useState('');
-  const [placeType, setPlaceType] = useState('');
-  const [mbti, setMbti] = useState('');
+  const [selectedBloodType, setSelectedBloodType] = useState("");
+  const [placeType, setPlaceType] = useState("");
+  const [mbti, setMbti] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [warningMessage, setWarningMessage] = useState(""); // 상태 메시지 글자수 경고
   const [profilePictureUrl, setProfilePictureUrl] = useState(""); // 현재 프사 URL
@@ -66,8 +260,8 @@ const EditProfile = () => {
   // 아이디 중복 확인 함수
   const checkIdDuplicate = (currentId) => {
     fetch(`/api/checkDuplicate?id=${currentId}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.isAvailable) {
           setIsIdAvailable(true);
           setIdMessage("사용 가능한 아이디입니다.");
@@ -76,14 +270,14 @@ const EditProfile = () => {
           setIdMessage("이미 사용 중인 아이디입니다.");
         }
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   // 이름 중복 확인 함수
   const checkNameDuplicate = (currentName) => {
     fetch(`/api/checkNameDuplicate?name=${currentName}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.isAvailable) {
           setIsNameAvailable(true);
           setNameMessage("사용 가능한 이름입니다.");
@@ -92,15 +286,14 @@ const EditProfile = () => {
           setNameMessage("이미 사용 중인 이름입니다.");
         }
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
-
 
   // 닉네임 중복 확인 함수
   const checkNicknameDuplicate = (currentNickname) => {
     fetch(`/api/checkNicknameDuplicate?nickname=${currentNickname}`)
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         if (data.isAvailable) {
           setIsNicknameAvailable(true);
           setNicknameMessage("사용 가능한 닉네임입니다.");
@@ -109,7 +302,7 @@ const EditProfile = () => {
           setNicknameMessage("이미 사용 중인 닉네임입니다.");
         }
       })
-      .catch(error => console.error(error));
+      .catch((error) => console.error(error));
   };
 
   // 아이디 입력 핸들러
@@ -128,7 +321,9 @@ const EditProfile = () => {
     }
   };
 
-  {/* 이름 입력 핸들러 */ }
+  {
+    /* 이름 입력 핸들러 */
+  }
   const onChangeName = (e) => {
     const currentName = e.target.value;
     setName(currentName);
@@ -143,7 +338,9 @@ const EditProfile = () => {
     }
   };
 
-  {/* 닉네임 입력 핸들러 */ }
+  {
+    /* 닉네임 입력 핸들러 */
+  }
   const onChangeNickname = (e) => {
     const currentNickname = e.target.value;
     setNickname(currentNickname);
@@ -157,7 +354,6 @@ const EditProfile = () => {
       checkNicknameDuplicate(currentNickname);
     }
   };
-
 
   // 비밀번호 입력 핸들러
   const onChangePassword = (e) => {
@@ -250,7 +446,10 @@ const EditProfile = () => {
     const monthDiff = today.getMonth() - birthDate.getMonth();
 
     // 만약 현재 월이 생일 월보다 이전이거나, 현재 월과 생일 월이 같지만 현재 날짜가 생일보다 전일 경우 1 빼기
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
       setAge(ageDiff - 1);
     } else {
       setAge(ageDiff);
@@ -281,10 +480,14 @@ const EditProfile = () => {
   // 지역 변경 핸들러
   const handlePlaceChange = (e) => {
     const selectedPlaceTypeName = e.target.value;
-    const selectedPlaceTypeObj = placeTypes.find((placeType) => placeType.placeTypeName === selectedPlaceTypeName);
+    const selectedPlaceTypeObj = placeTypes.find(
+      (placeType) => placeType.placeTypeName === selectedPlaceTypeName
+    );
 
     setSelectedPlaceType({
-      placeTypeSEQ: selectedPlaceTypeObj ? selectedPlaceTypeObj.placeTypeSEQ : "",
+      placeTypeSEQ: selectedPlaceTypeObj
+        ? selectedPlaceTypeObj.placeTypeSEQ
+        : "",
       placeTypeName: selectedPlaceTypeName,
     });
   };
@@ -310,8 +513,8 @@ const EditProfile = () => {
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setProfilePictureUrl(imageUrl); 
-      
+      setProfilePictureUrl(imageUrl);
+
       try {
         const formData = new FormData();
         formData.append("profileImg", file);
@@ -342,7 +545,6 @@ const EditProfile = () => {
       setSelectSeq([...selectSeq, seq]);
     }
   };
-  
 
   useEffect(() => {
     const fetchCategoryTypes = async () => {
@@ -378,21 +580,20 @@ const EditProfile = () => {
   }, []);
 
   const [selectedPlaceType, setSelectedPlaceType] = useState({
-    placeTypeSEQ: "",   // 선택한 placeType의 placeTypeSEQ
+    placeTypeSEQ: "", // 선택한 placeType의 placeTypeSEQ
     placeTypeName: "", // 선택한 placeType의 placeTypeName
   });
 
-
-// 로그인된 사용자 정보 불러오기
+  // 로그인된 사용자 정보 불러오기
   useEffect(() => {
-    const userInfo = localStorage.getItem('user');
+    const userInfo = localStorage.getItem("user");
     if (userInfo) {
       const parsedUserInfo = JSON.parse(userInfo);
       setUser(parsedUserInfo);
       setId(parsedUserInfo.id);
       setName(parsedUserInfo.name);
       setNickname(parsedUserInfo.nickname);
-      setPassword('');
+      setPassword("");
       setEmail(parsedUserInfo.email);
       setPhone(parsedUserInfo.phone);
       if (parsedUserInfo.birthday) {
@@ -410,24 +611,32 @@ const EditProfile = () => {
       if (userPlaceType) {
         setSelectedPlaceType({
           placeTypeSEQ: userPlaceType.placeTypeSEQ,
-          placeTypeName: userPlaceType.placeTypeName
+          placeTypeName: userPlaceType.placeTypeName,
         });
       }
 
       // 관심사 카테고리 정보 불러오기
       const getUserCategoryInfo = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`);
-          const selectSeq = response.data.map(item => item.category.categorySEQ);
+          const response = await axios.get(
+            `http://localhost:8080/qiri/userCategoryInfo/${parsedUserInfo.id}`
+          );
+          const selectSeq = response.data.map(
+            (item) => item.category.categorySEQ
+          );
           setSelectSeq(selectSeq);
 
-          const selectedCategories = categories.filter(category => selectSeq.includes(category.categorySEQ));
-          const selectedCategoryNames = selectedCategories.map(category => category.categoryName);
+          const selectedCategories = categories.filter((category) =>
+            selectSeq.includes(category.categorySEQ)
+          );
+          const selectedCategoryNames = selectedCategories.map(
+            (category) => category.categoryName
+          );
           setSelectlike(selectedCategoryNames);
         } catch (error) {
           console.error(error);
         }
-      }
+      };
       getUserCategoryInfo();
     }
   }, []);
@@ -462,46 +671,48 @@ const EditProfile = () => {
     };
 
     try {
-      const updateResponse = await axios.put("http://localhost:8080/qiri/userInfo/editProfile", signUpDTO,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+      const updateResponse = await axios.put(
+        "http://localhost:8080/qiri/userInfo/editProfile",
+        signUpDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    const categoryResponse = await axios.post(
-      "http://localhost:8080/qiri/userCategoryInfo",
-      signUpDTO,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    console.log(categoryResponse);
+      const categoryResponse = await axios.post(
+        "http://localhost:8080/qiri/userCategoryInfo",
+        signUpDTO,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(categoryResponse);
 
       if (updateResponse.status === 200) {
-
         dispatch(asyncEditProfile(userInfoDTO));
         dispatch(userLogout(user));
-        alert('회원정보 수정 완료. 로그아웃 합니다.');
-        navigate('/');
+        alert("회원정보 수정 완료. 로그아웃 합니다.");
+        navigate("/");
       } else {
-        alert('회원정보 수정 실패. 다시 시도해주세요.');
+        alert("회원정보 수정 실패. 다시 시도해주세요.");
       }
     } catch (error) {
       console.error(error);
-      alert('오류가 발생했습니다. 다시 시도해주세요.');
+      alert("오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
   return (
-    <>
+    <StyledSignup>
       <div className="form-container">
         <div className="form">
           <div className="form-el">
-            <label htmlFor="id">아이디 (아이디는 변경 불가능합니다.)</label> <br />
+            <label htmlFor="id">아이디 (아이디는 변경 불가능합니다.)</label>{" "}
+            <br />
             <input id="id" name="id" value={id} onChange={onChangeId} />
             <br></br>
             {!isNameAvailable && <p>이미 사용 중인 아이디입니다.</p>}
@@ -520,7 +731,12 @@ const EditProfile = () => {
           {/* 닉네임 입력 양식 */}
           <div className="form-el">
             <label htmlFor="nickname">닉네임</label> <br />
-            <input id="nickname" name="nickname" value={nickname} onChange={onChangeNickname} />
+            <input
+              id="nickname"
+              name="nickname"
+              value={nickname}
+              onChange={onChangeNickname}
+            />
             <br></br>
             {!isNicknameAvailable && <p>이미 사용 중인 닉네임입니다.</p>}
             <p className="message">{nicknameMessage}</p>
@@ -528,13 +744,17 @@ const EditProfile = () => {
 
           {/* 비밀번호 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="password">비밀번호 (변경을 원하지 않는 경우, 기존 비밀번호를 입력해주세요)</label> <br />
+            <label htmlFor="password">
+              비밀번호 (변경을 원하지 않는 경우, 기존 비밀번호를 입력해주세요)
+            </label>{" "}
+            <br />
             <input
               id="password"
               name="password"
               type={showPassword ? "text" : "password"} // 비밀번호 보이기 입력에 따라 변경
               value={password}
-              onChange={onChangePassword} />
+              onChange={onChangePassword}
+            />
             <br></br>
             <button
               type="button"
@@ -554,7 +774,8 @@ const EditProfile = () => {
               name="passwordConfirm"
               type={showPassword ? "text" : "password"}
               value={passwordConfirm}
-              onChange={onChangePasswordConfirm} />
+              onChange={onChangePasswordConfirm}
+            />
             <br></br>
             <button
               type="button"
@@ -600,7 +821,8 @@ const EditProfile = () => {
 
           {/* 나이 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="age">나이 (생일 선택시 자동 선택. 만나이)</label> <br />
+            <label htmlFor="age">나이 (생일 선택시 자동 선택. 만나이)</label>{" "}
+            <br />
             <input
               id="age"
               name="age"
@@ -637,7 +859,8 @@ const EditProfile = () => {
                     value="여"
                     checked={selectedGender === "여"}
                     onChange={handleGenderChange}
-                  />여
+                  />
+                  여
                 </label>
               </div>
             </div>
@@ -672,8 +895,6 @@ const EditProfile = () => {
               </div>
             </div>
             <br></br>
-
-
             {/* 혈액형 입력 양식 */}
             <div className="blood-type">
               <label>혈액형</label> <br />
@@ -704,7 +925,12 @@ const EditProfile = () => {
             >
               <option value="">선택하세요</option>
               {placeTypes.map((placeType) => (
-                <option value={placeType.placeTypeName} key={placeType.placeTypeSEQ}>{placeType.placeTypeName}</option>
+                <option
+                  value={placeType.placeTypeName}
+                  key={placeType.placeTypeSEQ}
+                >
+                  {placeType.placeTypeName}
+                </option>
               ))}
             </select>
           </div>
@@ -742,7 +968,8 @@ const EditProfile = () => {
 
           {/* 상태 메시지 입력 양식 */}
           <div className="form-el">
-            <label htmlFor="statusMessage">상태 메시지 (최대 20자)</label> <br />
+            <label htmlFor="statusMessage">상태 메시지 (최대 20자)</label>{" "}
+            <br />
             <input
               id="statusMessage"
               name="statusMessage"
@@ -766,10 +993,14 @@ const EditProfile = () => {
             <br />
             {profilePictureUrl && (
               <img
-              src={profilePictureUrl.startsWith('blob:') ? profilePictureUrl : `/uploadprofile/${profilePictureUrl}`} // 불러온 이미지와 새로 선택한 이미지 둘다 미리보기 기능 구현할려고 쓴 코드 (blob(새로운 미리보기 이미지))
+                src={
+                  profilePictureUrl.startsWith("blob:")
+                    ? profilePictureUrl
+                    : `/uploadprofile/${profilePictureUrl}`
+                } // 불러온 이미지와 새로 선택한 이미지 둘다 미리보기 기능 구현할려고 쓴 코드 (blob(새로운 미리보기 이미지))
                 alt="미리보기"
                 className="profile-picture-preview"
-                style={{width: "200px"}}
+                style={{ width: "200px" }}
               />
             )}
           </div>
@@ -784,21 +1015,26 @@ const EditProfile = () => {
                   <div key={categoryType.ctSEQ}>
                     <h3>{categoryType.ctName}</h3>
                     <div className="box-options">
-                      {getCategoriesByType(categoryType.ctSEQ).map((category) => (
-                        <div
-                          key={category.categorySEQ}
-                          className={`selectlike-box-item ${selectSeq.includes(category.categorySEQ) ? "selected" : ""
+                      {getCategoriesByType(categoryType.ctSEQ).map(
+                        (category) => (
+                          <div
+                            key={category.categorySEQ}
+                            className={`selectlike-box-item ${
+                              selectSeq.includes(category.categorySEQ)
+                                ? "selected"
+                                : ""
                             }`}
-                          onClick={() =>
-                            handleInterestClick(
-                              category.categoryName,
-                              category.categorySEQ
-                            )
-                          }
-                        >
-                          {category.categoryName}
-                        </div>
-                      ))}
+                            onClick={() =>
+                              handleInterestClick(
+                                category.categoryName,
+                                category.categorySEQ
+                              )
+                            }
+                          >
+                            {category.categoryName}
+                          </div>
+                        )
+                      )}
                     </div>
                   </div>
                 ))}
@@ -812,7 +1048,7 @@ const EditProfile = () => {
           </form>
         </div>
       </div>
-    </>
+    </StyledSignup>
   );
 };
 

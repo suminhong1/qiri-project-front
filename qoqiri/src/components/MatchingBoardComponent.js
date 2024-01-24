@@ -14,7 +14,6 @@ import {
   getPosts,
   getPostsByCategoryType,
 } from "../api/post";
-import "../css/MatchingBoard.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";

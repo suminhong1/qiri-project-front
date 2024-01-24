@@ -9,10 +9,24 @@ import { createGroupChat } from "../api/chat";
 import ChatRoomModal from "../components/ChatRoomModal";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import styled from "styled-components";
+import { matchedPost } from "../api/post";
 
 const StyledApply = styled.div`
+  padding-left: 240px;
+  width: 100%;
   .ApplyMain {
-    margin-left: 240px;
+    width: 90%;
+    min-width: 1100px;
+    height: 800px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 30px;
+    border-radius: 20px;
+    background-color: rgb(247, 242, 235);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: auto;
   }
 `;
 
@@ -23,10 +37,6 @@ const Apply = () => {
   const { postSEQ } = useParams();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-
-  const handleBack = () => {
-    navigate("/myMatching");
-  };
 
   useEffect(() => {
     const fetchAppliedUserIds = async () => {
@@ -42,14 +52,16 @@ const Apply = () => {
   }, [postSEQ, user.id]);
 
   const groupChat = async () => {
+    alert("그룹채팅방이 생성되었습니다!");
     const result = await createGroupChat(ChatDTO);
     await setChatRoomSEQ(result.data.chatRoomSEQ);
     await dispatch(asyncChatRooms(user.id));
   };
 
   const matchingEnd = () => {
-    alert("즐겁게 노시길 바랍니다!");
-    navigate("/myMatching");
+    alert("즐겁게 노시길 바래요!");
+    matchedPost(postSEQ);
+    navigate("/matchingBoard");
   };
 
   // ChatRoom 모달을 닫기 위한 함수
@@ -69,12 +81,6 @@ const Apply = () => {
     <StyledApply>
       <div className="ApplyMain">
         <div className="AC">
-          <div className="Applytag">궁금해요</div>
-          <button className="ap-backButton" onClick={handleBack}>
-            뒤로가기
-          </button>
-          {console.log("보이니?" + appliedUsers)}
-
           {appliedUsers.length === 0 ? (
             <p className="ap-empty-p">터엉...ㅠㅠ</p>
           ) : (

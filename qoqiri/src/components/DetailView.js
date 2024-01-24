@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import defaultimg from "../assets/defaultimg.png";
-import "../css/MatchingBoard.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Date from "../components/Date";
@@ -15,7 +14,6 @@ import { joinChatRoom } from "../api/chat";
 import styled from "styled-components";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import { postBlockUser, getBlockUser } from "../api/blockuser";
-import { RepeatOneSharp } from "@mui/icons-material";
 
 const Detail = styled.div`
   border-top: 33px solid #ff7f38;
@@ -180,7 +178,7 @@ const DetailView = ({ selectedPostSEQ }) => {
 
   // 매칭신청
   const handleApplyClick = async () => {
-    if (!user.id || !user.token) {
+    if (!user) {
       alert("로그인해주세요");
       return;
     }

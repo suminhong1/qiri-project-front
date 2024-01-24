@@ -12,8 +12,8 @@ export const addPostAPI = async (data) => {
   return await instance.post("post", data);
 };
 
-export const deletePost = async (id) => {
-  return await instance.delete(`/post/{postSeq}` + id);
+export const deletePost = async (postSEQ) => {
+  return await instance.put("post/" + postSEQ);
 };
 
 // 선택한 카테고리 matchingCategoryInfo 테이블로 저장하는 API
@@ -174,6 +174,13 @@ export const getMyPosts = async (userId) => {
 // 내가 쓴 매칭글 중 매칭중인 글만 불러오기
 export const getMyPostsNotMatched = async (userId) => {
   return await instance.get(`post_not_matched/${userId}`);
+};
+
+// 매칭글 매칭완료 처리
+export const matchedPost = async (postSEQ) => {
+  try {
+    return await instance.put("matched_post/" + postSEQ);
+  } catch (error) {}
 };
 
 export const deleteMatchingCategoryAPI = async (id) => {

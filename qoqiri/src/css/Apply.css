@@ -1,26 +1,13 @@
-.ApplyMain {
-  max-width: 1500px;
-  height: 800px;
-  margin: 0 auto;
-  margin-top: 50px;
-  border-radius: 2%;
-  background-color: rgb(247, 242, 235);
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow-x: auto;
-}
-
 .AC {
   height: 800px;
   border: 1px;
   margin: 10px;
   overflow-x: auto;
   display: flex;
-  flex-direction: row; 
-  align-items: flex-start; 
-  overflow-x: auto; 
-  white-space: nowrap; 
+  flex-direction: row;
+  align-items: flex-start;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .Applytag {
@@ -86,8 +73,8 @@
   padding: 20px;
   margin: 20px;
   align-items: flex-start;
-  justify-content: flex-start; 
-  white-space: nowrap; 
+  justify-content: flex-start;
+  white-space: nowrap;
 }
 
 .apply-form {

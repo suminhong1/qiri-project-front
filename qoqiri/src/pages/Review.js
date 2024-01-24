@@ -1,72 +1,255 @@
 import React, { useState, useEffect } from "react";
-import "../css/Review.css";
 import {
   saveReview,
   updateReview,
-  deleteReview,
-  updatePostTitleDropbox,
+  getAllReview,
+  getMyMatchings,
 } from "../api/review";
-import axios from "axios";
+import { useSelector } from "react-redux";
+import styled from "styled-components";
+import { deletePost } from "../api/post";
 
-const instance = axios.create({
-  baseURL: "http://localhost:8080/qiri",
-});
+const StyledReview = styled.div`
+  width: 100%;
+  padding-left: 240px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin: auto;
 
-export const getPosts = async () => {
-  return await instance.get("/public/post", {
-    params: {
-      board: 2,
-    },
-  });
-};
+  .rv-container {
+    width: 1100px;
+    padding-left: 100px;
+  }
 
-export const reviewUpdate = async (data) => {
-  return await instance.put(`reviewUpdate`, data);
-};
+  .rv-container h1 {
+    color: #ff7f38;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+
+  .rv-write-button {
+    font-weight: bold;
+    background-color: #ff7f38;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    position: relative;
+    left: 1px;
+    height: 90px;
+  }
+
+  .rv-input-area {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .rv-input-area textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    resize: none;
+    height: 90px;
+    width: 100rem;
+  }
+
+  .rv-review-board {
+    border: 1px solid #e0e0e0;
+  }
+
+  .rv-review-item {
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e08e;
+    transition: background-color 0.3s;
+    height: 100px;
+  }
+
+  .rv-review-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  .rv-review-item:last-child {
+    border-bottom: none;
+  }
+
+  .rv-writerInfo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .rv-info {
+    font-size: 0.8rem;
+    .rv-writer {
+      margin-right: 40px;
+    }
+  }
+
+  .rv-menu {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .rv-stats-thums {
+    float: right;
+    position: relative;
+  }
+  .rv-like-button {
+    cursor: pointer;
+  }
+
+  .rv-stats-views {
+    float: right;
+    position: relative;
+    bottom: 20px;
+    margin: 6px;
+  }
+
+  .rv-input-area {
+    position: relative;
+  }
+
+  .rv-review-item textarea {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    resize: none;
+    height: 60px;
+    width: 700px;
+  }
+
+  .rv-psUpdataOKBtn {
+    background: none;
+    border: none;
+    color: blue;
+    font-size: small;
+    font-weight: bold;
+  }
+
+  .rv-psUpdataBtn {
+    background: none;
+    border: none;
+    color: blue;
+    font-size: small;
+    font-weight: bold;
+  }
+
+  .rv-psDeleteBtn {
+    background: none;
+    border: none;
+    color: blue;
+    font-size: small;
+    font-weight: bold;
+  }
+
+  .rv-character-count {
+    position: absolute;
+    top: 95px; /* 위치 조절이 필요할 수 있습니다 */
+    font-size: 0.9em;
+    color: gray;
+  }
+
+  .rv-review-item p {
+    font-size: 20px;
+  }
+
+  .rv-like-array {
+    border: none;
+    position: relative;
+    top: 110px;
+    right: 10px;
+    font-weight: bolder;
+    color: #ff7f38;
+  }
+
+  .rv-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .rv-modal-content {
+    position: relative;
+    width: 360px;
+    height: 690px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  .rv-select {
+    font-size: 13px;
+    width: 110px;
+    display: flex;
+    justify-items: baseline;
+    font-weight: bold;
+    height: 90px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+  }
+`;
 
 const ReviewBoard = () => {
+  const user = useSelector((state) => state.user);
   const [reviews, setReviews] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState("");
   const [content, setContent] = useState("");
   const [editingContent, setEditingContent] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [modalContentURL, setModalContentURL] = useState("");
-  const [posts, setPosts] = useState([]);
+  const [myMatchings, setMyMatchings] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingPostId, setEditingPostId] = useState(null);
-  const [userPosts, setUserPosts] = useState([]); // 사용자의 글 목록
-  const [selectedTitle, setSelectedTitle] = useState(""); // 선택된 글 타이틀
+  const [selectedMatching, setSelectedMatching] = useState(""); // 선택된 글 타이틀
   const [editingPostTitle, setEditingPostTitle] = useState(""); // 수정할 글 타이틀
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setLoggedInUser(user);
-      fetchUserPosts(user.id); // 사용자 글 목록 가져오기
-      postsAPI();
-    }
-  }, []);
+  const getAllReviewAPI = async () => {
+    const result = await getAllReview();
+    setReviews(result.data);
+  };
+
+  const getMyMatchingsAPI = async () => {
+    const result = await getMyMatchings(user.id);
+    setMyMatchings(result.data);
+  };
 
   useEffect(() => {
-    if (loggedInUser) {
-      fetchUserPosts(loggedInUser.id); 
-      postsAPI();
-    }
-  }, [loggedInUser]);
+    setLoggedInUser(user);
+    getMyMatchingsAPI(); // 사용자 글 목록 가져오기
+    getAllReviewAPI();
+  }, [user]);
 
   // 리뷰 수정버튼 활성화함수
   const handleEditClick = (postId, content, postTitle) => {
     setIsEditing(true);
     setEditingPostId(postId);
-    setEditingContent(content); 
-    setEditingPostTitle(postTitle); 
+    setEditingContent(content);
+    setEditingPostTitle(postTitle);
   };
 
   // 리뷰 업데이트 확인함수
   const handleUpdateSubmit = async () => {
     // 수정 로직
     const updateData = {
-      token: loggedInUser.token,
+      token: user.token,
       postTitle: editingPostTitle,
       postContent: editingContent,
       board: 2,
@@ -87,106 +270,46 @@ const ReviewBoard = () => {
   };
 
   // 리뷰 삭제 확인함수
-  const handleDeleteClick = async (postSEQ, userId, postTitle) => {
-    if (loggedInUser.id === userId) {
-      try {
-        await deleteReview(postSEQ, postTitle);
-        alert("리뷰가 삭제되었습니다.");
-        // 드롭박스를 업데이트하기 위해 사용자 글 목록을 다시 가져옴
-        fetchUserPosts(loggedInUser.id);
-        window.location.replace("http://localhost:3000/review");
-      } catch (error) {
-        alert("리뷰 삭제에 실패하였습니다. 다시 시도해주세요.");
-      }
-    }
-  };
-
-  const postsAPI = async () => {
-    const result = await getPosts();
-    setPosts(result.data);
-  };
-
-  const fetchUserPosts = async (userId) => {
+  const handleDeleteClick = async (postSEQ) => {
     try {
-      const response = await instance.get("/public/post", {
-        params: {
-          board: 1,
-          userId: userId,
-        },
-      });
-      const filteredPosts = response.data.filter(
-        (post) =>
-          post.postTitleDropbox !== "Y" &&
-          post.userInfo.userId == loggedInUser.id
-      );
-      setUserPosts(filteredPosts);
+      await deletePost(postSEQ);
+      alert("리뷰가 삭제되었습니다.");
+      // 드롭박스를 업데이트하기 위해 사용자 글 목록을 다시 가져옴
+      getMyMatchingsAPI();
+      window.location.replace("http://localhost:3000/review");
     } catch (error) {
+      alert("리뷰 삭제에 실패하였습니다. 다시 시도해주세요.");
     }
   };
 
-  // 드롭박스 만들기 및 선택하기
+  // 드롭박스로 선택한 매칭글 담기
+  const handleMatchingSelect = async (data) => {
+    await setSelectedMatching(data);
+    console.log(data);
+  };
 
-  const handleTitleSelect = async (title) => {
-    setSelectedTitle(title);
-    const selectedPost = userPosts.find((post) => post.postTitle === title);
-
-    if (selectedPost) {
-    }
-  }; // 드롭박스 만들기 및 선택하기
-
+  // 글쓰기 버튼 함수
   const handleWriteClick = async () => {
     // 글 타이틀이 선택되지 않았을 경우 글쓰기 방지
-    if (!selectedTitle || selectedTitle === "글 타이틀 선택") {
+    if (!selectedMatching || selectedMatching === "글 타이틀 선택") {
       alert("글 타이틀을 선택해주세요.");
       return;
     }
-    // 로그인 확인
-    if (!loggedInUser) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-    // userId 확인
-    if (!loggedInUser.id) {
-      alert("유효하지 않은 사용자 정보입니다. 다시 로그인해주세요.");
-      return;
-    }
+
     if (content.length <= 50) {
       // PostDTO 형식에 맞게 reviewData 객체를 수정
-      const reviewData = {
-        token: loggedInUser.token, //로그인한 사용자의 토큰
+      const PostDTO = {
+        token: user.token, //로그인한 사용자의 토큰
         postContent: content,
         boardSEQ: 2,
-        postTitle: selectedTitle, // 드롭박스 만들기 및 선택하기
+        postTitle: content, // 드롭박스 만들기 및 선택하기
+        postSEQ: selectedMatching,
       };
       try {
         // 리뷰 내용을 백엔드로 전송
-        await saveReview(reviewData);     
+        await saveReview(PostDTO);
         alert("리뷰가 저장되었습니다.");
-        // 선택한 포스트의 postTitleDropbox를 "Y"로 변경
-        const selectedPost = userPosts.find(
-          (post) => post.postTitle === selectedTitle
-        );
         window.location.replace("http://localhost:3000/review");
-        if (selectedPost) {
-          await updatePostTitleDropbox(selectedPost.postSEQ);
-        }
-
-        // UI 업데이트
-        setReviews([
-          {
-            title: selectedTitle,
-            postContent: content,
-            userId: loggedInUser.id,
-            userNickname: loggedInUser.nickname,
-            postTitleDropbox: "Y",
-          },
-          ...reviews,
-        ]);
-        setContent("");
-        setUserPosts((prevPosts) =>
-          prevPosts.filter((post) => post.postTitle !== selectedTitle)
-        ); // 드롭박스 만들기 및 선택하기
-        setSelectedTitle(null); // 드롭박스 만들기 및 선택하기
       } catch (error) {
         alert("리뷰 저장에 실패하였습니다. 다시 시도해주세요.");
       }
@@ -222,36 +345,37 @@ const ReviewBoard = () => {
   };
 
   return (
-    <div className="rv-container">
-      <h1>저는 이랬어요</h1>
-      <div className="rv-input-area">
-        <select
-          className="rv-select"
-          value={selectedTitle}
-          onChange={(e) => handleTitleSelect(e.target.value)}
-        >
-          <option value={""}>글 타이틀 선택</option>
-          {userPosts.map((post) => (
-            <option key={post.postSEQ} value={post.postTitle}>
-              {post.postTitle}
-            </option>
-          ))}
-        </select>
-        {/* 드롭박스 만들기 및 선택하기*/}
-        <textarea
-          placeholder="리뷰 내용을 입력하세요. (50자를 초과할 수 없습니다.)"
-          value={content}
-          onChange={handleContentChange}
-        ></textarea>
-        <div className="rv-character-count">{content.length}/50</div>
-        <button className="rv-write-button" onClick={handleWriteClick}>
-          글쓰기
-        </button>
-      </div>
-      <div className="rv-review-board">
-        {posts
-          .filter((po) => po.postDelete !== "Y") // postDelete가 "Y"인 게시물을 필터링
-          .map((po) => (
+    <StyledReview>
+      <div className="rv-container">
+        <h1>저는 이랬어요</h1>
+        <div className="rv-input-area">
+          <select
+            className="rv-select"
+            value={selectedMatching}
+            onChange={(e) => handleMatchingSelect(e.target.value)}
+          >
+            <option value={""}>원글 제목 선택</option>
+            {myMatchings.map((myMatching) => (
+              <option
+                key={myMatching.post?.postSEQ}
+                value={myMatching.post?.postSEQ}
+              >
+                {myMatching.post?.postTitle}
+              </option>
+            ))}
+          </select>
+          <textarea
+            placeholder="리뷰 내용을 입력하세요. (50자를 초과할 수 없습니다.)"
+            value={content}
+            onChange={handleContentChange}
+          ></textarea>
+          <div className="rv-character-count">{content.length}/50</div>
+          <button className="rv-write-button" onClick={handleWriteClick}>
+            글쓰기
+          </button>
+        </div>
+        <div className="rv-review-board">
+          {reviews.map((po) => (
             <div key={po.postSEQ} className="rv-review-item">
               {isEditing && editingPostId === po.postSEQ ? (
                 <>
@@ -270,63 +394,63 @@ const ReviewBoard = () => {
                 <>
                   <div className="rv-writerInfo">
                     <p>{po.postContent}</p>
-                    <span
-                      className="rv-writer"
-                      onClick={() => handleWriterClick(po.userInfo.userId)}
-                    >
-                      끼리: {po.userInfo.userNickname}
-                    </span>
-                    <span className="rv-writer-title">
-                      글 제목 : {po.postTitle}
-                    </span>
-                  </div>
-                  {loggedInUser.id === po.userInfo.userId && (
-                    <div className="rv-persnalBtn">
-                      <button
-                        className="rv-psUpdataBtn"
-                        onClick={() =>
-                          handleEditClick(
-                            po.postSEQ,
-                            po.postContent,
-                            po.postTitle
-                          )
-                        }
-                      >
-                        수정
-                      </button>
-                      <button
-                        className="rv-psDeleteBtn"
-                        onClick={() =>
-                          handleDeleteClick(
-                            po.postSEQ,
-                            po.userInfo.userId,
-                            po.postTitle
-                          )
-                        }
-                      >
-                        삭제
-                      </button>
+                    <div className="rv-menu">
+                      <div className="rv-info">
+                        <span
+                          className="rv-writer"
+                          onClick={() => handleWriterClick(po.userInfo.userId)}
+                        >
+                          작성자: {po.userInfo.userNickname}
+                        </span>
+                        <span className="rv-writer-title">
+                          원글 제목 : {po.postTitle}
+                        </span>
+                      </div>
+                      {loggedInUser.id === po.userInfo.userId && (
+                        <div className="rv-persnalBtn">
+                          <button
+                            className="rv-psUpdataBtn"
+                            onClick={() =>
+                              handleEditClick(
+                                po.postSEQ,
+                                po.postContent,
+                                po.postTitle
+                              )
+                            }
+                          >
+                            수정
+                          </button>
+                          <button
+                            className="rv-psDeleteBtn"
+                            onClick={() => handleDeleteClick(po.postSEQ)}
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
                 </>
               )}
             </div>
           ))}
-      </div>
-      {showModal && (
-        <div className="rv-modal" onClick={handleCloseModal}>
-          <div
-            className="rv-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="rv-close-button" onClick={handleCloseModal}>
-              &times;
-            </span>
-            <iframe src={modalContentURL} width="100%" height="100%"></iframe>
-          </div>
         </div>
-      )}
-    </div>
+
+        {showModal && (
+          <div className="rv-modal" onClick={handleCloseModal}>
+            <div
+              className="rv-modal-content"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="rv-close-button" onClick={handleCloseModal}>
+                &times;
+              </span>
+              <iframe src={modalContentURL} width="100%" height="100%"></iframe>
+            </div>
+          </div>
+        )}
+      </div>
+    </StyledReview>
   );
 };
 

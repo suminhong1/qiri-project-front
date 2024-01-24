@@ -1,11 +1,206 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "../css/Signup.css";
 import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
 import { getPlaceTypes } from "../api/placeType";
 import { signUp } from "../api/user";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
+const StyledSignup = styled.div`
+  padding-top: 30px;
+  padding-bottom: 30px;
+
+  .form {
+    max-width: 35vw;
+    min-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .form h3 {
+    font-size: 26px;
+    font-weight: bold;
+    color: #262626;
+    margin-bottom: 20px;
+  }
+
+  .form-el {
+    margin-top: 16px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .form-el label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #262626;
+  }
+
+  .form-el input {
+    width: 75%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 18px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
+  }
+
+  .form-el input:focus {
+    border: 1px solid #ff7f38;
+  }
+
+  .message {
+    font-size: 15px;
+    color: #ef0000;
+    margin-top: 4px;
+  }
+
+  .signup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .signup-form button[type="submit"] {
+    width: 500%;
+    height: 48px;
+    border: none;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: #ff7f38;
+    color: white;
+    margin-top: 16px;
+    cursor: pointer;
+  }
+
+  .signup-form button[type="submit"]:disabled {
+    background-color: #ff7f38;
+    color: white;
+  }
+
+  .show-password-button {
+    border: 2px solid #e2e0e0;
+    margin-bottom: 5px;
+  }
+
+  .form img {
+    width: 5%;
+    height: auto;
+    margin-bottom: 20px;
+  }
+
+  .form-el.label-for-gender {
+    margin-top: 16px; /* 간격 조절 */
+  }
+
+  .gender-options {
+    display: flex;
+    flex-direction: row;
+    gap: 20px; /* 남자 여자 글자 사이의 간격 조절 */
+  }
+
+  .gender-option {
+    display: flex;
+    align-items: center;
+  }
+
+  .gender-option input[type="radio"] {
+    margin-right: 2px; /* 라디오 버튼 간격 조절 */
+  }
+
+  .form-el.label-for-bloodType {
+    margin-top: 16px; /* 간격 조절 */
+  }
+
+  /* 혈액형 선택창 스타일 */
+  .form-el select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e0e0;
+    font-size: 14px;
+    font-weight: 400;
+    margin-top: 4px;
+    outline: none;
+  }
+
+  /* 지역 선택창 조정 */
+  .form-el select#place {
+    width: 30%;
+  }
+
+  .form-el select#mbti {
+    width: 30%;
+  }
+
+  /* 관심사 선택 부분 */
+  .interest-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 16px;
+  }
+
+  .interest-section .form-el label {
+    font-size: 25px; /* 관심 주제를 선택해주세요 글자 부분 */
+  }
+
+  .selectlike-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-top: 8px;
+  }
+
+  .box-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    font-size: 16px;
+  }
+
+  .selectlike-box-item {
+    font-style: inherit;
+    margin: 5px;
+    padding: 7px 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 20px;
+    font-size: 13px;
+  }
+
+  .selectlike-box-item.selected {
+    background-color: #ff9615;
+    color: white;
+    border: 1px solid #ff9615;
+  }
+
+  .selectlike-box h3 {
+    font-size: 17px;
+    color: #ff9615;
+  }
+
+  /* 프로필 사진 부분 */
+  .profile-picture-preview {
+    width: 150px;
+    height: 150px;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+`;
 
 const SignUp = () => {
   // 상태 변수들
@@ -177,7 +372,7 @@ const SignUp = () => {
     } else {
       setPasswordConfirmMessage("");
       setIsPasswordConfirm(true);
-    } 
+    }
   };
 
   // 비밀번호 보이기 토글 핸들러
@@ -441,13 +636,17 @@ const SignUp = () => {
   };
 
   return (
-    <>
+    <StyledSignup>
       <div className="form-container">
         <div className="form">
           <div className="form-el">
-          <label htmlFor="notion"> * 는 필수 입력 항목입니다. </label> <br />
+            <label htmlFor="notion"> * 는 필수 입력 항목입니다. </label> <br />
             <br></br>
-            <label htmlFor="notion"> 기입하지 않은 정보는 비공개 표시됩니다. </label> <br />
+            <label htmlFor="notion">
+              {" "}
+              기입하지 않은 정보는 비공개 표시됩니다.{" "}
+            </label>{" "}
+            <br />
             <br></br>
             <br></br>
             <label htmlFor="id"> * 아이디 </label> <br />
@@ -519,7 +718,7 @@ const SignUp = () => {
             >
               {showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
             </button>
-            <p className="message">{passwordConfirmMessage}</p> 
+            <p className="message">{passwordConfirmMessage}</p>
           </div>
 
           {/* 이메일 입력 양식 */}
@@ -731,7 +930,7 @@ const SignUp = () => {
                 src={profilePictureUrl}
                 alt="프로필 사진 미리보기"
                 className="profile-picture-preview"
-               // style={{width: "200px"}}
+                // style={{width: "200px"}}
               />
             )}
           </div>
@@ -780,7 +979,7 @@ const SignUp = () => {
           </form>
         </div>
       </div>
-    </>
+    </StyledSignup>
   );
 };
 
