@@ -9,6 +9,7 @@ import "../src/assets/fonts/Font.css";
 import "./css/NotifyList.css";
 import "./css/Header.css";
 import "./css/MatchingBoardComponent.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

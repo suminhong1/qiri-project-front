@@ -66,9 +66,7 @@ const ChatList = ({ show, handleClose, ...props }) => {
                       {chatRoom?.chatRoom?.post?.postTitle}
                     </div>
                     <div className="chat-time">
-                      {formatSendTimeBasedOnDate(
-                        chatRoom?.chatRoom?.createdTime
-                      )}
+                      {formatSendTimeBasedOnDate(chatRoom?.joinDate)}
                     </div>
                   </div>
                   <div className="chat-addr">

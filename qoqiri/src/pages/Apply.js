@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import ApplyForm from "../components/ApplyForm";
-import "../css/Apply.css";
 import { getMatchingUserInfoByPostSEQ } from "../api/matching";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,8 +12,9 @@ import { matchedPost } from "../api/post";
 const StyledApply = styled.div`
   padding-left: 240px;
   width: 100%;
+
   .ApplyMain {
-    width: 90%;
+    width: 95%;
     min-width: 1100px;
     height: 800px;
     margin-top: 30px;
@@ -25,8 +24,63 @@ const StyledApply = styled.div`
     background-color: rgb(247, 242, 235);
     display: flex;
     flex-direction: column;
-    position: relative;
+  }
+
+  .aplly_button {
+    display: flex;
+    justify-content: flex-end;
+
+    .group_chat_button,
+    .complete_button {
+      margin: 10px;
+      border: none;
+      font-weight: bold;
+      color: white;
+      background-color: #ff7f38;
+      font-size: 1.2rem;
+      padding: 10px;
+      border-radius: 12px;
+    }
+  }
+
+  .AC {
+    height: 100%;
+    margin-bottom: 15px;
     overflow-x: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .AC::-webkit-scrollbar {
+    height: 12px;
+  }
+
+  .AC::-webkit-scrollbar-thumb {
+    outline: none;
+    border-radius: 5px;
+    background-color: rgb(210, 210, 210);
+  }
+
+  .ap-empty-p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 100px;
+    color: #ff7f38;
+  }
+
+  .ap-section {
+    display: flex;
+    padding: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    white-space: nowrap;
   }
 `;
 
@@ -38,22 +92,18 @@ const Apply = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  useEffect(() => {
-    const fetchAppliedUserIds = async () => {
-      const response = await getMatchingUserInfoByPostSEQ(postSEQ);
+  const getMatchingUserInfoByPostSEQAPI = async () => {
+    const result = await getMatchingUserInfoByPostSEQ(DTO);
+    setAppliedUsers(result.data);
+  };
 
-      setAppliedUsers(
-        response.data.filter((info) => info.matchingAccept !== "H")
-      );
-    };
-    if (user.id) {
-      fetchAppliedUserIds();
-    }
-  }, [postSEQ, user.id]);
+  useEffect(() => {
+    getMatchingUserInfoByPostSEQAPI();
+  }, [postSEQ, user]);
 
   const groupChat = async () => {
     alert("그룹채팅방이 생성되었습니다!");
-    const result = await createGroupChat(ChatDTO);
+    const result = await createGroupChat(DTO);
     await setChatRoomSEQ(result.data.chatRoomSEQ);
     await dispatch(asyncChatRooms(user.id));
   };
@@ -72,7 +122,7 @@ const Apply = () => {
   // ChatRoom 모달이 열려 있는지 확인
   const isChatRoomModalOpen = chatRoomSEQ !== null;
 
-  const ChatDTO = {
+  const DTO = {
     id: user.id,
     postSEQ: postSEQ,
   };
@@ -80,25 +130,31 @@ const Apply = () => {
   return (
     <StyledApply>
       <div className="ApplyMain">
+        <div className="aplly_button">
+          <button className="group_chat_button" onClick={groupChat}>
+            승락한 사람들과 그룹채팅
+          </button>
+          <button className="complete_button" onClick={matchingEnd}>
+            모집 완료
+          </button>
+        </div>
         <div className="AC">
           {appliedUsers.length === 0 ? (
-            <p className="ap-empty-p">터엉...ㅠㅠ</p>
+            <p className="ap-empty-p">아직 아무도 신청한 사람이 없어요</p>
           ) : (
             appliedUsers.map((userInfo) => (
-              <section className="ap-section" key={userInfo.id}>
+              <section
+                className="ap-section"
+                key={userInfo.matchingUserInfoSeq}
+              >
                 <div className=".apply-form">
-                  <ApplyForm userId={userInfo.id} />
+                  <ApplyForm userId={userInfo.userInfo.userId} />
                 </div>
               </section>
             ))
           )}
         </div>
-        <button className="ap-left-bottom-button" onClick={groupChat}>
-          승락한 사람 모두와 떠들기! Click!
-        </button>
-        <button className="ap-right-bottom-button" onClick={matchingEnd}>
-          같이 놀 사람을 모두 구했어요! Click!
-        </button>
+
         <ChatRoomModal
           show={isChatRoomModalOpen}
           handleClose={handleCloseChatRoom}

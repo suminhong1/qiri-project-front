@@ -10,8 +10,8 @@ export const MatchingApply = async (data) => {
 };
 
 // 신청한 postSEQ 같은유저정보리스트 확인하기
-export const getMatchingUserInfoByPostSEQ = async (postSEQ) => {
-  return await instance.get(`getApplyList/${postSEQ}`);
+export const getMatchingUserInfoByPostSEQ = async (DTO) => {
+  return await instance.post("getApplyList", DTO);
 };
 
 // 매칭승락

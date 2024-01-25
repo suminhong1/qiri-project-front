@@ -1,4 +1,4 @@
-// 시간 포맷 설정(날짜)
+// 월 일 표시
 const formatSendTime1 = (sendTime) => {
   const date = new Date(sendTime);
   const options = {
@@ -8,7 +8,7 @@ const formatSendTime1 = (sendTime) => {
   return date.toLocaleDateString("en-US", options);
 };
 
-// 시간 포맷 설정(시, 분)
+// 시 분 표시
 const formatSendTime2 = (sendTime) => {
   const date = new Date(sendTime);
   const options = {
@@ -18,6 +18,7 @@ const formatSendTime2 = (sendTime) => {
   return date.toLocaleTimeString("en-US", options);
 };
 
+// ~전 표시
 const formatSendTime3 = (sendTime) => {
   const now = new Date();
   const date = new Date(sendTime);
@@ -88,4 +89,11 @@ export const formatDate24Hours = (sendTime) => {
     // 24시간이 지났다면 formatSendTime1 함수로 날짜 포맷을 반환
     return formatSendTime(sendTime);
   }
+};
+
+export const formatBirthday = (birthday) => {
+  if (!birthday) return "";
+  const parts = birthday.split("T");
+  if (parts.length !== 2) return ""; // unexpected format
+  return parts[0].trim();
 };

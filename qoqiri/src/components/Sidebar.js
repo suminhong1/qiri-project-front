@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { getMyPosts, getMyPostsNotMatched } from "../api/post";
+import { getMyPostsNotMatched } from "../api/post";
 import styled from "styled-components";
 import { formatDate24Hours } from "../utils/TimeFormat";
 
@@ -20,7 +20,7 @@ const StyledSidebar = styled.div`
     overflow-y: hidden;
   }
   .side_menu:hover {
-    overflow-y: auto; /* 마우스를 올렸을 때만 스크롤을 활성화합니다. */
+    overflow-y: auto;
   }
 
   .side_menu::-webkit-scrollbar {
@@ -38,6 +38,7 @@ const StyledSidebar = styled.div`
     font-weight: bold;
     font-size: 1.5rem;
     margin-bottom: 20px;
+    color: rgb(49, 49, 49);
   }
   .post_item {
     width: 200px;
@@ -46,11 +47,10 @@ const StyledSidebar = styled.div`
     background-color: white;
     border-bottom: 0.5px solid rgb(224, 224, 224);
     padding-bottom: 15px;
-  }
-
-  .post_item:hover {
+    color: rgb(49, 49, 49);
     cursor: pointer;
   }
+
   .post_title {
     font-weight: bold;
   }

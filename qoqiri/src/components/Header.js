@@ -164,7 +164,7 @@ const Header = () => {
                   <FontAwesomeIcon
                     icon={faComment}
                     size={"2xl"}
-                    style={{ color: "black" }}
+                    style={{ color: "rgb(49, 49, 49)" }}
                   />
                 </div>
                 <button
@@ -188,7 +188,7 @@ const Header = () => {
                         icon={regularBell}
                         style={{
                           height: "30px",
-                          color: "black",
+                          color: "rgb(49, 49, 49)",
                         }}
                       />
                     )}
