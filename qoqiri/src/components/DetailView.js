@@ -14,6 +14,7 @@ import { joinChatRoom } from "../api/chat";
 import styled from "styled-components";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import { postBlockUser, getBlockUser } from "../api/blockuser";
+import { formatDate24Hours } from "../utils/TimeFormat";
 
 const Detail = styled.div`
   border-top: 33px solid #ff7f38;
@@ -261,7 +262,7 @@ const DetailView = ({ selectedPostSEQ }) => {
     <Detail>
       <div className="board-detail" key={post?.postSEQ}>
         <div className="board-header-time">
-          <Date postDate={post?.postDate} />
+          {formatDate24Hours(post?.postDate)}
         </div>
         <div className="board-header">
           <div className="profile">

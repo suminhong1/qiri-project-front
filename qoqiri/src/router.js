@@ -41,6 +41,10 @@ const router = createBrowserRouter([
         element: <MatchingBoard />,
       },
       {
+        path: "matchingBoard/:id",
+        element: <MatchingBoard />,
+      },
+      {
         path: "Login",
         element: <Login />,
       },

@@ -4,10 +4,10 @@ import { getMatchingUserInfoByPostSEQ } from "../api/matching";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createGroupChat } from "../api/chat";
-import ChatRoomModal from "../components/ChatRoomModal";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import styled from "styled-components";
 import { matchedPost } from "../api/post";
+import ChatRoom from "../components/ChatRoom";
 
 const StyledApply = styled.div`
   padding-left: 240px;
@@ -21,7 +21,7 @@ const StyledApply = styled.div`
     margin-bottom: 30px;
     margin-left: 30px;
     border-radius: 20px;
-    background-color: rgb(247, 242, 235);
+    background-color: rgb(235, 238, 241);
     display: flex;
     flex-direction: column;
   }
@@ -62,6 +62,10 @@ const StyledApply = styled.div`
     outline: none;
     border-radius: 5px;
     background-color: rgb(210, 210, 210);
+  }
+
+  .AC::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(190, 190, 190);
   }
 
   .ap-empty-p {
@@ -155,11 +159,12 @@ const Apply = () => {
           )}
         </div>
 
-        <ChatRoomModal
-          show={isChatRoomModalOpen}
-          handleClose={handleCloseChatRoom}
-          chatRoomSEQ={chatRoomSEQ}
-        />
+        {isChatRoomModalOpen && (
+          <ChatRoom
+            chatRoomSEQ={chatRoomSEQ}
+            handleCloseChatRoom={handleCloseChatRoom}
+          />
+        )}
       </div>
     </StyledApply>
   );

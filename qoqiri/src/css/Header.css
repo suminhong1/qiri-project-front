@@ -4,11 +4,11 @@
   top: 0px;
   background-color: white;
   width: 100%;
+  min-width: 1450px;
   z-index: 10;
   display: flex;
   height: 70px;
   justify-content: space-between;
-  min-width: 1450px;
   border-bottom: 1px solid #cccccc;
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
 }
@@ -76,7 +76,7 @@
 }
 
 .header-matching:hover {
-  background-color: #efefef; /* hover 시 배경색 변경 */
+  background-color: rgb(235, 238, 241); /* hover 시 배경색 변경 */
 }
 
 .header-user {
@@ -138,7 +138,7 @@
   overflow-y: auto;
   max-height: 100vh;
   line-height: 1.4;
-  background-color: #eeeeee;
+  background-color: rgb(235, 238, 241);
   border-top: 1px solid rgb(189, 189, 189);
 }
 
@@ -175,17 +175,18 @@
   justify-content: space-between; /* 내부 요소를 양옆 끝으로 정렬 */
 }
 
-.chat-link .chat-exp {
+.chat-exp {
   font-weight: bold;
   font-size: 1.2rem;
 }
 
-.chat-link .chat-time {
+.chat-time {
   font-size: 0.8rem;
   margin-right: 5px;
+  color: gray;
 }
 
-.chat-link .chat-addr {
+.chat-addr {
   font-size: 1rem;
   white-space: normal;
   margin-top: 10px;

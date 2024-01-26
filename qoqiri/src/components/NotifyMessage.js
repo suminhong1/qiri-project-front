@@ -27,15 +27,15 @@ const fadeOutAnimation = keyframes`
 
 const StyledDiv = styled.div`
   .realTime_notifyList {
-    position: fixed; /* 고정 위치 */
+    position: fixed;
     width: 300px;
     max-width: 100%;
     white-space: nowrap;
     font-weight: bold;
-    bottom: 10%; /* 원하는 상단 여백 조정 */
-    left: 75%; /* 원하는 우측 여백 조정 */
+    bottom: 10%;
+    left: 75%;
     display: flex;
-    flex-direction: column; /* 아래서부터 위로 쌓이도록 설정 */
+    flex-direction: column;
   }
   .realTime_notify {
     width: 100%;
@@ -43,7 +43,7 @@ const StyledDiv = styled.div`
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    background-color: #ffffff; /* 배경색 */
+    background-color: #ffffff;
     margin-top: 15px;
     padding: 10px;
     background-color: white;
@@ -52,8 +52,8 @@ const StyledDiv = styled.div`
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     display: flex;
-    overflow: hidden; /* 내부의 긴 콘텐츠를 잘라내도록 수정 */
-    z-index: 9999; /* 다른 요소들 위로 표시하기 위한 z-index 설정 */
+    overflow: hidden;
+    z-index: 15;
     animation: ${fadeOutAnimation} 2s ease-out 3s forwards;
   }
 
@@ -94,17 +94,17 @@ const NotifyMessage = () => {
   };
 
   useEffect(() => {
-    if (user !== null) {
+    if (!localStorage.getItem("user")) {
       const socket = new SockJS("http://localhost:8080/ws/notification");
       stompClient.current = new Client({
         webSocketFactory: () => socket,
-        connectHeaders: {}, // 여기서 오타를 수정했습니다
+        connectHeaders: {},
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
       });
 
-      stompClient.current.onConnect = (frame) => {
+      stompClient.current.onConnect = () => {
         stompClient.current.subscribe(
           `/sub/notification/${user.id}`,
           (message) => {

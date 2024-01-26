@@ -1,11 +1,11 @@
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { useSelector } from "react-redux";
-import ChatRoomModal from "./ChatRoomModal";
 import { useEffect, useState } from "react";
 import { getNotifyList } from "../api/notify";
 import DetailView from "./DetailView";
 import { formatDate24Hours } from "../utils/TimeFormat";
 import { useNavigate } from "react-router-dom";
+import ChatRoom from "./ChatRoom";
 
 const NotifyList = ({ show, handleClose, ...props }) => {
   const navigate = useNavigate();
@@ -76,24 +76,25 @@ const NotifyList = ({ show, handleClose, ...props }) => {
             </div>
           </div>
         ))}
-        <ChatRoomModal
-          show={isChatRoomModalOpen}
-          handleClose={handleCloseChatRoom}
+      </Offcanvas.Body>
+      {isChatRoomModalOpen && (
+        <ChatRoom
           chatRoomSEQ={chatRoomSEQ}
+          handleCloseChatRoom={handleCloseChatRoom}
         />
-        {isOpen && (
-          <div className="Matching-modal-main">
-            <div className="Matching-modal-overlay">
-              <div className="Matching-modal">
-                <div className="close-button" onClick={closeModal}>
-                  &times;
-                </div>
-                <DetailView selectedPostSEQ={postSEQ} />
+      )}
+      {isOpen && (
+        <div className="Matching-modal-main">
+          <div className="Matching-modal-overlay">
+            <div className="Matching-modal">
+              <div className="close-button" onClick={closeModal}>
+                &times;
               </div>
+              <DetailView selectedPostSEQ={postSEQ} />
             </div>
           </div>
-        )}
-      </Offcanvas.Body>
+        </div>
+      )}
     </Offcanvas>
   );
 };

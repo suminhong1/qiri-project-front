@@ -9,6 +9,7 @@ import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { faThumbsUp as solidThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import Date from "../components/Date";
 import { getLike, postLike, delLike } from "../api/commentLike";
+import { formatDate24Hours } from "../utils/TimeFormat";
 
 const Box = styled.div`
   width: 95%;
@@ -200,7 +201,9 @@ const Comment = ({ comment }) => {
           </div>
         </div>
         <div className="like-count">
-          <Date postDate={comment.commentDate} className="like-count" />
+          <div className="like-count">
+            {formatDate24Hours(comment.commentDate)}
+          </div>
           <div className="like-count">
             {liked ? ( // liked 상태에 따라 아이콘 변경
               <FontAwesomeIcon

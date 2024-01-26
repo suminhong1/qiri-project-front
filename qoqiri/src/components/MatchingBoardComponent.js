@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import DetailView from "./DetailView";
 import Date from "./Date";
 import { getCategoryTypes } from "../api/categoryType";
@@ -18,6 +18,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMessage } from "@fortawesome/free-regular-svg-icons";
 import defaultimg from "../assets/defaultimg.png";
+import { formatDate24Hours } from "../utils/TimeFormat";
 
 const MatchingBoardComponent = () => {
   const [posts, setPosts] = useState([]);
@@ -274,17 +275,17 @@ const MatchingBoardComponent = () => {
       <main className="main">
         <div className="select-bar">
           <div className="active-button">
-            <a href="/matchingBoard" className="active">
+            <Link to="/matchingBoard" className="active">
               전체보기
-            </a>
+            </Link>
             {categoryType.map((cat) => (
-              <a
-                href={`/matchingBoard/${cat?.ctSEQ}`}
+              <Link
+                to={`/matchingBoard/${cat?.ctSEQ}`}
                 className="active"
                 key={cat?.ctSEQ}
               >
                 {cat?.ctName}
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -331,7 +332,7 @@ const MatchingBoardComponent = () => {
                 key={po?.postSEQ}
               >
                 <div className="board-header-time">
-                  <Date postDate={po?.postDate} />
+                  {formatDate24Hours(po?.postDate)}
                 </div>
                 <div className="board-header">
                   <div className="profile">

@@ -1,14 +1,13 @@
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { getChatRoomUserList } from "../api/chat";
-import ChatRoomModal from "./ChatRoomModal";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { formatSendTimeBasedOnDate } from "../utils/TimeFormat";
+import ChatRoom from "./ChatRoom";
 
 const ChatList = ({ show, handleClose, ...props }) => {
   const user = useSelector((state) => state.user); // 내정보
   const chatRoomList = useSelector((state) => state.chatRoom); // 내가 참여중인 채팅방 리스트
-
   const [chatRoomUserList, setChatRoomUserList] = useState([]);
   const [chatRoomSEQ, setChatRoomSEQ] = useState(null);
 
@@ -50,42 +49,41 @@ const ChatList = ({ show, handleClose, ...props }) => {
       </Offcanvas.Header>
       <Offcanvas.Body>
         <div className="chatlist">
-          {user &&
-            Array.isArray(chatRoomList) &&
-            chatRoomList.map((chatRoom) => {
-              const chatRoomSEQ = chatRoom?.chatRoom?.chatRoomSEQ;
-              const userList = chatRoomUserList[chatRoomSEQ] || [];
-              return (
-                <div
-                  className="chat-link"
-                  key={chatRoom?.userChatRoomInfoSeq}
-                  onClick={() => handleShowChatRoom(chatRoomSEQ)}
-                >
-                  <div className="chat-top">
-                    <div className="chat-exp">
-                      {chatRoom?.chatRoom?.post?.postTitle}
-                    </div>
-                    <div className="chat-time">
-                      {formatSendTimeBasedOnDate(chatRoom?.joinDate)}
-                    </div>
+          {chatRoomList.map((chatRoom) => {
+            const chatRoomSEQ = chatRoom?.chatRoom?.chatRoomSEQ;
+            const userList = chatRoomUserList[chatRoomSEQ] || [];
+            return (
+              <div
+                className="chat-link"
+                key={chatRoom?.userChatRoomInfoSeq}
+                onClick={() => handleShowChatRoom(chatRoomSEQ)}
+              >
+                <div className="chat-top">
+                  <div className="chat-exp">
+                    {chatRoom?.chatRoom?.post?.postTitle}
                   </div>
-                  <div className="chat-addr">
-                    {userList?.map((user) => (
-                      <span key={user?.userChatRoomInfoSeq}>
-                        {user?.userInfo?.userNickname}&nbsp;
-                      </span>
-                    ))}
+                  <div className="chat-time">
+                    {formatSendTimeBasedOnDate(chatRoom?.joinDate)}
                   </div>
                 </div>
-              );
-            })}
-          <ChatRoomModal
-            show={isChatRoomModalOpen}
-            handleClose={handleCloseChatRoom}
-            chatRoomSEQ={chatRoomSEQ}
-          />
+                <div className="chat-addr">
+                  {userList?.map((user) => (
+                    <span key={user?.userChatRoomInfoSeq}>
+                      {user?.userInfo?.userNickname}&nbsp;
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </Offcanvas.Body>
+      {isChatRoomModalOpen && (
+        <ChatRoom
+          chatRoomSEQ={chatRoomSEQ}
+          handleCloseChatRoom={handleCloseChatRoom}
+        />
+      )}
     </Offcanvas>
   );
 };

@@ -4,10 +4,14 @@ import { getUser } from "../api/user";
 import defaultimg from "../assets/defaultimg.png";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { matchingAccept, hideMachingUser } from "../api/matching";
+import {
+  matchingAccept,
+  hideMachingUser,
+  getApplicantUserMatchingInfo,
+} from "../api/matching";
 import styled from "styled-components";
 import { getUserCategory } from "../api/category";
-import { formatBirthday } from "../utils/TimeFormat";
+import { formatDate24Hours } from "../utils/TimeFormat";
 
 const StyledApplyForm = styled.div`
   .ap_container {
@@ -38,14 +42,29 @@ const StyledApplyForm = styled.div`
     backface-visibility: hidden;
   }
 
-  .ap_hide {
-    margin-left: auto;
-    margin-right: 10px;
-    margin-top: 6px;
-    border: none;
+  .ap_front_top {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
     font-size: 0.9rem;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+  }
+
+  .ap_back_top {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-size: 0.9rem;
+  }
+
+  .ap_hide {
+    border: none;
     font-weight: bold;
-    background-color: rgb(231, 240, 252);
+    background-color: transparent;
   }
 
   .ap_main_image {
@@ -142,9 +161,9 @@ const StyledApplyForm = styled.div`
     transition: transform 0.5s ease-in-out;
     display: flex;
     flex-direction: column;
-    align-items: center;
     position: absolute;
     backface-visibility: hidden;
+    font-size: 1.1rem;
   }
 
   .ap_custom_card.flipped .ap_front_info {
@@ -155,12 +174,63 @@ const StyledApplyForm = styled.div`
     transform: rotateY(360deg);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4), 0 6px 6px rgba(0, 0, 0, 0.23);
   }
+
+  .ap_back_body {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .ap_back_age_gender {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    gap: 20px;
+    width: 100%;
+    display: flex;
+
+    .ap_back_age,
+    .ap_back_gender,
+    .ap_back_place,
+    .ap_back_rating {
+      color: rgb(49, 49, 49);
+    }
+  }
+
+  .ap_back_place,
+  .ap_back_rating {
+    margin-bottom: 10px;
+  }
+
+  .ap_back_category {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 0.5px solid gray;
+    width: 100%;
+  }
+
+  .ap_back_category_list {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    .ap_back_category_list_user {
+      font-size: 1rem;
+      font-weight: normal;
+      background-color: rgb(93, 156, 235);
+      color: white;
+      padding: 5px;
+      border-radius: 10px;
+    }
+  }
 `;
 
 const ApplyForm = ({ userId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userCategoryList, setUserCategoryList] = useState([]);
+  const [applicantUserMatchingInfo, setApplicantUserMatchingInfo] =
+    useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userData, setUserData] = useState({ introduction: "" });
   const user = useSelector((state) => state.user);
@@ -182,9 +252,15 @@ const ApplyForm = ({ userId }) => {
     setUserCategoryList(result.data);
   };
 
+  const getApplicantUserMatchingInfoAPI = async () => {
+    const result = await getApplicantUserMatchingInfo(postSEQ, userId);
+    setApplicantUserMatchingInfo(result.data);
+  };
+
   useEffect(() => {
     getUserAPI();
     getUserCategoryAPI();
+    getApplicantUserMatchingInfoAPI();
   }, [userId]);
 
   const handleCardClick = () => {
@@ -212,9 +288,14 @@ const ApplyForm = ({ userId }) => {
       <div className="ap_container">
         <div className={`ap_custom_card ${isFlipped ? "flipped" : ""}`}>
           <div className="ap_front_info">
-            <button className="ap_hide" onClick={hideMatchingUser}>
-              숨기기
-            </button>
+            <div className="ap_front_top">
+              <div className="ap_date">
+                {formatDate24Hours(applicantUserMatchingInfo.applicationDate)}
+              </div>
+              <button className="ap_hide" onClick={hideMatchingUser}>
+                숨기기
+              </button>
+            </div>
             <img
               className="ap_main_image"
               src={
@@ -240,33 +321,61 @@ const ApplyForm = ({ userId }) => {
                 상세 프로필
               </button>
               <button className="ap_front_applyBtn" onClick={matchingAcceptAPI}>
-                승낙
+                {applicantUserMatchingInfo?.matchingAccept == "Y"
+                  ? "승낙한 유저"
+                  : "승낙"}
               </button>
             </div>
           </div>
           <div className="ap_back_info">
-            <button className="ap_hide" onClick={hideMatchingUser}>
-              숨기기
-            </button>
-            <div>
-              <div>
-                <div>나이</div>
-                <div>성별</div>
-                <div>지역</div>
+            <div className="ap_back_top">
+              <div className="ap_date">
+                {formatDate24Hours(applicantUserMatchingInfo.applicationDate)}
               </div>
-              <div>
-                <div>관심사1</div>
-                <div>관심사2</div>
-                <div>관심사3</div>
+              <button className="ap_hide" onClick={hideMatchingUser}>
+                숨기기
+              </button>
+            </div>
+            <div className="ap_back_body">
+              <div className="ap_back_age_gender">
+                <div className="ap_back_age">
+                  나이 {userData?.age !== null ? userData?.age : "비공개"}
+                </div>
+                <div className="ap_back_gender">
+                  성별 {userData?.gender !== null ? userData?.gender : "비공개"}
+                </div>
               </div>
-              <div>평점</div>
+              <div className="ap_back_place">
+                지역{" "}
+                {userData?.placeType?.placeTypeName !== null
+                  ? userData?.placeType?.placeTypeName
+                  : "비공개"}
+              </div>
+              <div className="ap_back_rating">
+                평점 {userData?.rating !== 0 ? userData?.rating : "미평가"}
+              </div>
+              <div className="ap_back_category">
+                관심사
+                <div className="ap_back_category_list">
+                  {userCategoryList.map((categoryList) => (
+                    <div
+                      className="ap_back_category_list_user"
+                      key={categoryList.matchingCategorySEQ}
+                    >
+                      {categoryList.category?.categoryName}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="ap_back_Btn">
               <button className="ap_back_infoBtn" onClick={handleCardClick}>
                 기본 프로필
               </button>
               <button className="ap_back_applyBtn" onClick={matchingAcceptAPI}>
-                승낙
+                {applicantUserMatchingInfo?.matchingAccept == "Y"
+                  ? "승낙한 유저"
+                  : "승낙"}
               </button>
             </div>
           </div>
