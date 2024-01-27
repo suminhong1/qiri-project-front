@@ -94,7 +94,7 @@ const NotifyMessage = () => {
   };
 
   useEffect(() => {
-    if (!localStorage.getItem("user")) {
+    if (localStorage.getItem("user")) {
       const socket = new SockJS("http://localhost:8080/ws/notification");
       stompClient.current = new Client({
         webSocketFactory: () => socket,
