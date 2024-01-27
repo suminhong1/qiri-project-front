@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import DetailView from "../components/DetailView";
+import ApplyForm from "../components/ApplyForm";
 import Date from "../components/Date";
 import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
@@ -43,6 +44,13 @@ const MatchingBoard = () => {
   const user = useSelector((state) => state.user);
   const [blockUser, setBlockUser] = useState([]);
   const [blockUserFetched, setBlockUserFetched] = useState(false); // 계속 가져와서 한번만 가져오도록 조건 걸음
+  const [applyFormUserId, setApplyFormUserId] = useState(null); // Add this line
+  const [isApplyFormModalOpen, setIsApplyFormModalOpen] = useState(false);
+
+  const openApplyFormModal = (userId) => {
+    setApplyFormUserId(userId);
+    setIsApplyFormModalOpen(true);
+  };
 
   // 게시물 불러오는 API
   const getPostsAPI = async () => {
@@ -340,11 +348,12 @@ const MatchingBoard = () => {
                           ? `/uploadprofile/${po?.userInfo?.profileImg}`
                           : defaultimg
                       }
+                      onClick={openApplyFormModal}
                     />
                   </div>
                   <div className="titleNickname">
                     <div className="title">{po?.postTitle}</div>
-                    <span className="nickname">
+                    <span className="nickname" onClick={openApplyFormModal}>
                       {po?.userInfo?.userNickname}
                     </span>
                   </div>
@@ -414,6 +423,19 @@ const MatchingBoard = () => {
                     &times;
                   </div>
                   <DetailView selectedPostSEQ={selectedPostSEQ} />
+                </div>
+              </div>
+            </div>
+          )}
+          {/* ApplyForm Modal */}
+          {isApplyFormModalOpen && (
+            <div className="Matching-modal-main">
+              <div className="Matching-modal-overlay">
+                <div className="Matching-modal">
+                  <div className="close-button" onClick={closeModal}>
+                    &times;
+                  </div>
+                  <ApplyForm userId={applyFormUserId} />
                 </div>
               </div>
             </div>
