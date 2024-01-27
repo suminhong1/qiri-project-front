@@ -12,6 +12,7 @@ import {
 import styled from "styled-components";
 import { getUserCategory } from "../api/category";
 import { formatDate24Hours } from "../utils/TimeFormat";
+import { postBlockUser, getBlockUser, putBlockUser } from "../api/blockuser";
 
 const StyledApplyForm = styled.div`
   .ap_container {
@@ -106,7 +107,8 @@ const StyledApplyForm = styled.div`
   }
 
   .ap_front_infoBtn,
-  .ap_front_applyBtn {
+  .ap_like,
+  .ap_block_user {
     border: none;
     color: white;
     font-weight: bold;
@@ -120,7 +122,10 @@ const StyledApplyForm = styled.div`
     border-right: 0.5px solid rgb(231, 240, 252);
     border-bottom-left-radius: 26px;
   }
-  .ap_front_applyBtn {
+  .ap_like {
+    border-right: 0.5px solid rgb(231, 240, 252);
+  }
+  .ap_block_user {
     border-left: 0.5 solid rgb(231, 240, 252);
     border-bottom-right-radius: 26px;
   }
@@ -225,7 +230,7 @@ const StyledApplyForm = styled.div`
   }
 `;
 
-const ApplyForm = ({ userId, postSEQ }) => {
+const Profile = ({ userId, postSEQ }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userCategoryList, setUserCategoryList] = useState([]);
@@ -234,6 +239,56 @@ const ApplyForm = ({ userId, postSEQ }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [userData, setUserData] = useState({ introduction: "" });
   const user = useSelector((state) => state.user);
+  const [blockUser, setBlockUser] = useState([]);
+  const [blockUserFetched, setBlockUserFetched] = useState(false);
+
+  const blockUserAPI = async () => {
+    try {
+      if (!blockUserFetched) {
+        const result = await getBlockUser(user.id);
+        setBlockUser(result.data);
+        setBlockUserFetched(true);
+      }
+    } catch (error) {}
+  };
+
+  const handleBlockUser = async () => {
+    const sendUserInfo = {
+      userInfo: {
+        userId: user.id,
+      },
+      blockInfo: { userId },
+    };
+
+    try {
+      // 사용자가 이미 차단되었는지 확인합니다.
+      const existingBlockUser = blockUser.find(
+        (blockedUser) => blockedUser.blockInfo.userId === userId
+      );
+
+      if (existingBlockUser) {
+        // 이미 차단된 경우 차단 정보를 업데이트합니다.
+        const updatedBlockUser = await putBlockUser(userId);
+        alert("차단했습니다.");
+        // 필요한 경우 updatedBlockUser 데이터를 처리합니다.
+      } else {
+        // 차단되지 않은 경우 새로운 차단 항목을 생성합니다.
+        const createdBlockUser = await postBlockUser(sendUserInfo);
+        alert("차단했습니다.");
+        // 필요한 경우 createdBlockUser 데이터를 처리합니다.
+      }
+
+      // 페이지를 다시 로드하거나 필요한 경우 상태를 업데이트합니다.
+      window.location.reload();
+    } catch (error) {
+      // 오류 처리
+      console.error("사용자 차단 중 오류 발생:", error);
+    }
+  };
+
+  useEffect(() => {
+    blockUserAPI();
+  }, [user, blockUserFetched]);
 
   const chatDTO = {
     id: user.id,
@@ -287,14 +342,6 @@ const ApplyForm = ({ userId, postSEQ }) => {
       <div className="ap_container">
         <div className={`ap_custom_card ${isFlipped ? "flipped" : ""}`}>
           <div className="ap_front_info">
-            <div className="ap_front_top">
-              <div className="ap_date">
-                {formatDate24Hours(applicantUserMatchingInfo.applicationDate)}
-              </div>
-              <button className="ap_hide" onClick={hideMatchingUser}>
-                숨기기
-              </button>
-            </div>
             <img
               className="ap_main_image"
               src={
@@ -319,22 +366,13 @@ const ApplyForm = ({ userId, postSEQ }) => {
               <button className="ap_front_infoBtn" onClick={handleCardClick}>
                 상세 프로필
               </button>
-              <button className="ap_front_applyBtn" onClick={matchingAcceptAPI}>
-                {applicantUserMatchingInfo?.matchingAccept == "Y"
-                  ? "승낙한 유저"
-                  : "승낙"}
+              <button className="ap_like">좋아요</button>
+              <button className="ap_block_user" onClick={handleBlockUser}>
+                차단하기
               </button>
             </div>
           </div>
           <div className="ap_back_info">
-            <div className="ap_back_top">
-              <div className="ap_date">
-                {formatDate24Hours(applicantUserMatchingInfo.applicationDate)}
-              </div>
-              <button className="ap_hide" onClick={hideMatchingUser}>
-                숨기기
-              </button>
-            </div>
             <div className="ap_back_body">
               <div className="ap_back_age_gender">
                 <div className="ap_back_age">
@@ -371,11 +409,6 @@ const ApplyForm = ({ userId, postSEQ }) => {
               <button className="ap_back_infoBtn" onClick={handleCardClick}>
                 기본 프로필
               </button>
-              <button className="ap_back_applyBtn" onClick={matchingAcceptAPI}>
-                {applicantUserMatchingInfo?.matchingAccept == "Y"
-                  ? "승낙한 유저"
-                  : "승낙"}
-              </button>
             </div>
           </div>
         </div>
@@ -394,4 +427,4 @@ const ApplyForm = ({ userId, postSEQ }) => {
     </StyledApplyForm>
   );
 };
-export default ApplyForm;
+export default Profile;
