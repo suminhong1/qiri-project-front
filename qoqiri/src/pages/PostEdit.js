@@ -55,9 +55,6 @@ const PostEdit = () => {
 
     const maxCharacterCount = 100000;
 
-    // 편집에서 필요한건 기존 정보 불러오는 것! 테이블 3개 정보 다
-    // 그 중 카테고리 정보 가지고 온 것! <-- 내가 선택한 카테고리들 얘랑 비교!
-
     // 게시물 불러오기
     const getPostAPI = async () => {
         const result = await getPost(id);
@@ -176,8 +173,6 @@ const PostEdit = () => {
             updateImagePreviews(newAttachmentImg);
         }
     
-        // 파일 업로드 필드 초기화
-    //    fileInputRef.current.value = '';
     };
 
     // 첨부파일 미리보기
@@ -223,8 +218,7 @@ const PostEdit = () => {
             setEditLike([...editLike, categorySEQ]);
             setEditSeq([...editSeq, TypeSEQ]);
         }
-        console.log('클릭 후 - editLike:', editLike);
-        console.log('클릭 후 - editSeq:', editSeq);
+     
     };
 
        // 글 수정 시 상단에 선택할 수 있는 카테고리, 카테고리 타입
@@ -303,26 +297,8 @@ const PostEdit = () => {
 
                 console.log(MatchingDTO);
 
-                // 첨부 파일 업로드 부분 
-
                 // 기존에 업로드한 첨부 파일 삭제
                  await deleteAttachmentsAPI(postResponse.data.postSEQ);
-                // 첨부파일 삭제까진 되는데 왜 오류가 날까 첨부파일은 서버에서도 지워야됨
-
-                // 첨부 파일 추가
-                // if (attachmentImg.length > 0) {
-                //     const formData = new FormData();
-                //     formData.append('postId', postResponse.data.postSEQ);
-                //     attachmentImg.forEach((image) => {
-                //         formData.append('files', image);
-                //     });
-                //     const attachmentResponse = await addAttachmentsAPI(formData);
-                //     console.log(attachmentResponse);
-                // }
-
-                // if (deletedImages.length > 0) {
-                //     await deleteAttachmentsAPI(postResponse.data.postSEQ, deletedImages);
-                // }
 
                 // editMatchingAPI 호출
                 const matchingResponse = await addMatchingAPI({                 
