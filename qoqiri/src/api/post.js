@@ -13,10 +13,6 @@ export const addPostAPI = async (data) => {
     return await instance.post('post', data);
 };
 
-export const deletePost = async (id) => {
-    return await instance.delete(`/post/{postSeq}` + id);
-};
-
 // 선택한 카테고리 matchingCategoryInfo 테이블로 저장하는 API
 export const addMatchingAPI = async (data) => {
     return await instance.post('matchingCategoryInfo', data);
@@ -30,7 +26,7 @@ export const addAttachmentsAPI = async (formData) => {
             'Content-Type': 'multipart/form-data',
         },
     });
-    return response.data; // 서버에서의 응답을 반환?
+    return response.data; 
 };
 
 // 게시물 하나에 대한 전체 postAttachments 조회
@@ -38,13 +34,13 @@ export const getAttachments = async (id) => {
     return await instance.get('postAttachments/' + id);
 };
 
+
 // postAttachments 전체조회
 export const getAttachmentsAll = async () => {
     return await instance.get("postAttachments");
 } 
 
 // 게시물 수정
-
 export const editPostAPI = async (data) => {
     try {
         const response = await instance.put('/post', data);
@@ -59,24 +55,13 @@ export const editPostAPI = async (data) => {
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
     try {
-        const response = await instance.put('/matchingCategoryInfo', data); // 여기서 오류
+        const response = await instance.put('/matchingCategoryInfo', data); 
         console.log(response.data); // 확인용 로그
         return response;
     } catch (error) {
         console.error('editMatchingAPI 에러:', error);
         throw error;
     }
-};
-
-// 첨부 파일 수정
-export const editAttachmentsAPI = async (formData) => {
-    console.log(formData);
-    const response = await instance.put('/postAttachments', formData, {
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-    });
-    return response.data;
 };
 
 export const getSelectAttach = async (id) => {
@@ -93,13 +78,7 @@ export const getSelectPlaceType = async (id) => {
 
 export const getMatchCate = async (id) => {
     // MatchingcategoryInfo 불러오는 API
-    // return await instance.get('public/post/' + id + '/matchingCategoryInfo');
     return await instance.get('matchingCategoryInfo/' + id);
-};
-
-export const getAttach = async (id) => {
-    // 첨부파일 불러오는 API
-    return await instance.get('postAttachments/' + id);
 };
 
 export const getBoards = async () => {
@@ -195,4 +174,8 @@ export const deletePostAPI = async (postSeq) => {
 
 export const deleteMatchingAPI = async (id) => {
     return await instance.delete(`/matchingCategoryInfo/deleteAll/${id}`);
-}
+};
+
+export const deleteAttachmentsAPI = async (id) =>{
+    return await instance.delete(`/postAttachments/deleteAll/${id}`);
+};
