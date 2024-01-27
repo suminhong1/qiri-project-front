@@ -285,7 +285,6 @@ const PostWrite = () => {
                                                         }`}
                                                         onClick={() =>
                                                             handleInterestClick(
-                                                                // 선택된 카테고리 이름과 seq를 selectLike 배열에 추가하거나 제거하는 이벤트 selectSeq도 마찬가지
                                                                 category.categorySEQ,
                                                                 category.categoryType.ctSEQ
                                                             )

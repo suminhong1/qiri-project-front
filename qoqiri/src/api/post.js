@@ -43,7 +43,6 @@ export const getAttachmentsAll = async () => {
 };
 
 // 게시물 수정
-
 export const editPostAPI = async (data) => {
   try {
     const response = await instance.put("/post", data);
@@ -58,24 +57,13 @@ export const editPostAPI = async (data) => {
 // 선택한 카테고리 수정
 export const editMatchingAPI = async (data) => {
   try {
-    const response = await instance.put("/matchingCategoryInfo", data); // 여기서 오류
+    const response = await instance.put("/matchingCategoryInfo", data);
     console.log(response.data); // 확인용 로그
     return response;
   } catch (error) {
     console.error("editMatchingAPI 에러:", error);
     throw error;
   }
-};
-
-// 첨부 파일 수정
-export const editAttachmentsAPI = async (formData) => {
-  console.log(formData);
-  const response = await instance.put("/postAttachments", formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  });
-  return response.data;
 };
 
 export const getSelectAttach = async (id) => {
@@ -90,14 +78,13 @@ export const getSelectPlaceType = async (id) => {
   return await instance.get(`/placeType/${id}`);
 };
 
+// MatchingcategoryInfo 불러오는 API
 export const getMatchCate = async (id) => {
-  // MatchingcategoryInfo 불러오는 API
-  // return await instance.get('public/post/' + id + '/matchingCategoryInfo');
   return await instance.get("matchingCategoryInfo/" + id);
 };
 
+// 첨부파일 불러오는 API
 export const getAttach = async (id) => {
-  // 첨부파일 불러오는 API
   return await instance.get("postAttachments/" + id);
 };
 
@@ -107,9 +94,6 @@ export const getBoards = async () => {
 
 export const getPostList = async (page, board) => {
   let url = `public/post?page=${page}`;
-  // if (board !== null) {
-  //     url += `&board=${board}`;
-  // }
   return await instance.get(url);
 };
 
@@ -191,4 +175,12 @@ export const deleteMatchingCategoryAPI = async (id) => {
     console.error("매칭 카테고리 정보 삭제 중 오류 발생:", error);
     throw error;
   }
+};
+
+export const deleteMatchingAPI = async (id) => {
+  return await instance.delete(`/matchingCategoryInfo/deleteAll/${id}`);
+};
+
+export const deleteAttachmentsAPI = async (id) => {
+  return await instance.delete(`/postAttachments/deleteAll/${id}`);
 };
