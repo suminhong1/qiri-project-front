@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getBlockUser, putBlockUser } from "../api/blockuser";
+import { getBlockUser, delBlockUser } from "../api/blockuser";
 import "../css/BlockUser.css";
 
 const BlockUserInfo = () => {
@@ -16,15 +16,15 @@ const BlockUserInfo = () => {
     blockUserAPI();
   }, [user]);
 
-  // Filter blockUser to include only items where unblock is 'Y'
   const filteredBlockUser = blockUser.filter(
     (blockUser) => blockUser.unblock === "Y"
   );
 
   const handleBlockUser = async (userId) => {
-    const delBlockUser = await putBlockUser(userId);
-    // 잘못된 부분: return delBlockUser.blockedId;
-    return delBlockUser.data; // 수정된 부분
+    const deleteBlockUser = await delBlockUser(userId);
+    alert("수정되었습니다.");
+    window.location.reload();
+    return deleteBlockUser.data;
   };
 
   return (

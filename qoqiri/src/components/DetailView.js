@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import defaultimg from "../assets/defaultimg.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import styled from "styled-components";
 import Date from "../components/Date";
 import { editPostAPI, getAttachments, getPost, deletePost } from "../api/post";
 import UserRating from "../components/UserRating";
@@ -9,12 +10,16 @@ import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
-import { MatchingApply } from "../api/matching"; // 신청버튼테스트용
+import { editPostAPI, getAttachments, getPost } from "../api/post";
+import { postBlockUser, getBlockUser, putBlockUser } from "../api/blockuser";
+import { MatchingApply } from "../api/matching";
 import { joinChatRoom } from "../api/chat";
-import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import { postBlockUser, getBlockUser } from "../api/blockuser";
 import { formatDate24Hours } from "../utils/TimeFormat";
+import { viewComments } from "../store/commentSlice";
+import { RepeatOneSharp } from "@mui/icons-material";
 
 const Detail = styled.div`
   border-top: 33px solid #ff7f38;
@@ -106,9 +111,13 @@ const DetailView = ({ selectedPostSEQ }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [post, setPost] = useState({});
   const [attachments, setAttachments] = useState([]);
+  const [blockUser, setBlockUser] = useState([]);
+  const [blockUserFetched, setBlockUserFetched] = useState(false);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
+
+  // 유저 차단하기 좌클릭
   const [contextMenuPosition, setContextMenuPosition] = useState({
     x: 0,
     y: 0,
@@ -117,8 +126,14 @@ const DetailView = ({ selectedPostSEQ }) => {
   const handleContextMenu = (event) => {
     event.preventDefault();
 
+    const xOffset = 50;
+    const yOffset = 60;
+
     setContextMenuVisible(true);
-    setContextMenuPosition({ x: event.clientX, y: event.clientY });
+    setContextMenuPosition({
+      x: event.clientX + xOffset,
+      y: event.clientY + yOffset,
+    });
   };
   const closeContextMenu = (event) => {
     if (
@@ -140,9 +155,14 @@ const DetailView = ({ selectedPostSEQ }) => {
     };
   }, [contextMenuVisible]);
 
+  // 댓글 슬라이스
   const comments = useSelector((state) => {
     return state.comment;
   });
+
+  useEffect(() => {
+    dispatch(viewComments(selectedPostSEQ));
+  }, [dispatch]);
 
   // 게시물 카드 오픈
   const openModal = (imageIndex) => {
@@ -156,15 +176,21 @@ const DetailView = ({ selectedPostSEQ }) => {
     setIsModalOpen(false);
   };
 
+  // 게시물 API
   const getPostAPI = async () => {
     const result = await getPost(selectedPostSEQ);
     setPost(result.data);
   };
-
-  const ChatDTO = {
-    id: user.id,
-    postSEQ: selectedPostSEQ,
+  // 첨부파일 API
+  const getAttachmentsAPI = async () => {
+    const result = await getAttachments(selectedPostSEQ);
+    setAttachments(result.data);
   };
+
+  useEffect(() => {
+    getPostAPI();
+    getAttachmentsAPI();
+  }, [selectedPostSEQ]);
 
   const deletePost = () => {
     deletePost(selectedPostSEQ);
@@ -172,9 +198,9 @@ const DetailView = ({ selectedPostSEQ }) => {
     window.location.reload();
   };
 
-  const getAttachmentsAPI = async () => {
-    const result = await getAttachments(selectedPostSEQ);
-    setAttachments(result.data);
+  const ChatDTO = {
+    id: user.id,
+    postSEQ: selectedPostSEQ,
   };
 
   // 매칭신청
@@ -216,47 +242,53 @@ const DetailView = ({ selectedPostSEQ }) => {
     }
   };
 
+  const blockUserAPI = async () => {
+    try {
+      if (!blockUserFetched) {
+        const result = await getBlockUser(user.id);
+        setBlockUser(result.data);
+        setBlockUserFetched(true);
+      }
+    } catch (error) {}
+  };
+
   const handleBlockUser = async () => {
     const sendUserInfo = {
       userInfo: {
         userId: user.id,
-        userPwd: user.token,
-        userName: user.name,
-        userNickname: user.nickname,
-        age: user.age,
-        gender: user.gender,
-        placeType: user.placeType,
-        phone: user.phone,
-        email: user.email,
-        profileImg: user.profileImg,
-        statusMessage: user.statusMessage,
-        hasPartner: user.hasPartner,
-        bloodType: user.bloodType,
-        mbti: user.mbti,
-        birthday: user.birthday,
-        joinDate: user.joinDate,
-        popularity: user.popularity,
-        rating: user.rating,
-        isAdmin: user.isAdmin,
-        isDeleted: user.isDeleted,
       },
-      blockInfo: post?.userInfo,
+      blockInfo: { userId: post?.userInfo?.userId },
     };
 
-    const createBlockUser = await postBlockUser(sendUserInfo);
-    alert("차단했습니다.");
-    window.location.reload();
-    return createBlockUser.sendUserInfo;
+    try {
+      // 사용자가 이미 차단되었는지 확인합니다.
+      const existingBlockUser = blockUser.find(
+        (blockedUser) => blockedUser.blockInfo.userId === post?.userInfo?.userId
+      );
+
+      if (existingBlockUser) {
+        // 이미 차단된 경우 차단 정보를 업데이트합니다.
+        const updatedBlockUser = await putBlockUser(post.userInfo.userId);
+        alert("차단했습니다.");
+        // 필요한 경우 updatedBlockUser 데이터를 처리합니다.
+      } else {
+        // 차단되지 않은 경우 새로운 차단 항목을 생성합니다.
+        const createdBlockUser = await postBlockUser(sendUserInfo);
+        alert("차단했습니다.");
+        // 필요한 경우 createdBlockUser 데이터를 처리합니다.
+      }
+
+      // 페이지를 다시 로드하거나 필요한 경우 상태를 업데이트합니다.
+      window.location.reload();
+    } catch (error) {
+      // 오류 처리
+      console.error("사용자 차단 중 오류 발생:", error);
+    }
   };
 
   useEffect(() => {
-    getPostAPI();
-    getAttachmentsAPI();
-  }, [selectedPostSEQ]);
-
-  useEffect(() => {
-    dispatch(viewComments(selectedPostSEQ));
-  }, [dispatch]);
+    blockUserAPI();
+  }, [user, blockUserFetched]);
 
   return (
     <Detail>
