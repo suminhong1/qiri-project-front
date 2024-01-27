@@ -298,7 +298,7 @@ const PostEdit = () => {
                 console.log(MatchingDTO);
 
                 // 기존에 업로드한 첨부 파일 삭제
-                 await deleteAttachmentsAPI(postResponse.data.postSEQ);
+                //  await deleteAttachmentsAPI(postResponse.data.postSEQ);
 
                 // editMatchingAPI 호출
                 const matchingResponse = await addMatchingAPI({                 

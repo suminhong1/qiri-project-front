@@ -143,20 +143,16 @@ const Apply = () => {
           </button>
         </div>
         <div className="AC">
-          {appliedUsers.length === 0 ? (
-            <p className="ap-empty-p">아직 아무도 신청한 사람이 없어요</p>
-          ) : (
-            appliedUsers.map((userInfo) => (
-              <section
-                className="ap-section"
-                key={userInfo.matchingUserInfoSeq}
-              >
-                <div className=".apply-form">
-                  <ApplyForm userId={userInfo.userInfo.userId} />
-                </div>
-              </section>
-            ))
-          )}
+          {appliedUsers.map((userInfo) => (
+            <section className="ap-section" key={userInfo.matchingUserInfoSeq}>
+              <div className=".apply-form">
+                <ApplyForm
+                  userId={userInfo.userInfo.userId}
+                  postSEQ={postSEQ}
+                />
+              </div>
+            </section>
+          ))}
         </div>
 
         {isChatRoomModalOpen && (

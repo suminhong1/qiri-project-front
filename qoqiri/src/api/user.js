@@ -23,4 +23,9 @@ export const findIdByEmail = async (data) => {
 
 export const editProfile = async (data) => {
   return await instance.put("editProfile", data);
-}
+};
+
+// 좋아요 버튼
+export const userLike = async (data) => {
+  return await instance.post("userlike", data);
+};

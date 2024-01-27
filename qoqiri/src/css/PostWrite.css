@@ -1,224 +1,228 @@
-.postWrite input[type='text'],
-.postWrite input[type='password'] {
-    box-sizing: border-box;
-    width: 100%;
-    height: 40px;
-    font-size: 1em;
-    border: 1px solid #dbdbdb;
-    border-radius: 8px;
+#form-container {
+  padding-left: 240px;
+}
+
+.postWrite input[type="text"],
+.postWrite input[type="password"] {
+  box-sizing: border-box;
+  width: 100%;
+  height: 40px;
+  font-size: 1em;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
 }
 
 .post-content {
-    width: 100%;
-    word-break: break-word;
+  width: 100%;
+  word-break: break-word;
 }
 
 .post-content .textareaContainer {
-    width: 100%;
+  width: 100%;
 }
 
 .wordCount {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin: 10px 0;
 }
 
 .button {
-    flex: 1;
+  flex: 1;
 }
 
 .textareaContainer textarea {
-    width: 100%;
-    resize: none;
-    min-height: 300px;
-    overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
-    white-space: pre-line;
-    min-width: 900px;
+  width: 100%;
+  resize: none;
+  min-height: 300px;
+  overflow-x: hidden; /* 가로 스크롤바 비활성화, 텍스트 자동 줄 바꿈 */
+  white-space: pre-line;
+  min-width: 900px;
 }
 
 /* 관심사 선택 부분 */
 #interest-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 16px;
 }
 
 #interest-section .form-el label {
-    font-size: 25px; 
+  font-size: 25px;
 }
 
 .set-categoryLike-box {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 8px;
 }
 
 .set-box-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    font-size: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  font-size: 16px;
 }
 
 .set-categoryLike-box-item {
-    font-style: inherit;
-    margin: 5px;
-    padding: 7px 10px;
-    border: 1px solid #ccc;
-    cursor: pointer;
-    border-radius: 20px;
-    font-size: 13px;
+  font-style: inherit;
+  margin: 5px;
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 20px;
+  font-size: 13px;
 }
 
 .set-categoryLike-box-item.selected {
-    background-color: #ff9615;
-    color: white;
-    border: 1px solid #ff9615;
+  background-color: #ff9615;
+  color: white;
+  border: 1px solid #ff9615;
 }
 
 .set-categoryLike-box h3 {
-    font-size: 17px;
-    color: #ff9615;
+  font-size: 17px;
+  color: #ff9615;
 }
 
 #file-upload {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
-    font-size: 1em;
-    margin-left: 10px;
-    color: #262626;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  font-size: 1em;
+  margin-left: 10px;
+  color: #262626;
 }
 #file-upload input {
-    background-color: antiquewhite;
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-    direction: ltr;
-    z-index: 2;
+  background-color: antiquewhite;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  direction: ltr;
+  z-index: 2;
 }
 
 #file-upload input:focus {
-    border: 1px solid #ff9615;
+  border: 1px solid #ff9615;
 }
 
 #file-upload span {
-    background-color: antiquewhite;
-    color: #ff9615;
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    padding: 8px 14px;
-    font-weight: bold;
+  background-color: antiquewhite;
+  color: #ff9615;
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 8px 14px;
+  font-weight: bold;
 }
 
-#remove-image{
-    background-color: antiquewhite;
-    color: #ff9615;
-    padding: 6px 12px;
-    border-radius: 5px;
-    border: #ff9615;
-    cursor: pointer;
-    margin-bottom: 10px;
-    padding: 8px 14px;
-    font-weight: bold;
+#remove-image {
+  background-color: antiquewhite;
+  color: #ff9615;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: #ff9615;
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 8px 14px;
+  font-weight: bold;
 }
 
 .post-button {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 #postTitle {
-    display: flex;
-    width: 100%;
-    border-radius: 5px;
-    margin-bottom: 30px;
-    margin-top: 30px;
-    margin-left: 10px;
+  display: flex;
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  margin-left: 10px;
 }
 
 #postTitle #title {
-    background: antiquewhite;
-    color: #ff9615;
-    font-weight: bold;
-    border: 1px #f88e0d;
-   padding-right: 10%;
-   display: flex;
-   /* width: 40%; */
-   border-radius: 5px;
-   margin-bottom: 30px;
-   margin-top: 30px;
-   margin-left: 10px;
+  background: antiquewhite;
+  color: #ff9615;
+  font-weight: bold;
+  border: 1px #f88e0d;
+  padding-right: 10%;
+  display: flex;
+  /* width: 40%; */
+  border-radius: 5px;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  margin-left: 10px;
 }
 
 #postTitle input::placeholder {
-    color: #ff9615;
+  color: #ff9615;
 }
 
-.select-place{
-    margin-left: 170px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    color: #ff9615;
-    font-weight: bold;
-    border-radius: 8px; 
+.select-place {
+  margin-left: 170px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  color: #ff9615;
+  font-weight: bold;
+  border-radius: 8px;
 }
 
-.place-option{
-    font-weight: bold;
-    border-radius: 8px;
+.place-option {
+  font-weight: bold;
+  border-radius: 8px;
 }
 #cancelButton {
-    position: relative;
-    overflow: hidden;
-    font-size: 1em;
-    font-weight: 600;
-    /* color: #262626; */
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    margin-left: 50px;
+  position: relative;
+  overflow: hidden;
+  font-size: 1em;
+  font-weight: 600;
+  /* color: #262626; */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  margin-left: 50px;
 }
 #cancelButton button {
-    background-color: antiquewhite;
-    border: 1px solid #ff9615;
-    color: #ff9615;
-    font-weight: bold;
-    padding: 6px 12px;
-    border-radius: 5px;
-    margin-bottom: 10px;
+  background-color: antiquewhite;
+  border: 1px solid #ff9615;
+  color: #ff9615;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 .submitButton {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 50px;
-    padding: 10px;
-    font-size: 1em;
-    border: 0;
-    border-radius: 8px;
-    word-break: keep-all;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  padding: 10px;
+  font-size: 1em;
+  border: 0;
+  border-radius: 8px;
+  word-break: keep-all;
 }
 .submitButton button {
-    background-color: antiquewhite;
-    border: 1px solid #ff9615;
-    color: #ff9615;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-weight: bold;
+  background-color: antiquewhite;
+  border: 1px solid #ff9615;
+  color: #ff9615;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
 }
