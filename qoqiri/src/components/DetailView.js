@@ -15,6 +15,7 @@ import { joinChatRoom } from "../api/chat";
 import { asyncChatRooms } from "../store/chatRoomSlice";
 import { formatDate24Hours } from "../utils/TimeFormat";
 import { RepeatOneSharp } from "@mui/icons-material";
+import ApplyFormModal from "./ApplyFormModal";
 
 const Detail = styled.div`
   border-top: 33px solid #ff7f38;
@@ -111,6 +112,11 @@ const DetailView = ({ selectedPostSEQ }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const [contextMenuVisible, setContextMenuVisible] = useState(false);
+  const [isApplyFormOpen, setIsApplyFormOpen] = useState(false);
+
+  const openApplyForm = () => {
+    setIsApplyFormOpen(true);
+  };
 
   // 유저 차단하기 좌클릭
   const [contextMenuPosition, setContextMenuPosition] = useState({
@@ -287,7 +293,7 @@ const DetailView = ({ selectedPostSEQ }) => {
 
   return (
     <Detail>
-      <div className="board-detail" key={post?.postSEQ}>
+      <div className="board-detail">
         <div className="board-header-time">
           {formatDate24Hours(post?.postDate)}
         </div>
@@ -299,6 +305,7 @@ const DetailView = ({ selectedPostSEQ }) => {
                   ? `/uploadprofile/${post?.userInfo?.profileImg}`
                   : defaultimg
               }
+              onClick={openApplyForm}
             />
           </div>
           <div className="titleNickname">
@@ -427,6 +434,9 @@ const DetailView = ({ selectedPostSEQ }) => {
             &times;
           </div>
         </div>
+      )}
+      {isApplyFormOpen && (
+        <ApplyFormModal userId={post.userInfo.userId} postSEQ={post.postSEQ} />
       )}
     </Detail>
   );
