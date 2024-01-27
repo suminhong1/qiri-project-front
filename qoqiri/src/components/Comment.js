@@ -7,7 +7,6 @@ import { deleteComment, updateComment } from "../store/commentSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faThumbsUp } from "@fortawesome/free-regular-svg-icons";
 import { faThumbsUp as solidThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import Date from "../components/Date";
 import { getLike, postLike, delLike } from "../api/commentLike";
 import { formatDate24Hours } from "../utils/TimeFormat";
 

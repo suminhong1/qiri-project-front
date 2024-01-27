@@ -3,22 +3,17 @@ import defaultimg from "../assets/defaultimg.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import styled from "styled-components";
-import Date from "../components/Date";
 import { editPostAPI, getAttachments, getPost, deletePost } from "../api/post";
 import UserRating from "../components/UserRating";
 import { viewComments } from "../store/commentSlice";
 import { useSelector, useDispatch } from "react-redux";
 import AddComment from "../components/AddComment";
 import Comment from "../components/Comment";
-import { editPostAPI, getAttachments, getPost } from "../api/post";
 import { postBlockUser, getBlockUser, putBlockUser } from "../api/blockuser";
 import { MatchingApply } from "../api/matching";
 import { joinChatRoom } from "../api/chat";
-import { useSelector, useDispatch } from "react-redux";
 import { asyncChatRooms } from "../store/chatRoomSlice";
-import { postBlockUser, getBlockUser } from "../api/blockuser";
 import { formatDate24Hours } from "../utils/TimeFormat";
-import { viewComments } from "../store/commentSlice";
 import { RepeatOneSharp } from "@mui/icons-material";
 
 const Detail = styled.div`

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import DetailView from "./DetailView";
-import Date from "./Date";
 import { getCategoryTypes } from "../api/categoryType";
 import { getCategories } from "../api/category";
 import { getAttachmentsAll } from "../api/post";
