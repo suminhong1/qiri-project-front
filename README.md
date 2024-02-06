@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# 코끼리끼리
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+카테고리별로 다양한 매칭을 할 수 있는 웹 서비스 입니다.
 
-## Available Scripts
+# 기능 소개
 
-In the project directory, you can run:
+- 게시물을 등록하여 원하는 사람을 모집하기
+- 매칭신청을 통해 채팅하기
+- 원하는 사람을 골라 매칭 승락하기
+- 매칭 후 후기 작성하기
 
-### `npm start`
+# 개발환경 구축
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+` Apache Tomcat 9.0` `Spring Boot` `JAVA` `Oracle DBMS `
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+git clone https://github.com/user/repository.git
+```
 
-### `npm test`
+```
+npm install
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+http://localhost:3000
+```
 
-### `npm run build`
+# 기술스택
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## BACKEND
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Web Server
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- apache tomcat
 
-### `npm run eject`
+### Language & Framework
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- JAVA, Spring Boot
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Database
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Oracle
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Library
 
-## Learn More
+- Lombok
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## FRONTEND
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Language & Framework
 
-### Code Splitting
+- JavaScript
+- React
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Library
 
-### Analyzing the Bundle Size
+- Bootstrap
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## DEVOPS
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- GitHub
